@@ -1,0 +1,76 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/lightgrey"
+    tools:context="example.b.HelpFragment" >
+
+    <Button
+        android:id="@+id/aboutGeoquest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="0dp"
+        android:background="@drawable/div_down"
+        android:text="@string/insideAbout" />
+    
+    <TextView
+        android:id="@+id/aboutGeoquestText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="7dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:paddingBottom="10dp"
+        android:lineSpacingMultiplier="1.2"
+        android:background="@color/white"
+        android:text="@string/insideAboutText"/>
+
+    <Button
+        android:id="@+id/howWorks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="0dp"
+        android:background="@drawable/div_down"
+        android:text="@string/insidehowWorks" />
+    
+     <TextView
+        android:id="@+id/howWorkstText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="7dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:paddingBottom="10dp"
+        android:lineSpacingMultiplier="1.2"
+        android:background="@color/white"
+        android:text="@string/insideWorksText"/>
+
+    <Button
+        android:id="@+id/ReportProblems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="0dp"
+        android:background="@drawable/div_down"
+        android:text="@string/insidereportProblems" />
+    
+     <TextView
+        android:id="@+id/reportProblemsText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="7dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:paddingBottom="10dp"
+        android:lineSpacingMultiplier="1.2"
+        android:background="@color/white"
+        android:text="@string/insideReportText"/>
+
+</LinearLayout>

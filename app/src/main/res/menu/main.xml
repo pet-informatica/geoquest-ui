@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="example.b.MainActivity" >
+
+    <item
+        android:id="@+id/menu_main"
+        android:icon="@drawable/ic_action_overflow"
+        android:showAsAction="always"
+        android:title="@string/action_menu"
+        android:visible="true">
+        <menu>
+            <item
+                android:id="@+id/menu_help"
+                android:showAsAction="never"
+                android:title="@string/action_help"/>
+            
+            <item
+                android:id="@+id/menu_credits"
+                android:showAsAction="never"
+                android:title="@string/action_credits"/>
+        </menu>
+    </item>
+
+</menu>

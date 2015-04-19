@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="8" >
+
+    <RelativeLayout
+        android:id="@+id/UserInfosBadges"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3.75"
+        android:background="@color/orange"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="150dp"
+                android:layout_height="150dp" >
+
+                <ImageView
+                    android:id="@+id/userBadgesImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/asset_avatar" />
+
+                <ImageView
+                    android:id="@+id/userBadgesImgBorda"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/asset_borda" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/descUserBadges"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="0dp"
+                android:text="Especialista em Hidrografia"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutStarsBadges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/star1Badges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star_full" />
+
+                <ImageView
+                    android:id="@+id/star2Badges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star_full" />
+
+                <ImageView
+                    android:id="@+id/star3Badges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star_full" />
+
+                <ImageView
+                    android:id="@+id/star4Badges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star_full" />
+
+                <ImageView
+                    android:id="@+id/star5Badges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/star" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4.25"
+        android:background="@color/white" >
+
+        <RelativeLayout
+            android:id="@+id/layoutTitleBadges"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:id="@+id/titleBadges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="7dp"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_star_badges" />
+
+                <TextView                   
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BADGES"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+                
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_star_badges" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutBadges"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/titleBadges"
+                android:padding="10dp" >
+
+                <LinearLayout
+                    android:id="@+id/layoutBadges1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/badge1"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:alpha="0.2"
+                        android:src="@drawable/badge_caseiro" />
+
+                    <ImageView
+                        android:id="@+id/badge2"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:alpha="0.2"
+                        android:src="@drawable/badge_dev" />
+
+                    <ImageView
+                        android:id="@+id/badge3"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:alpha="0.2"
+                        android:src="@drawable/badge_flash" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutBadges2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/layoutBadges1"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/badge4"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:alpha="0.2"
+                        android:src="@drawable/badge_caseiro" />
+
+                    <ImageView
+                        android:id="@+id/badge5"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:alpha="0.2"
+                        android:src="@drawable/badge_dev" />
+
+                    <ImageView
+                        android:id="@+id/badge6"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:alpha="0.2"
+                        android:src="@drawable/badge_flash" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutBadges3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/layoutBadges2"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/badge7"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:alpha="0.2"
+                        android:src="@drawable/badge_caseiro" />
+
+                    <ImageView
+                        android:id="@+id/badge8"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:alpha="0.2"
+                        android:src="@drawable/badge_dev" />
+
+                    <ImageView
+                        android:id="@+id/badge9"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:alpha="0.2"
+                        android:src="@drawable/badge_flash" />
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

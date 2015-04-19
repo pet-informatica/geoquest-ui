@@ -1,0 +1,34 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/pink"
+    tools:context="example.b.CreditsFragment" >
+
+    <ImageView
+        android:id="@+id/geoquestCreditosBanner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-30px"
+        android:src="@drawable/geoquest_creditos" />
+
+    <ImageView
+        android:id="@+id/logo_petInformatica"
+        android:layout_below="@id/geoquestCreditosBanner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15px"
+        android:src="@drawable/logo_petinformatica" />
+    
+    <!-- Next image's src will be changed in the future -->
+    
+    <ImageView
+        android:id="@+id/logo_petGeografia"
+        android:layout_below="@id/logo_petInformatica"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15px"
+        android:src="@drawable/logo_petinformatica" />
+
+</RelativeLayout>
