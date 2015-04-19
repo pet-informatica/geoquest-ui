@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements CategoryFragment.OnFragmentInteractionListener{
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,4 +68,8 @@ public class MainActivity extends Activity {
 
 		return super.onOptionsItemSelected(item);
 	}
+
+    public void onCategorySelected(String id){
+        Log.i("MainActivity > CategoryFragment", "Selected category " + id);
+    }
 }

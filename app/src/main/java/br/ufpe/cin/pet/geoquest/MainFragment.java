@@ -84,7 +84,7 @@ public class MainFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				getFragmentManager().beginTransaction()
-				.replace(R.id.container, new QuestionFragment()).commit();
+				.replace(R.id.container, new CategoryFragment()).commit();
 			}
 		});
 
