@@ -1,10 +1,11 @@
 package br.ufpe.cin.pet.geoquest;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import br.ufpe.cin.pet.geoquest.classes.Question;
 
 public class QuestionFragment extends Fragment{
+
+    ArrayList<Question> questions;
+
+    private int currentQuestion;
 	
-	TextView questionTitle;
+	TextView questionExam;
 	TextView questionDescription;
 	LinearLayout layout_ans1;
 	LinearLayout layout_ans2;
@@ -35,10 +48,10 @@ public class QuestionFragment extends Fragment{
 
 		final View rootView = inflater.inflate(R.layout.fragment_question, container, false);
 
-		getActivity().getActionBar().setTitle("Geoquest");
+        getActivity().getActionBar().setTitle("GeoQuest");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		questionTitle = (TextView) rootView.findViewById(R.id.questionTitle);
+		questionExam = (TextView) rootView.findViewById(R.id.questionTitle);
 		questionDescription = (TextView) rootView.findViewById(R.id.questionDescription);
 		answer1 = (TextView) rootView.findViewById(R.id.answer1);
 		answer2 = (TextView) rootView.findViewById(R.id.answer2);
@@ -51,42 +64,90 @@ public class QuestionFragment extends Fragment{
 		layout_ans3 = (LinearLayout) rootView.findViewById(R.id.answer3Layout);
 		layout_ans4 = (LinearLayout) rootView.findViewById(R.id.answer4Layout);
 		layout_ans5 = (LinearLayout) rootView.findViewById(R.id.answer5Layout);
-		
-		Question quest = new Question();
-		quest.title = "Enem 2009".toUpperCase();
-		
-		quest.description = "Suspendisse ultricies mi in dignissim consectetur. Duis non turpis neque. Fusce id quam semper massa molestie cursus vel non purus. Etiam aliquet urna placerat magna venenatis bibendum. Ut nec risus gravida libero porta iaculis sed eu orci. Ut feugiat non elit et cursus. Aliquam rutrum eros et commodo vehicula. Maecenas vel tincidunt ligula, id sagittis quam. Nam ac mauris in nulla pretium pellentesque. Nullam semper, ante vitae molestie venenatis, ligula ligula tincidunt turpis, id viverra tortor felis sit amet orci. Aenean luctus finibus metus id tempor. Duis viverra lectus eget ipsum sodales elementum.";
-		
-		Vector<String> answers = new Vector<String>();
-		answers.add("Lorem ipsum dolor sit amet.");
-		answers.add("Nunc facilisis turpis enim, eget porta justo.");
-		answers.add("fosa faoishfa fwifjwelg oieghw");
-		answers.add("23pr9j esoighs tp3i4ntl34 pofjqe");
-		answers.add("23nr fefpnwe� gwgkwengkwe opwejpwengn w wieehgwen");		
-		quest.alternatives = answers;
-		
-		quest.rightAnswer = 4;
-		
-		questionTitle.setText(quest.title);
-		questionDescription.setText(quest.description);
-		answer1.setText(quest.alternatives.get(0));
-		answer2.setText(quest.alternatives.get(1));
-		answer3.setText(quest.alternatives.get(2));
-		answer4.setText(quest.alternatives.get(3));
-		answer5.setText(quest.alternatives.get(4));
-		
-		setOnClickListeners(rootView, quest.rightAnswer);
-		
+
+        requestQuestions(rootView);
+
+        currentQuestion = 0;
+
 		return rootView;
 		
-	}	
+	}
+
+    private void updateUI(View rootView){
+
+        Question quest = questions.get(currentQuestion);
+
+        questionExam.setText(quest.getExam());
+        questionDescription.setText(quest.getQuestion());
+        answer1.setText(quest.getAlternatives().get(0));
+        answer2.setText(quest.getAlternatives().get(1));
+        answer3.setText(quest.getAlternatives().get(2));
+        answer4.setText(quest.getAlternatives().get(3));
+        answer5.setText(quest.getAlternatives().get(4));
+
+        setOnClickListeners(rootView, quest.getCorrectAnswer());
+    }
+
+    private void requestQuestions(final View rootView){
+        Log.i("QuestionFragment", "Fetching questions...");
+
+        String categoryId = getArguments().getString("category_id");
+
+        String url = "https://shielded-plains-2193.herokuapp.com/questions/?category=" + categoryId;
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>(){
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+
+                    questions = new ArrayList<Question>();
+
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject question = response.getJSONObject(i);
+
+                        String title = question.getString("question");
+                        String exam = question.getString("exam");
+                        String correctAnswer = question.getString("correct_answer");
+
+                        ArrayList<String> alternatives = new ArrayList<String>();
+                        alternatives.add( question.getString("option_a"));
+                        alternatives.add( question.getString("option_b"));
+                        alternatives.add( question.getString("option_c"));
+                        alternatives.add( question.getString("option_d"));
+                        alternatives.add( question.getString("option_e"));
+
+
+                        questions.add(new Question(title, exam, alternatives, correctAnswer));
+
+                    }
+
+                    Log.i("QuestionFragment", "Fetched " + response.length() + " questions.");
+
+                    updateUI(rootView);
+
+                }catch(Exception e){
+                    Log.e("QuestionFragment", e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // TODO Auto-generated method stub
+                Log.e("QuestionFragment", error.getMessage());
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        RequestSingleton.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
+    }
 	
-	private void setOnClickListeners(View rootView, final int rightAnswer){
+	private void setOnClickListeners(View rootView, final String rightAnswer){
 		layout_ans1 = (LinearLayout) rootView.findViewById (R.id.answer1Layout);
 		layout_ans1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				checkAnswer(1, rightAnswer);
+				checkAnswer("A", rightAnswer);
 			}
 		});
 
@@ -94,7 +155,7 @@ public class QuestionFragment extends Fragment{
 		layout_ans2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				checkAnswer(2, rightAnswer);
+				checkAnswer("B", rightAnswer);
 			}
 		});
 
@@ -102,7 +163,7 @@ public class QuestionFragment extends Fragment{
 		layout_ans3.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				checkAnswer(3, rightAnswer);
+				checkAnswer("C", rightAnswer);
 			}
 		});
 		
@@ -110,7 +171,7 @@ public class QuestionFragment extends Fragment{
 		layout_ans4.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				checkAnswer(4, rightAnswer);
+				checkAnswer("D", rightAnswer);
 			}
 		});
 
@@ -118,12 +179,12 @@ public class QuestionFragment extends Fragment{
 		layout_ans5.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				checkAnswer(5, rightAnswer);
+				checkAnswer("E", rightAnswer);
 			}
 		});
 	}
 	
-	private void checkAnswer(int ans, int rightAnswer){
+	private void checkAnswer(String ans, String rightAnswer){
 		Dialog dialog = createDialog();
 		
 		if(ans != rightAnswer){

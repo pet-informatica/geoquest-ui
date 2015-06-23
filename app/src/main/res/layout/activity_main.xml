@@ -3,7 +3,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="example.b.MainActivity"
+    tools:context="br.ufpe.cin.pet.geoquest.MainActivity"
     tools:ignore="MergeRootFrame" >
 
 </FrameLayout>

@@ -1,6 +1,8 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -57,6 +59,9 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
      */
     private CategoryAdapter adapter;
 
+
+    private ProgressDialog progressDialog;
+
     // TODO: Rename and change types of parameters
     public static CategoryFragment newInstance() {
         CategoryFragment fragment = new CategoryFragment();
@@ -76,11 +81,12 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-
         String url ="https://shielded-plains-2193.herokuapp.com/categories/?format=json";
 
         final List<Category> categories = new ArrayList<Category>();
+
+        progressDialog = ProgressDialog.show(getActivity(), "",
+                "Buscando categorias...", true);
 
         Log.i("CategoryFragment", "Fetching categories...");
 
@@ -103,6 +109,10 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
 
                             adapter = new CategoryAdapter(getActivity(), categories);
                             ((AdapterView<ListAdapter>) mListView).setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+
+                            progressDialog.hide();
+
                         }catch(Exception e){
                             Log.e("CategoryFragment", e.getMessage());
                         }
@@ -112,7 +122,7 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
-
+                        Log.e("CategoryFragment", "Error " + error.getMessage());
                     }
                 });
 

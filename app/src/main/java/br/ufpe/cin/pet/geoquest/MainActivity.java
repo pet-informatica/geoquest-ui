@@ -1,6 +1,11 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -8,8 +13,15 @@ import android.view.MenuItem;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+
+import java.net.URL;
 
 public class MainActivity extends Activity implements CategoryFragment.OnFragmentInteractionListener{
+
+    private Bitmap userImage;
+    private ProgressDialog progressDialog;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +30,13 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
         FacebookSdk.sdkInitialize(getApplicationContext());
 
 		setContentView(R.layout.activity_main);
-		
+
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 			.add(R.id.container, new MainFragment()).commit();
 		}
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -41,8 +54,10 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
 
 	public void onBackPressed()
 	{
-		getFragmentManager().beginTransaction()
-		.replace(R.id.container, new MainFragment()).commit();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container, new MainFragment()).commit();
+
+
 	}
 
 	@Override
@@ -64,12 +79,38 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
 			getFragmentManager().beginTransaction()
 			.replace(R.id.container, new MainFragment()).commit();
 			return true;
-		}
+		}else if(id == R.id.menu_logout){
+            LoginManager.getInstance().logOut();
+            Intent loginIntent = new Intent(getApplication(), LoginActivity.class);
+            loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(loginIntent);
+        }
 
 		return super.onOptionsItemSelected(item);
 	}
 
     public void onCategorySelected(String id){
-        Log.i("MainActivity > CategoryFragment", "Selected category " + id);
+        Log.i("CategoryFragment", "Selected category " + id);
+
+        Bundle b = new Bundle();
+        b.putString("category_id", id);
+
+        Fragment f = new QuestionFragment();
+        f.setArguments(b);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, f).commit();
+
     }
+
+
+    public Bitmap getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(Bitmap userImage) {
+        this.userImage = userImage;
+    }
+
+
 }

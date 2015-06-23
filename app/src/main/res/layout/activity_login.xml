@@ -26,17 +26,10 @@
         android:scaleType="fitCenter"
         android:layout_below="@+id/login_logo"
         android:layout_marginLeft="140dp"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/username"
-        android:layout_below="@+id/auth_button"
-        android:layout_alignRight="@+id/auth_button"
-        android:layout_alignEnd="@+id/auth_button" />
+
 
 </RelativeLayout>

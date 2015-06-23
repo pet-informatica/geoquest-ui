@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 
 public class MainFragment extends Fragment{
 
@@ -33,24 +34,37 @@ public class MainFragment extends Fragment{
 
 	Button btn_play;
 
-    private Profile profile;
+    private View rootView;
+
+    private MainActivity activity;
+
+    private ProfileTracker profileTracker;
+
+    private ImageView userImage;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-        profile = Profile.getCurrentProfile();
+		rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        activity = (MainActivity) getActivity();
 
 		getActivity().getActionBar().setTitle("Geoquest");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 
         userName = (TextView) rootView.findViewById(R.id.nameUserPerfil);
-        userName.setText(profile.getName());
 
-        ImageView userImage = (ImageView) rootView.findViewById(R.id.imgUserPerfil);
+        userImage = (ImageView) rootView.findViewById(R.id.imgUserPerfil);
 
-        new FacebookImageTask(userImage).execute(profile.getProfilePictureUri(150,150).toString());
+
+        updateProfile();
+
+        if(activity.getUserImage() != null){
+            userImage.setImageBitmap(activity.getUserImage());
+        }else{
+            updateImage();
+        }
+
 
 		app_ranking = (RelativeLayout) rootView.findViewById (R.id.layoutRanking);
 		app_ranking.setOnClickListener(new View.OnClickListener() {
@@ -90,5 +104,16 @@ public class MainFragment extends Fragment{
 
 		return rootView;
 	}
+
+    public void updateProfile(){
+        Log.i("MainFragment", "Updating user information " + Profile.getCurrentProfile().getName());
+        Profile profile = Profile.getCurrentProfile();
+        userName.setText(profile.getName());
+    }
+
+    public void updateImage(){
+        new FacebookImageTask(userImage, activity).execute(Profile.getCurrentProfile().getProfilePictureUri(150,150).toString());
+    }
+
 
 }

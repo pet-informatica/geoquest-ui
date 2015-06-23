@@ -19,8 +19,10 @@ public class FacebookImageTask extends AsyncTask<String, Void, Void> {
 
     private Bitmap image;
 
-    public FacebookImageTask(ImageView view){
-        this.view = view;
+    private MainActivity activity;
+
+    public FacebookImageTask(ImageView view, MainActivity activity){
+        this.view = view; this.activity = activity;
     }
     @Override
     protected Void doInBackground(String... urls) {
@@ -41,5 +43,6 @@ public class FacebookImageTask extends AsyncTask<String, Void, Void> {
     protected void onPostExecute(Void result){
         view.setImageBitmap(image);
         view.invalidate();
+        activity.setUserImage(image);
     }
 }
