@@ -79,8 +79,8 @@ public class MainFragment extends Fragment{
 		app_statistics.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//				Intent intent = new Intent(MainActivity.this, TestActivity.class);
-				//				startActivity(intent);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.container, new StatsFragment()).commit();
 			}
 		});
 

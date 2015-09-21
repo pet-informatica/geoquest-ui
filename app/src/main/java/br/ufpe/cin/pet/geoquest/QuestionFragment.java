@@ -73,7 +73,7 @@ public class QuestionFragment extends Fragment{
 		
 	}
 
-    private void updateUI(View rootView){
+    private void updateUI(){
 
         Question quest = questions.get(currentQuestion);
 
@@ -85,7 +85,7 @@ public class QuestionFragment extends Fragment{
         answer4.setText(quest.getAlternatives().get(3));
         answer5.setText(quest.getAlternatives().get(4));
 
-        setOnClickListeners(rootView, quest.getCorrectAnswer());
+        setOnClickListeners(getView(), quest.getCorrectAnswer());
     }
 
     private void requestQuestions(final View rootView){
@@ -123,7 +123,7 @@ public class QuestionFragment extends Fragment{
 
                     Log.i("QuestionFragment", "Fetched " + response.length() + " questions.");
 
-                    updateUI(rootView);
+                    updateUI();
 
                 }catch(Exception e){
                     Log.e("QuestionFragment", e.getMessage());
@@ -187,7 +187,7 @@ public class QuestionFragment extends Fragment{
 	private void checkAnswer(String ans, String rightAnswer){
 		Dialog dialog = createDialog();
 		
-		if(ans != rightAnswer){
+		if(!ans.equals(rightAnswer)){
 			LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.answerResultLayout);
 			Button dialogButton = (Button) dialog.findViewById(R.id.btnNext); 
 			TextView ansDialog = (TextView) dialog.findViewById(R.id.answerDialogResult); 
@@ -199,9 +199,23 @@ public class QuestionFragment extends Fragment{
 			ansDialog.setText("RESPOSTA ERRADA");
 			ansDialog.setTextColor(getResources().getColor(R.color.bordeaux));
 			ansDescDialog.setTextColor(getResources().getColor(R.color.bordeaux));
-			ansDescDialog.setText("N�o rolou n�o, amiguinho. Tenta de novo, vai que n�.");
+			ansDescDialog.setText("Não rolou não, amiguinho. Tenta de novo, vai que vai.");
 			imgAns.setImageResource(R.drawable.wrong);
-		}
+		}else{
+            LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.answerResultLayout);
+            Button dialogButton = (Button) dialog.findViewById(R.id.btnNext);
+            TextView ansDialog = (TextView) dialog.findViewById(R.id.answerDialogResult);
+            TextView ansDescDialog = (TextView) dialog.findViewById(R.id.answerDialogDesc);
+            ImageView imgAns = (ImageView) dialog.findViewById(R.id.answerSymbol);
+
+            ll.setBackgroundColor(getResources().getColor(R.color.green));
+            dialogButton.setBackgroundResource(R.drawable.next_question);
+            ansDialog.setText("RESPOSTA CERTA");
+            ansDialog.setTextColor(getResources().getColor(R.color.green));
+            ansDescDialog.setTextColor(getResources().getColor(R.color.green));
+            ansDescDialog.setText("Boa boy. Botando quente.");
+            imgAns.setImageResource(R.drawable.check);
+        }
 		
 		dialog.show();
 	}
@@ -216,6 +230,8 @@ public class QuestionFragment extends Fragment{
 		dialogButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                currentQuestion++;
+                updateUI();
 				dialog.dismiss();
 			}
 		});

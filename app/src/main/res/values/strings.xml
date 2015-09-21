@@ -31,5 +31,14 @@
 	<string name="nextQuestion">PRÓXIMA QUESTÃO</string>
 	<string name="resultQuestion">RESPOSTA CERTA</string>
 	<string name="answerDesc">Parabéns, você está indo muito bem. Continue arrasando!</string>
+    <string name="rankingPositionDesc">no ranking de amigos.</string>
+    <string name="favoriteAreaDesc">é sua área favorita.</string>
+    <string name="jogoConcluido"> do jogo concluído</string>
+    <string name="endQuestionsText">Parabéns! Você concluiu todas as questões. O que deseja fazer agora?</string>
+    <string name="refazerQuestoesText">Refazer questões</string>
+    <string name="retornarMenuText">Retornar ao menu principal</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

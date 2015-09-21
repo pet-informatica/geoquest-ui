@@ -32,4 +32,12 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="CustomProgressBarHorizontal" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/custom_progressbar</item>
+    </style>
+
+    <style name="CustomProgressBarItems" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/custom_progressbar_items</item>
+    </style>
+
 </resources>
