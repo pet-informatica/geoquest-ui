@@ -93,7 +93,7 @@ public class QuestionFragment extends Fragment{
 
         String categoryId = getArguments().getString("category_id");
 
-        String url = "https://shielded-plains-2193.herokuapp.com/questions/?category=" + categoryId;
+        String url = R.string.base_url + "questions/?category=" + categoryId;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>(){
             @Override

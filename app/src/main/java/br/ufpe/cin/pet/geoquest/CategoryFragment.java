@@ -88,7 +88,7 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String url ="https://shielded-plains-2193.herokuapp.com/categories/?format=json";
+        String url = R.string.base_url + "categories/?format=json";
 
         final List<Category> categories = new ArrayList<Category>();
 

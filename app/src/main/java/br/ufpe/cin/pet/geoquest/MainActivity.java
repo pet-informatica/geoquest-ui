@@ -56,8 +56,6 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
 	{
             getFragmentManager().beginTransaction()
                     .replace(R.id.container, new MainFragment()).commit();
-
-
 	}
 
 	@Override

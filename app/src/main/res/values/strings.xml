@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="facebook_app_id">749976745118652</string>
+    <string name="facebook_app_id">1691640874387297</string>
 
     <string name="app_name">geoquest</string>
     <string name="All">All</string>
@@ -37,6 +37,7 @@
     <string name="endQuestionsText">Parabéns! Você concluiu todas as questões. O que deseja fazer agora?</string>
     <string name="refazerQuestoesText">Refazer questões</string>
     <string name="retornarMenuText">Retornar ao menu principal</string>
+    <string name="base_url">http://192.168.235.104:8000/</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

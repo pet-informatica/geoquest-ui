@@ -46,19 +46,19 @@ public class LoginActivity extends Activity {
 
     private LoginButton authButton;
 
-    private TextView username;
-
     private CallbackManager callbackManager;
 
+    private TextView username;
+
     private ProgressDialog progressDialog;
+
+    ProfileTracker tracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-
-        setContentView(R.layout.activity_login);
 
         Log.i("LoginActivity", "User already logged in?");
         if(AccessToken.getCurrentAccessToken() != null){
@@ -75,6 +75,8 @@ public class LoginActivity extends Activity {
 
         callbackManager = CallbackManager.Factory.create();
 
+        setContentView(R.layout.activity_login);
+
         authButton = (LoginButton) findViewById(R.id.auth_button);
         authButton.setReadPermissions(Arrays.asList("public_profile, email, user_friends"));
 
@@ -90,15 +92,17 @@ public class LoginActivity extends Activity {
             public void onSuccess(LoginResult loginResult) {
 
                 Log.i("FacebookLogin", "User logged in with success -> AccessToken:");
-                System.out.println(AccessToken.getCurrentAccessToken().getToken());
+                Log.i("FacebookLogin", loginResult.getAccessToken().getToken());
+                Log.i("FacebookLogin", "User logged in with success -> UserID:");
 
                 Profile.fetchProfileForCurrentAccessToken();
+                AccessToken.setCurrentAccessToken(loginResult.getAccessToken());
+                Profile.setCurrentProfile(Profile.getCurrentProfile());
 
                 progressDialog.show();
 
                 Log.i("LoginActivity", "Registering user to server");
                 waitRegister();
-
             }
 
             @Override
@@ -118,11 +122,14 @@ public class LoginActivity extends Activity {
 
     private void waitRegister(){
 
-        String url = "https://shielded-plains-2193.herokuapp.com/register";
+        String url = getResources().getString(R.string.base_url) + "rest-auth/facebook/";
+
+        Log.i("FacebookLogin", "Enviando token para o servidor");
 
         StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.d("Response", response);
                 Log.e("LoginActivity", "User registered with success");
                 waitProfileLoad();
             }
@@ -132,7 +139,7 @@ public class LoginActivity extends Activity {
                 Log.e("LoginActivity", "Error on user registration");
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
                     Log.e("Error", "TimeoutError");
-                } else if (error instanceof AuthFailureError) {
+              } else if (error instanceof AuthFailureError) {
                     Log.e("Error", "AuthFailureError");
                 } else if (error instanceof ServerError) {
                     Log.e("Error", "ServerError");
@@ -142,15 +149,16 @@ public class LoginActivity extends Activity {
                     Log.e("Error", "ParseError");
                 }
 
-                Log.e("Error", " Code " + error.networkResponse.data);
+                Log.e("Error", " Code " + error.networkResponse);
 
-                Log.e("Error", " Code " + error.networkResponse.statusCode);
+//                Log.e("Error", " Code " + error.networkResponse.statusCode);
             }
         }){
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("access_token", AccessToken.getCurrentAccessToken().getToken());
+                params.put("code", "login");
                 return params;
             }
 
@@ -164,19 +172,22 @@ public class LoginActivity extends Activity {
         RequestSingleton.getInstance(this).addToRequestQueue(sr);
     }
 
-    private void waitProfileLoad(){
+    private void waitProfileLoad() {
 
-        ProfileTracker profileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                Log.i("FacebookLogin", "User profile loaded.");
-                loggedInCallback();
-                progressDialog.hide();
-            }
-        };
+        Log.i("FacebookLogin", "Aguardando carregamento do perfil.");
+//        loggedInCallback();
 
-        profileTracker.startTracking();
+            tracker = new ProfileTracker() {
+                @Override
+                protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                    Log.i("FacebookLogin", "User profile has changed.");
+                }
+            };
 
+            loggedInCallback();
+            progressDialog.hide();
+
+            tracker.startTracking();
     }
 
     public void loggedInCallback(){
@@ -213,5 +224,11 @@ public class LoginActivity extends Activity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AccessToken.setCurrentAccessToken(null);
+        Profile.setCurrentProfile(null);
+        tracker.stopTracking();
+    }
 }
