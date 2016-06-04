@@ -158,7 +158,7 @@ public class LoginActivity extends Activity {
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("access_token", AccessToken.getCurrentAccessToken().getToken());
-                params.put("code", "login");
+                // params.put("code", "login");
                 return params;
             }
 
