@@ -13,7 +13,7 @@ public class CreditsFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.activity_credits, container,
 				false);
 		
-		getActivity().getActionBar().setTitle("Cr�ditos");
+		getActivity().getActionBar().setTitle("Créditos");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		return rootView;
