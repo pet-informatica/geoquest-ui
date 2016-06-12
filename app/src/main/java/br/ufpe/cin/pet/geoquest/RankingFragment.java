@@ -1,18 +1,9 @@
 package br.ufpe.cin.pet.geoquest;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Vector;
-import java.util.concurrent.ExecutionException;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.service.notification.NotificationListenerService;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,37 +14,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.app.Fragment;
-import android.widget.TextView;
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Cache;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Network;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.facebook.AccessToken;
-import com.android.volley.toolbox.HurlStack;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import br.ufpe.cin.pet.geoquest.classes.Raking;
 
@@ -61,8 +21,6 @@ public class RankingFragment extends Fragment implements
 		SearchView.OnQueryTextListener {
 
 	private AdapterRaking adapter;
-
-	//Map<String, String> data;
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
@@ -90,6 +48,7 @@ public class RankingFragment extends Fragment implements
 		try {
 			items = rr.get();
 		} catch (Exception e) {
+			Log.i("ERROR", "Não foi possível obter o ranking de seus amigos");
 			e.printStackTrace();
 		}
 
