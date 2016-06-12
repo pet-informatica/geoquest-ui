@@ -20,6 +20,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import br.ufpe.cin.pet.geoquest.Utils.CropImage;
 import br.ufpe.cin.pet.geoquest.classes.Raking;
 
 public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
@@ -85,9 +86,13 @@ public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
 			viewHolder.number.setText(raking.getNumber());
 			raking.setColor();
 			viewHolder.number.setTextColor(view.getResources().getColor(raking.getColor()));
-			viewHolder.photo.setImageBitmap(getCroppedBitmap(raking.getPicture(), 50));
-			viewHolder.name.setText(raking.getName());
 			viewHolder.number.setTextSize(24);
+
+			CropImage cim = new CropImage(50, raking.getPicture());
+			viewHolder.photo.setImageBitmap(cim.getCroppedBitmap());
+
+			viewHolder.name.setText(raking.getName());
+
 		}
 		return view;
 	}
@@ -128,33 +133,5 @@ public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
 			}
 		}
 
-	}
-
-	public static Bitmap getCroppedBitmap(Bitmap bmp, int raio) {
-		Bitmap sbmp;
-		if(bmp.getWidth() != raio || bmp.getHeight() != raio) {
-			sbmp = Bitmap.createScaledBitmap(bmp, raio, raio, false);
-		} else {
-			sbmp = bmp;
-		}
-
-		Bitmap output = Bitmap.createBitmap(sbmp.getWidth(),
-				sbmp.getHeight(), Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(output);
-
-		final Paint paint = new Paint();
-		final Rect rect = new Rect(0, 0, sbmp.getWidth(), sbmp.getHeight());
-
-		paint.setAntiAlias(true);
-		paint.setFilterBitmap(true);
-		paint.setDither(true);
-		canvas.drawARGB(0, 0, 0, 0);
-		paint.setColor(Color.parseColor("#BAB399"));
-		canvas.drawCircle(sbmp.getWidth() / 2+0.7f, sbmp.getHeight() / 2+0.7f,
-				sbmp.getWidth() / 2+0.1f, paint);
-		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-		canvas.drawBitmap(sbmp, rect, rect, paint);
-
-		return output;
 	}
 }
