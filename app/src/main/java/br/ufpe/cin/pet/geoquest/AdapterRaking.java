@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +20,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import br.ufpe.cin.pet.geoquest.Utils.CropImage;
 import br.ufpe.cin.pet.geoquest.classes.Raking;
 
 public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
@@ -78,9 +86,13 @@ public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
 			viewHolder.number.setText(raking.getNumber());
 			raking.setColor();
 			viewHolder.number.setTextColor(view.getResources().getColor(raking.getColor()));
-			viewHolder.photo.setImageResource(R.drawable.asset_avatar);
-			viewHolder.name.setText(raking.getName());
 			viewHolder.number.setTextSize(24);
+
+			CropImage cim = new CropImage(50, raking.getPicture());
+			viewHolder.photo.setImageBitmap(cim.getCroppedBitmap());
+
+			viewHolder.name.setText(raking.getName());
+
 		}
 		return view;
 	}

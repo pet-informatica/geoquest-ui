@@ -1,5 +1,7 @@
 package br.ufpe.cin.pet.geoquest.classes;
 
+import android.graphics.Bitmap;
+
 import br.ufpe.cin.pet.geoquest.R;
 
 /**
@@ -9,10 +11,12 @@ public class Raking {
     String number;
     String name;
     int color;
+    Bitmap picture;
 
-    public Raking(String number, String name) {
+    public Raking(String number, String name, Bitmap bm) {
         this.number = number;
         this.name = name;
+        this.picture = bm;
     }
 
     public String getNumber() {
@@ -40,5 +44,13 @@ public class Raking {
 
     public int getColor() {
         return this.color;
+    }
+
+    public void setPicture(Bitmap bm) {
+        this.picture = bm;
+    }
+
+    public Bitmap getPicture() {
+        return this.picture;
     }
 }

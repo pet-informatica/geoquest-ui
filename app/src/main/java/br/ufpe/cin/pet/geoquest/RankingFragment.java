@@ -1,12 +1,12 @@
 package br.ufpe.cin.pet.geoquest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,7 @@ import br.ufpe.cin.pet.geoquest.classes.Raking;
 
 public class RankingFragment extends Fragment implements
 		SearchView.OnQueryTextListener {
+
 	private AdapterRaking adapter;
 
 	@Override
@@ -32,22 +33,24 @@ public class RankingFragment extends Fragment implements
 		return false;
 	}
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_ranking, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+		View rootView = inflater.inflate(R.layout.fragment_ranking, container, false);
 
 		getActivity().getActionBar().setTitle("Ranking");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		Raking[] person = new Raking[5];
-		person[0] = new Raking("1", "Ruy Brito");
-		person[1] = new Raking("2", "Bruno Soares");
-		person[2] = new Raking("3", "Marcela Azevedo");
-		person[3] = new Raking("4", "Gabi Diva");
-		person[4] = new Raking("5", "Marlon Reghert");
+		RakingRequest rr = new RakingRequest(getResources().getString(R.string.base_url)+"users/rank/");
+		rr.execute();
 
-		List<Raking> items = new ArrayList<Raking>(Arrays.asList(person));
+		List<Raking> items = new ArrayList<Raking>();
+
+		try {
+			items = rr.get();
+		} catch (Exception e) {
+			Log.i("ERROR", "Não foi possível obter o ranking de seus amigos");
+			e.printStackTrace();
+		}
 
 		adapter = new AdapterRaking(getActivity().getApplicationContext(),items);
 
