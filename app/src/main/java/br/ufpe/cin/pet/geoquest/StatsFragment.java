@@ -98,9 +98,10 @@ public class StatsFragment extends Fragment{
                     stats.favoriteArea = jsonResponse.getString(Stats.favoriteAreaKey);
                     stats.percentageCompleted = jsonResponse.getInt(Stats.percentageCompletedKey);
 
-
+                
                     JSONObject categoriesResponse = jsonResponse.getJSONObject(Stats.areasKey);
                     int categorie_percentage;
+                    stats.areas.clear();
                     for(String categorie : Stats.CATEGORIES){
                         categorie_percentage = 0;
                         if(categoriesResponse.has(categorie.toLowerCase())){
