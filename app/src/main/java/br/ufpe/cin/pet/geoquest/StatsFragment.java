@@ -1,6 +1,7 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -38,19 +39,35 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.facebook.AccessToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.ufpe.cin.pet.geoquest.classes.Stats;
 
 public class StatsFragment extends Fragment{
+
+    public static Stats stats = new Stats();
+
+
+    private ProgressDialog progressDialog;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_stats, container, false);
 
+        progressDialog = new ProgressDialog(rootView.getContext());
+        progressDialog.setMessage("Carregando...");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+
         getActivity().getActionBar().setTitle("Geoquest");
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 //{int posicao, string categoria, int porcentagem, lista<string, int> categorias_porcentagem}
-        getStatistics();
+        getStatistics(rootView);
+
+/*
         Stats.PairAreaPercentage pairGeo = new Stats.PairAreaPercentage("Geologia", 67);
         Stats.PairAreaPercentage pairHidro = new Stats.PairAreaPercentage("Hidrografia", 35);
         Stats.PairAreaPercentage pairPol = new Stats.PairAreaPercentage("Política", 88);
@@ -59,31 +76,15 @@ public class StatsFragment extends Fragment{
         pairs.add(pairGeo);
         pairs.add(pairHidro);
         pairs.add(pairPol);
-
-        Stats stats = new Stats(2, "Geologia", 56, pairs);
-
-        TextView rankingPosition = (TextView) rootView.findViewById(R.id.rankingPosition);
-        TextView favoriteArea = (TextView) rootView.findViewById(R.id.favoriteArea);
-        TextView progressBarText = (TextView) rootView.findViewById(R.id.progressBarText);
-        ProgressBar progressBarPercentageCompleted = (ProgressBar) rootView.findViewById(R.id.progressBarPercentageCompleted);
-
-        rankingPosition.setText(stats.rankingPos + "° posição");
-        favoriteArea.setText(stats.favoriteArea);
-        progressBarText.setText(stats.percentageCompleted + "% ");
-        progressBarPercentageCompleted.setProgress(stats.percentageCompleted);
-
-        AdapterStats adapter = new AdapterStats(getActivity().getApplicationContext(), stats.areas);
-
-        ListView listView = (ListView) rootView.findViewById(R.id.listViewStats);
-        listView.setAdapter(adapter);
+*/
 
         return rootView;
     }
 
 
-    private void getStatistics(){
+    private void getStatistics(final View rootView){
 
-        String url = getResources().getString(R.string.base_url) + "statistics/";
+        String url = "http://www.mocky.io/v2/575da6b90f0000b72222ae2f";
 
         Log.i("Statistics", "Enviando requisição das statistics");
 
@@ -91,7 +92,31 @@ public class StatsFragment extends Fragment{
             @Override
             public void onResponse(String response) {
                 Log.d("Response", response);
-             //   waitProfileLoad();
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    stats.rankingPos = jsonResponse.getInt(Stats.rankingPosKey);
+                    stats.favoriteArea = jsonResponse.getString(Stats.favoriteAreaKey);
+                    stats.percentageCompleted = jsonResponse.getInt(Stats.percentageCompletedKey);
+
+
+                    JSONObject categoriesResponse = jsonResponse.getJSONObject(Stats.areasKey);
+                    int categorie_percentage;
+                    for(String categorie : Stats.CATEGORIES){
+                        categorie_percentage = 0;
+                        if(categoriesResponse.has(categorie.toLowerCase())){
+                            categorie_percentage = categoriesResponse.getInt(categorie.toLowerCase());
+                        }
+                        stats.areas.add(new Stats.PairAreaPercentage(categorie,categorie_percentage));
+                    }
+
+                    populateViewWithStats(rootView);
+
+                    progressDialog.hide();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("ParserError", "Can't parse response into json object");
+                }
+                //   waitProfileLoad();
                 // response.
 
 
@@ -119,7 +144,7 @@ public class StatsFragment extends Fragment{
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
-                // botar a token do servidor auqi
+                
                 return params;
             }
 
@@ -133,5 +158,27 @@ public class StatsFragment extends Fragment{
         RequestSingleton.getInstance(this.getActivity()).addToRequestQueue(sr);
     }
 
+
+    private void populateViewWithStats(final View rootView){
+        // jsonResponse.get
+
+        TextView rankingPosition = (TextView) rootView.findViewById(R.id.rankingPosition);
+        TextView favoriteArea = (TextView) rootView.findViewById(R.id.favoriteArea);
+        TextView progressBarText = (TextView) rootView.findViewById(R.id.progressBarText);
+        ProgressBar progressBarPercentageCompleted = (ProgressBar) rootView.findViewById(R.id.progressBarPercentageCompleted);
+
+        rankingPosition.setText(stats.rankingPos + "° posição");
+        favoriteArea.setText(stats.favoriteArea);
+        progressBarText.setText(stats.percentageCompleted + "% ");
+        progressBarPercentageCompleted.setProgress(stats.percentageCompleted);
+
+        AdapterStats adapter = new AdapterStats(getActivity().getApplicationContext(), stats.areas);
+
+        stats.sortAreas();
+
+
+        ListView listView = (ListView) rootView.findViewById(R.id.listViewStats);
+        listView.setAdapter(adapter);
+    }
 
 }

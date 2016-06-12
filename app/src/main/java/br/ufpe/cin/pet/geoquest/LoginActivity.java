@@ -35,6 +35,10 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,6 +90,7 @@ public class LoginActivity extends Activity {
         progressDialog.setIndeterminate(true);
 
         // Callback registration
+
         authButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
             @Override
@@ -122,14 +127,19 @@ public class LoginActivity extends Activity {
 
     private void waitRegister(){
 
-        String url = getResources().getString(R.string.base_url) + "rest-auth/facebook/";
-
         Log.i("FacebookLogin", "Enviando token para o servidor");
 
-        StringRequest sr = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        StringRequest sr = new StringRequest(Request.Method.POST, getResources().getString(R.string.facebook_auth_url), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("Response", response);
+                try {
+                    JSONObject j = new JSONObject(response);
+                    Config.key = j.getString("key");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("error", "JSON can't be read from response");
+                }
+                //Log.d("Response", response.toString());
                 Log.e("LoginActivity", "User registered with success");
                 waitProfileLoad();
             }
@@ -158,6 +168,7 @@ public class LoginActivity extends Activity {
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<String, String>();
                 params.put("access_token", AccessToken.getCurrentAccessToken().getToken());
+                Log.e("param[acess_token]", AccessToken.getCurrentAccessToken().getToken());
                 // params.put("code", "login");
                 return params;
             }
@@ -175,7 +186,6 @@ public class LoginActivity extends Activity {
     private void waitProfileLoad() {
 
         Log.i("FacebookLogin", "Aguardando carregamento do perfil.");
-//        loggedInCallback();
 
             tracker = new ProfileTracker() {
                 @Override
