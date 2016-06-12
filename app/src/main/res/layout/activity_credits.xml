@@ -13,22 +13,31 @@
         android:layout_marginTop="-30px"
         android:src="@drawable/geoquest_creditos" />
 
-    <ImageView
-        android:id="@+id/logo_petInformatica"
-        android:layout_below="@id/geoquestCreditosBanner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-15px"
-        android:src="@drawable/logo_petinformatica" />
-    
-    <!-- Next image's src will be changed in the future -->
-    
+
     <ImageView
         android:id="@+id/logo_petGeografia"
-        android:layout_below="@id/logo_petInformatica"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="250px"
+        android:layout_marginBottom="40dp"
+        android:minHeight="200px"
+        android:minWidth="300px"
+        android:src="@drawable/my_image"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-15px"
-        android:src="@drawable/logo_petinformatica" />
+        android:id="@+id/logo_petinfo"
+        android:src="@drawable/my_image3"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:layout_marginBottom="300px"
+        android:layout_alignParentStart="false"
+        android:layout_below="@+id/geoquestCreditosBanner"
+        android:layout_alignParentBottom="true" />
+
 
 </RelativeLayout>

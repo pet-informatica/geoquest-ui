@@ -17,8 +17,8 @@
         android:layout_marginTop="10dp"
         android:padding="0dp"
         android:background="@drawable/div_down"
-        android:text="@string/insideAbout" />
-    
+        android:text="Sobre" />
+
     <TextView
         android:id="@+id/aboutGeoquestText"
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:paddingBottom="10dp"
         android:lineSpacingMultiplier="1.2"
         android:background="@color/white"
-        android:text="@string/insideAboutText"/>
+        android:text="O Geoquest é um aplicativo educacional sem fins lucrativos desenvolvido pelo PET-Informática em parceria com o PET-Geografia, ambos da Universidade Federal de Pernambuco (UFPE)"/>
 
     <Button
         android:id="@+id/howWorks"
@@ -38,9 +38,9 @@
         android:layout_marginTop="10dp"
         android:padding="0dp"
         android:background="@drawable/div_down"
-        android:text="@string/insidehowWorks" />
-    
-     <TextView
+        android:text="Como funciona?" />
+
+    <TextView
         android:id="@+id/howWorkstText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
         android:paddingBottom="10dp"
         android:lineSpacingMultiplier="1.2"
         android:background="@color/white"
-        android:text="@string/insideWorksText"/>
+        android:text="O jogo consiste num conjunto de perguntas a serem respondidas de acordo com os seus conhecimentos em geografia. Você pode conquistar badges e até mesmo comparar seu desempenho com os seus amigos!"/>
 
     <Button
         android:id="@+id/ReportProblems"
@@ -59,9 +59,9 @@
         android:layout_marginTop="10dp"
         android:padding="0dp"
         android:background="@drawable/div_down"
-        android:text="@string/insidereportProblems" />
-    
-     <TextView
+        android:text="Problemas?" />
+
+    <TextView
         android:id="@+id/reportProblemsText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,6 +71,6 @@
         android:paddingBottom="10dp"
         android:lineSpacingMultiplier="1.2"
         android:background="@color/white"
-        android:text="@string/insideReportText"/>
+        android:text="Se você teve qualquer problema durante a instalação ou uso do aplicativo entre em contato através do e-mail: petinformatica-l@cin.ufpe.br."/>
 
 </LinearLayout>
