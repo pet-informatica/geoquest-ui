@@ -109,7 +109,7 @@ public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
 				List<Raking> filteredItems = new ArrayList<Raking>();
 
 				for (Raking r : originalData) {
-					if (r.getName().toUpperCase().startsWith(constraint.toString().toUpperCase())) {
+					if (r.getName().toUpperCase().contains(constraint.toString().toUpperCase())) {
 						filteredItems.add(r);
 					}
 				}
