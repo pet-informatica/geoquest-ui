@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -23,6 +24,7 @@ import br.ufpe.cin.pet.geoquest.classes.Raking;
 
 /**
  * Created by rbb3 on 06/06/16.
+ * Modified by bss3 on 06/13/16.
  */
 public class RakingRequest extends AsyncTask<String, Void, List<Raking> > {
 
@@ -39,6 +41,8 @@ public class RakingRequest extends AsyncTask<String, Void, List<Raking> > {
 
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpget = new HttpGet(url);
+        httpget.setHeader("Authorization", "token " + Config.key);
+        Log.i("TOKEN", Config.key);
 
         String sresponse = "";
         this.response = null;
@@ -55,15 +59,14 @@ public class RakingRequest extends AsyncTask<String, Void, List<Raking> > {
         List<Raking> items = new ArrayList<Raking>();
 
         try {
-            JSONObject obj = new JSONObject(sresponse);
-            JSONArray arr = obj.getJSONArray("rank");
+            JSONArray obj = new JSONArray(sresponse);
             Bitmap bm = null;
 
             InputStream in;
 
-            int tam = arr.length();
+            int tam = obj.length();
             for(int i = 0; i < tam; i++) {
-                JSONObject object = arr.getJSONObject(i);
+                JSONObject object = obj.getJSONObject(i);
 
                 String nome = object.getString("name");
                 String foto = object.getString("picture");
