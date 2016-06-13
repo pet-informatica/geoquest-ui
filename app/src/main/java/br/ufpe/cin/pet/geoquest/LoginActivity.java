@@ -82,7 +82,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         authButton = (LoginButton) findViewById(R.id.auth_button);
-        authButton.setReadPermissions(Arrays.asList("public_profile, email, user_friends"));
+        authButton.setReadPermissions(Arrays.asList("public_profile, email, user_friends, publish_actions"));
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Carregando...");
