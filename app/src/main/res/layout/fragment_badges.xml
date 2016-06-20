@@ -26,8 +26,7 @@
                 <ImageView
                     android:id="@+id/userBadgesImg"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/asset_avatar" />
+                    android:layout_height="match_parent"/>
 
                 <ImageView
                     android:id="@+id/userBadgesImgBorda"
@@ -88,8 +87,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4.25"
+        android:layout_height="78dp"
         android:background="@color/white" >
 
         <RelativeLayout
@@ -125,107 +123,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_star_badges" />
+
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutBadges"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/titleBadges"
-                android:padding="10dp" >
-
-                <LinearLayout
-                    android:id="@+id/layoutBadges1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal" >
-
-                    <ImageView
-                        android:id="@+id/badge1"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:alpha="0.2"
-                        android:src="@drawable/badge_caseiro" />
-
-                    <ImageView
-                        android:id="@+id/badge2"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:alpha="0.2"
-                        android:src="@drawable/badge_dev" />
-
-                    <ImageView
-                        android:id="@+id/badge3"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:alpha="0.2"
-                        android:src="@drawable/badge_flash" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layoutBadges2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/layoutBadges1"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal" >
-
-                    <ImageView
-                        android:id="@+id/badge4"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:alpha="0.2"
-                        android:src="@drawable/badge_caseiro" />
-
-                    <ImageView
-                        android:id="@+id/badge5"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:alpha="0.2"
-                        android:src="@drawable/badge_dev" />
-
-                    <ImageView
-                        android:id="@+id/badge6"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:alpha="0.2"
-                        android:src="@drawable/badge_flash" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layoutBadges3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/layoutBadges2"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal" >
-
-                    <ImageView
-                        android:id="@+id/badge7"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:alpha="0.2"
-                        android:src="@drawable/badge_caseiro" />
-
-                    <ImageView
-                        android:id="@+id/badge8"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:alpha="0.2"
-                        android:src="@drawable/badge_dev" />
-
-                    <ImageView
-                        android:id="@+id/badge9"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:alpha="0.2"
-                        android:src="@drawable/badge_flash" />
-                </LinearLayout>
-            </RelativeLayout>
         </RelativeLayout>
+
     </ScrollView>
 
 </LinearLayout>

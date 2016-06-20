@@ -70,10 +70,11 @@ public class RakingRequest extends AsyncTask<String, Void, List<Raking> > {
 
                 String nome = object.getString("name");
                 String foto = object.getString("picture");
+                int pontuacao = object.getInt("points");
 
                 in = new URL(foto).openStream();
                 bm = BitmapFactory.decodeStream(in);
-                Raking raking = new Raking(Integer.toString(i+1), nome, bm);
+                Raking raking = new Raking(Integer.toString(i+1), nome, bm, pontuacao);
                 items.add(raking);
             }
 

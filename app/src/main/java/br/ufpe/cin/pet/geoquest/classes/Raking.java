@@ -12,11 +12,13 @@ public class Raking {
     String name;
     int color;
     Bitmap picture;
+    int pontuacao;
 
-    public Raking(String number, String name, Bitmap bm) {
+    public Raking(String number, String name, Bitmap bm, int points) {
         this.number = number;
         this.name = name;
         this.picture = bm;
+        this.pontuacao = points;
     }
 
     public String getNumber() {
@@ -52,5 +54,9 @@ public class Raking {
 
     public Bitmap getPicture() {
         return this.picture;
+    }
+
+    public int getPoints() {
+        return this.pontuacao;
     }
 }
