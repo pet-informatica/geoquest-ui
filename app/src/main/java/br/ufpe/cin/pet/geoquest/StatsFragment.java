@@ -48,7 +48,6 @@ public class StatsFragment extends Fragment{
 
     public static Stats stats = new Stats();
 
-
     private ProgressDialog progressDialog;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
