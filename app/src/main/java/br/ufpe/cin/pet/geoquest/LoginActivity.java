@@ -35,7 +35,7 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
+import com.facebook.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,6 +65,8 @@ public class LoginActivity extends Activity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         Log.i("LoginActivity", "User already logged in?");
+        Log.i("LoginActivity", "Config.key: " + Config.key);
+        Log.i("LoginActivity", "LoggedIn: " + isLoggedIn());
         if(AccessToken.getCurrentAccessToken() != null){
             Log.i("LoginActivity", "User already logged.");
             if(Profile.getCurrentProfile() == null) {
@@ -82,7 +84,14 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         authButton = (LoginButton) findViewById(R.id.auth_button);
+        //Session session = Session.getActiveSession();
+        //Log.i("LoginActivity", ""+session.getAccessToken().getToken());
+
+        Log.i("LoginActivity", ""+AccessToken.getCurrentAccessToken());
+
         authButton.setReadPermissions(Arrays.asList("public_profile, email, user_friends, publish_actions"));
+
+
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Carregando...");
@@ -125,6 +134,11 @@ public class LoginActivity extends Activity {
 
     }
 
+    public static boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
+    }
+
     private void waitRegister(){
 
         Log.i("FacebookLogin", "Enviando token para o servidor");
@@ -143,6 +157,9 @@ public class LoginActivity extends Activity {
                 Log.e("LoginActivity", "User registered with success");
                 waitProfileLoad();
             }
+
+
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -236,6 +253,7 @@ public class LoginActivity extends Activity {
 
     @Override
     public void onDestroy() {
+        Log.e("Login Activity", "onDestroy running");
         super.onDestroy();
         AccessToken.setCurrentAccessToken(null);
         Profile.setCurrentProfile(null);
