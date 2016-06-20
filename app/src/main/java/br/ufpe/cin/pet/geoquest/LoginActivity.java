@@ -169,6 +169,7 @@ public class LoginActivity extends Activity {
               } else if (error instanceof AuthFailureError) {
                     Log.e("Error", "AuthFailureError");
                 } else if (error instanceof ServerError) {
+                    Log.e("Error", error.getStackTrace().toString());
                     Log.e("Error", "ServerError");
                 } else if (error instanceof NetworkError) {
                     Log.e("Error", "NetworkError");

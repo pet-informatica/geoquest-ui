@@ -24,6 +24,7 @@ import br.ufpe.cin.pet.geoquest.Utils.CropImage;
 import br.ufpe.cin.pet.geoquest.classes.Raking;
 
 public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
+
 	private List<Raking> originalData = null;
 	private List<Raking> filteredData = null;
 	private LayoutInflater mInflater;
@@ -56,6 +57,7 @@ public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
 		protected TextView number;
 		protected ImageView photo;
 		protected TextView name;
+		protected TextView score;
 	}
 
 	@Override
@@ -73,6 +75,7 @@ public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
 					.findViewById(R.id.list_item_raking_imageView);
 			viewHolder.name = (TextView) view
 					.findViewById(R.id.list_item_raking_name_textView);
+			viewHolder.score = (TextView) view.findViewById(R.id.item_score);
 
 			view.setTag(viewHolder);
 		} else {
@@ -92,6 +95,7 @@ public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
 			viewHolder.photo.setImageBitmap(cim.getCroppedBitmap());
 
 			viewHolder.name.setText(raking.getName());
+			viewHolder.score.setText(raking.getPoints()+"");
 
 		}
 		return view;
