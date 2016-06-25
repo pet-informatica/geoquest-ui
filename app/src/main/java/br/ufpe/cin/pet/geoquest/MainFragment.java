@@ -109,6 +109,7 @@ public class MainFragment extends Fragment{
         Log.i("MainFragment", "Updating user information " + Profile.getCurrentProfile().getName());
         Profile profile = Profile.getCurrentProfile();
         userName.setText(profile.getName());
+		activity.setUserName(profile.getName());
     }
 
     public void updateImage(){
