@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -41,6 +42,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -52,13 +54,12 @@ import br.ufpe.cin.pet.geoquest.classes.Stats;
 public class MyBadgesFragment extends Fragment {
 
 	private ProgressDialog progressDialog;
-	private String picture;
-	private String username;
 	private String area;
 	private double percentage;
 	private String[] badge_tipos = {"caseiro", "flash", "dev", "badge3", "badge4",
 									"badge6", "badge7", "lerdo", "badge9"};
-	private Map<String, Number> has_badge;
+	private List<Badge> lista;
+	private AdapterBadge adapter;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,40 +75,12 @@ public class MyBadgesFragment extends Fragment {
 
 		getBadges(rootView);
 
-		/*
-		String name = "Maria Gabriela";
-		getActivity().getActionBar().setTitle(name);
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-		
-        Vector<String> badges = new Vector<String>();
-        badges.add("caseiro");
-        badges.add("flash");
-        badges.add("lerdo");
-        badges.add("dev");
-             
-        
-        for (int i = 0; i < badges.size(); ++i){
-        	final ImageView img = (ImageView) rootView.findViewById(getIdBadge(badges.get(i)));
-        	img.setAlpha(1f);
-        	final String desc = getBadgeDesc(badges.get(i));
-        	
-        	img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                	AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-            		dialog.setMessage(desc);
-            		dialog.show();
-                }
-            });  
-        }
-        */
-
 		return rootView;
     }
 
 	private void getBadges(final View rootView) {
 
-		String url = "http://www.mocky.io/v2/57662d790f0000be0ae36fb0";
+		String url = "http://www.mocky.io/v2/576caef810000027005fdb69";
 
 		Log.i("Badges", "Enviando requisição das badges");
 
@@ -117,16 +90,26 @@ public class MyBadgesFragment extends Fragment {
 				Log.d("Response", response);
 				try {
 					JSONObject jsonResponse = new JSONObject(response);
-					picture = jsonResponse.getString("picture");
-					username = jsonResponse.getString("name");
 					area = jsonResponse.getString("area");
 					percentage = jsonResponse.getDouble("percentage");
 					JSONObject badgeresponse = jsonResponse.getJSONObject("badges");
 
-					for(String categorie : badge_tipos) {
-						if (badgeresponse.has(categorie)) has_badge.put(categorie, 1);
-						else has_badge.put(categorie, 0);
+					Badge badge = null;
+					List<Badge> list = new ArrayList<Badge>();
+					boolean found;
+					for(int i = 0; i < badge_tipos.length; i++) {
+						found = false;
+						for(int j = 0; j < badgeresponse.length(); j++) {
+							if (badgeresponse.get((j+1)+"").toString().equalsIgnoreCase(badge_tipos[i])) {
+								badge = new Badge(getIdBadgeImg(badge_tipos[i]), badge_tipos[i], "Voce possui essa badge!", true);
+								found = true;
+								break;
+							}
+						}
+						if (found == false) badge = new Badge(getIdBadgeImg(badge_tipos[i]), "Desconhecido", "Voce não possui essa badge!", false);
+						list.add(badge);
 					}
+					lista = list;
 
 					populateView(rootView);
 
@@ -171,38 +154,29 @@ public class MyBadgesFragment extends Fragment {
 
 	}
 
-	class ViewHolder {
-		protected TextView title;
-		protected TextView descript;
-		protected ImageView token;
-	}
+	private void populateView(View rootView) {
 
-	private void populateView(final View rootView) {
+		MainActivity mainActivity = (MainActivity)getActivity();
 
-		getActivity().getActionBar().setTitle(username);
+		getActivity().getActionBar().setTitle(mainActivity.getUserName());
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		ImageView userImg = (ImageView) rootView.findViewById(R.id.userBadgesImgBorda);
+		ImageView userImgBorda = (ImageView) rootView.findViewById(R.id.userBadgesImgBorda);
+		ImageView userImg = (ImageView) rootView.findViewById(R.id.userBadgesImg);
 		TextView description = (TextView) rootView.findViewById(R.id.descUserBadges);
 		ImageView star1 = (ImageView) rootView.findViewById(R.id.star1Badges);
 		ImageView star2 = (ImageView) rootView.findViewById(R.id.star2Badges);
 		ImageView star3 = (ImageView) rootView.findViewById(R.id.star3Badges);
 		ImageView star4 = (ImageView) rootView.findViewById(R.id.star4Badges);
 		ImageView star5 = (ImageView) rootView.findViewById(R.id.star5Badges);
+		ListView listView = (ListView) rootView.findViewById(R.id.listViewBadges);
 
-		try {
-			InputStream in = new URL(picture).openStream();
-			Bitmap bm = BitmapFactory.decodeStream(in);
-			CropImage cim = new CropImage(200, bm);
-			userImg.setImageBitmap(cim.getCroppedBitmap());
-		} catch (MalformedURLException malex) {
-			Log.i("Bitmap", "Erro na formatação do bitmap");
-			malex.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Bitmap bm = mainActivity.getUserImage();
 
-		description.setText("Especialista em "+area);
+		CropImage cim = new CropImage(200, bm);
+		userImg.setImageBitmap(cim.getCroppedBitmap());
+
+		description.setText("Especialista em " + area);
 		if (percentage >= 20.0) star1.setImageResource(R.drawable.star_full);
 		else star1.setImageResource(R.drawable.star);
 		if (percentage >= 40.0) star2.setImageResource(R.drawable.star_full);
@@ -213,6 +187,35 @@ public class MyBadgesFragment extends Fragment {
 		else star4.setImageResource(R.drawable.star);
 		if (percentage == 100.0) star5.setImageResource(R.drawable.star_full);
 		else star5.setImageResource(R.drawable.star);
+
+
+		adapter = new AdapterBadge(getActivity().getApplicationContext(), lista);
+		listView.setAdapter(adapter);
+
+		/*
+		View view = null;
+		for(int i = 0; i < badge_tipos.length; i++) {
+			ViewHolder viewHolder = new ViewHolder();
+
+			viewHolder.descript = (TextView) rootView.findViewById(R.id.badge_description);
+			viewHolder.title = (TextView) rootView.findViewById(R.id.badge_title);
+			viewHolder.token = (ImageView) rootView.findViewById(R.id.Bagde_image);
+
+			if (has_badge[i] == 1) {
+				viewHolder.descript.setText("Você possui essa Badge!");
+				viewHolder.title.setText(badge_tipos[i].toUpperCase()+"");
+				viewHolder.token.setImageResource(getIdBadgeImg(badge_tipos[i]));
+			} else {
+				viewHolder.descript.setText("Acerte mais questões para conquistar essa badge!");
+				viewHolder.title.setText("Badge desconhecida");
+				viewHolder.token.setImageResource(getIdBadgeImg(badge_tipos[i]));
+				viewHolder.token.setImageAlpha(2);
+			}
+
+			view.setTag(viewHolder);
+			listView.addFooterView(view);
+		}
+		*/
 	}
 
 	/*
@@ -229,6 +232,8 @@ public class MyBadgesFragment extends Fragment {
 		if (x.equals("badge9")) return R.id.badge9;
 		return 0;
 	}
+
+	*/
 	
 	public static int getIdBadgeImg(String badge){
 		if (badge.equals("caseiro")) return R.drawable.badge_caseiro;
@@ -237,6 +242,8 @@ public class MyBadgesFragment extends Fragment {
 		if (badge.equals("dev")) return R.drawable.badge_dev;
 		return 0;
 	}
+
+	/*
 	
 	public static String getNomeBadge(String badge){
 		if (badge.equals("caseiro")) return "\"Caseiro\"";

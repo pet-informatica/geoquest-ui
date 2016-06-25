@@ -21,6 +21,7 @@ import java.net.URL;
 public class MainActivity extends Activity implements CategoryFragment.OnFragmentInteractionListener{
 
     private Bitmap userImage;
+	private String userName;
     private ProgressDialog progressDialog;
 
     @Override
@@ -110,5 +111,8 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
         this.userImage = userImage;
     }
 
+	public String getUserName() { return this.userName; }
+
+	public void setUserName(String userName) {this.userName = userName; }
 
 }

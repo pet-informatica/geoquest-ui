@@ -8,11 +8,13 @@ public class Badge {
     String nome;
     String descricao;
     int id;
+    boolean possui;
 
-    public Badge(int id, String nome, String descript) {
+    public Badge(int id, String nome, String descript, boolean possui) {
         this.id = id;
         this.nome = nome;
         this.descricao = descript;
+        this.possui = possui;
     }
 
     public void setId(int id) {
@@ -20,15 +22,17 @@ public class Badge {
     }
 
     public int getId() {
-        return this.id;
+        return id;
     }
+
+    public boolean temBadge() {return possui; }
 
     public void setNome(String nome) {
         this.nome = nome;
     }
 
     public String getNome() {
-        return this.nome;
+        return nome;
     }
 
     public void setDescricao(String desc) {
@@ -36,6 +40,6 @@ public class Badge {
     }
 
     public String getDescricao() {
-        return this.descricao;
+        return descricao;
     }
 }
