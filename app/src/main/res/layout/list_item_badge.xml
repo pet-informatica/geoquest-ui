@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="70dp"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="center_vertical"
@@ -14,31 +14,42 @@
     android:weightSum="1">
 
     <ImageView
-        android:id="@+id/list_item_raking_imageView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
+        android:id="@+id/Bagde_image"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginRight="15dp"
         android:contentDescription="@string/All" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Titulo"
-        android:id="@+id/item_title" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="158dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="1dp">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="-3dp">
 
         <TextView
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:text="Descricao"
-            android:id="@+id/item_desc" />
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:id="@+id/badge_title"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/abc_primary_text_material_light"
+            android:textSize="14sp" />
 
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/badge_description"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/badge_title"
+            android:textColor="@color/abc_primary_text_material_light"
+            android:textSize="12sp" />
+    </RelativeLayout>
 
 </LinearLayout>
