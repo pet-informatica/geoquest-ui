@@ -24,7 +24,8 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
 	private String userName;
     private ProgressDialog progressDialog;
 
-    @Override
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
