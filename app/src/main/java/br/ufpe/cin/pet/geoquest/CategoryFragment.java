@@ -84,6 +84,8 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
     public CategoryFragment() {
     }
 
+    /*
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +98,7 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
                 "Buscando categorias...", true);
 
         Log.i("CategoryFragment", "Fetching categories...");
+
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>(){
                     @Override
@@ -139,10 +142,15 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
+
+        progressDialog.hide();
+
         // Add the request to the RequestQueue.
-        RequestSingleton.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
+        //RequestSingleton.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
 
     }
+
+    */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
