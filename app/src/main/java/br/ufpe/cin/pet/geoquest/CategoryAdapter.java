@@ -28,11 +28,13 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
         private List<Category> categories;
         private LayoutInflater mInflater;
+        private Context parent;
 
-        public CategoryAdapter(Context context, List<Category> categories){
+        public CategoryAdapter(Context context, List<Category> categories, Context parent){
             super(context, R.layout.list_item_category, categories);
             this.categories = categories;
             mInflater = LayoutInflater.from(getContext());
+            this.parent = parent;
         }
 
         static class ViewHolder {
@@ -69,16 +71,27 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
             vh.progresso.setProgress(category.getDone());
             vh.nome.setText(category.getName());
 
+            final Context ctx = this.parent;
+            final CharSequence[] levels = {"Nível 1", "Nível 2", "Nível 3"};
+
             vh.jogar.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    AlertDialog alert = new AlertDialog.Builder(CategoryAdapter.this.getContext()).create();
+                    AlertDialog alert = new AlertDialog.Builder(ctx).setItems(levels, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create();
+
                     alert.setTitle(category.getName());
 
-                    alert.setButton("Nível 1", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int pos) {
-                            Log.e("ashuahsuahsu", "ahsshsaudha");
-                        }
-                    });
+
+
+//                    alert.setButton("Nível 1", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int pos) {
+//                            Log.e("ashuahsuahsu", "ahsshsaudha");
+//                        }
+//                    });
+//
 
                     alert.show();
                 }
