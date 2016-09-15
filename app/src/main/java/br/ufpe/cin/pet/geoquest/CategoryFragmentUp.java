@@ -49,7 +49,7 @@ public class CategoryFragmentUp extends Fragment {
         items.add(cat);
         items.add(cat2);
 
-        adapter = new CategoryAdapter(getActivity().getApplicationContext(), items);
+        adapter = new CategoryAdapter(getActivity().getApplicationContext(), items, this.getActivity());
 
         ListView listView = (ListView) rootView.findViewById(R.id.listViewCategories);
         listView.setAdapter(adapter);
