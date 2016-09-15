@@ -1,15 +1,21 @@
 package br.ufpe.cin.pet.geoquest;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.classes.Category;
@@ -30,10 +36,10 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
         }
 
         static class ViewHolder {
-            protected ImageView imagem;
             protected TextView descricao;
             protected ProgressBar progresso;
             protected TextView nome;
+            protected Button jogar;
         }
 
         @Override
@@ -45,11 +51,11 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
             if (convertView == null) {
                 view = mInflater.inflate(R.layout.list_item_category, null);
                 vh = new ViewHolder();
-                //vh.imagem = (ImageView) view.findViewById(R.id.Category_image);
                 vh.descricao = (TextView) view
                         .findViewById(R.id.category_description);
-                vh.progresso = (ProgressBar) view.findViewById(R.id.progressoCategoria);
+                vh.progresso = (ProgressBar) view.findViewById(R.id.progressCategoria);
                 vh.nome = (TextView) view.findViewById(R.id.category_name);
+                vh.jogar = (Button) view.findViewById(R.id.buttonPlay);
 
                 view.setTag(vh);
             } else {
@@ -57,13 +63,26 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                 vh = ((ViewHolder) view.getTag());
             }
 
-            Category category = getItem(position);
+            final Category category = getItem(position);
 
             vh.descricao.setText(category.getDescription());
-            //vh.imagem.setImageResource(category.getId());
-            //vh.imagem.setImageResource(R.id.);
             vh.progresso.setProgress(category.getDone());
             vh.nome.setText(category.getName());
+
+            vh.jogar.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    AlertDialog alert = new AlertDialog.Builder(CategoryAdapter.this.getContext()).create();
+                    alert.setTitle(category.getName());
+
+                    alert.setButton("Nível 1", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int pos) {
+                            Log.e("ashuahsuahsu", "ahsshsaudha");
+                        }
+                    });
+
+                    alert.show();
+                }
+            });
 
             return view;
         }
