@@ -9,9 +9,15 @@ public class Category {
 
     private String description;
 
-    public Category(String name, String description){
+    private int done;
+
+    private int total;
+
+    public Category(String name, String description, int done, int total){
         this.name = name;
         this.description = description;
+        this.done = done;
+        this.total = total;
     }
 
     public String getName() {
@@ -28,5 +34,17 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getDone() { return done;}
+
+    public void setDone(int done) {
+        this.done = done;
+    }
+
+    public int getTotal() {return total;}
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 }

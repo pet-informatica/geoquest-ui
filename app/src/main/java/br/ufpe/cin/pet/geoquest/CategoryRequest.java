@@ -1,11 +1,14 @@
 package br.ufpe.cin.pet.geoquest;
 
+/**
+ * Created by rbb3 on 14/09/16.
+ */
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -20,24 +23,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Raking;
 
-/**
- * Created by rbb3 on 06/06/16.
- * Modified by bss3 on 06/13/16.
- */
-public class RakingRequest extends AsyncTask<String, Void, List<Raking> > {
+public class CategoryRequest extends AsyncTask<String, Void, List<Category> > {
 
     private final String url;
 
     private HttpResponse response;
 
-    public RakingRequest(String url) {
+    public CategoryRequest(String url) {
         this.url = url;
     }
 
     @Override
-    protected List<Raking> doInBackground(String... params) {
+    protected List<Category> doInBackground(String... params) {
 
         HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpget = new HttpGet(url);
@@ -56,26 +56,22 @@ public class RakingRequest extends AsyncTask<String, Void, List<Raking> > {
             Log.i("Exception", "Error");
         }
 
-        List<Raking> items = new ArrayList<Raking>();
+        List<Category> items = new ArrayList<Category>();
 
         try {
             JSONArray obj = new JSONArray(sresponse);
-            Bitmap bm = null;
-
-            InputStream in;
 
             int tam = obj.length();
             for(int i = 0; i < tam; i++) {
                 JSONObject object = obj.getJSONObject(i);
 
                 String nome = object.getString("nome");
-                String foto = object.getString("picture");
-                int pontuacao = object.getInt("points");
+                String descricao = object.getString("descricao");
+                int total = object.getInt("total");
+                int done = object.getInt("done");
 
-                in = new URL(foto).openStream();
-                bm = BitmapFactory.decodeStream(in);
-                Raking raking = new Raking(Integer.toString(i+1), nome, bm, pontuacao);
-                items.add(raking);
+                Category cat = new Category(nome, descricao, done, total);
+                items.add(cat);
             }
 
         } catch (Exception e) {
