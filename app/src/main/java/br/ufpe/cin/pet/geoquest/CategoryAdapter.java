@@ -1,7 +1,11 @@
 package br.ufpe.cin.pet.geoquest;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.media.Image;
@@ -11,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +36,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
         private LayoutInflater mInflater;
         private Context parent;
 
-        public CategoryAdapter(Context context, List<Category> categories, Context parent){
+        public CategoryAdapter(Context context, List<Category> categories, Context parent) {
             super(context, R.layout.list_item_category, categories);
             this.categories = categories;
             mInflater = LayoutInflater.from(getContext());
@@ -45,7 +51,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, final View convertView, ViewGroup parent) {
             View view = convertView;
 
             ViewHolder vh = null;
@@ -66,33 +72,37 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
             }
 
             final Category category = getItem(position);
+            final Context ctx = this.parent;
+            final CharSequence[] levels = {"Nível 1", "Nível 2", "Nível 3"};
+
+            double pr = (double)100*category.getDone()/(double)category.getTotal();
+
+            final CharSequence mess = pr+"%";
 
             vh.descricao.setText(category.getDescription());
             vh.progresso.setProgress(category.getDone());
-            vh.nome.setText(category.getName());
 
-            final Context ctx = this.parent;
-            final CharSequence[] levels = {"Nível 1", "Nível 2", "Nível 3"};
+            vh.progresso.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    Toast toast = Toast.makeText(ctx, mess, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
+
+
+            vh.nome.setText(category.getName());
 
             vh.jogar.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     AlertDialog alert = new AlertDialog.Builder(ctx).setItems(levels, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
+                        public void onClick(DialogInterface dialog, int pos) {
+                            MainActivity ma = (MainActivity) ctx;
+                            ma.getFragmentManager().beginTransaction()
+                                    .replace(R.id.container, new QuestionFragment()).commit();
                         }
                     }).create();
 
                     alert.setTitle(category.getName());
-
-
-
-//                    alert.setButton("Nível 1", new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int pos) {
-//                            Log.e("ashuahsuahsu", "ahsshsaudha");
-//                        }
-//                    });
-//
-
                     alert.show();
                 }
             });

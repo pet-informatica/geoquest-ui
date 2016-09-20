@@ -129,9 +129,19 @@ public class MainFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				getFragmentManager().beginTransaction()
+						.replace(R.id.container, new CategoryFragmentUp()).commit();
+			}
+		});
+
+		/*
+		btn_play.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getFragmentManager().beginTransaction()
 				.replace(R.id.container, new CategoryFragmentUp()).commit();
 			}
 		});
+		*/
 
 		return rootView;
 	}

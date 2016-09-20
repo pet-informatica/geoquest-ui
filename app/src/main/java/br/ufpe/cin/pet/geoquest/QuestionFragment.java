@@ -1,6 +1,7 @@
 package br.ufpe.cin.pet.geoquest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Dialog;
 import android.app.Fragment;
@@ -24,7 +25,7 @@ import org.json.JSONObject;
 
 import br.ufpe.cin.pet.geoquest.classes.Question;
 
-public class QuestionFragment extends Fragment{
+public class QuestionFragment extends Fragment {
 
     ArrayList<Question> questions;
 
@@ -65,16 +66,29 @@ public class QuestionFragment extends Fragment{
 		layout_ans4 = (LinearLayout) rootView.findViewById(R.id.answer4Layout);
 		layout_ans5 = (LinearLayout) rootView.findViewById(R.id.answer5Layout);
 
-        requestQuestions(rootView);
+        //requestQuestions(rootView);
 
-        currentQuestion = 0;
+		ArrayList<String> lista = new ArrayList<String>();
+		lista.add("babaca");
+		lista.add("mt babaca");
+		lista.add("cuzao");
+		lista.add("cuzao cuzao");
+		lista.add("BIRL");
+		Question quest = new Question("Higor é um ...", "ENEM", lista, "E");
+
+		questions = new ArrayList<Question>();
+		questions.add(quest);
+
+		currentQuestion = 0;
+
+		updateUI();
+
+
 
 		return rootView;
-		
 	}
 
-    private void updateUI(){
-
+    private void updateUI() {
         Question quest = questions.get(currentQuestion);
 
         questionExam.setText(quest.getExam());
@@ -94,6 +108,7 @@ public class QuestionFragment extends Fragment{
         String categoryId = getArguments().getString("category_id");
 
         String url = R.string.base_url + "questions/?category=" + categoryId;
+		//String url = "http://www.mocky.io/v2/57dbe2ee0f00008a2a8b7043";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>(){
             @Override
@@ -143,7 +158,7 @@ public class QuestionFragment extends Fragment{
     }
 	
 	private void setOnClickListeners(View rootView, final String rightAnswer){
-		layout_ans1 = (LinearLayout) rootView.findViewById (R.id.answer1Layout);
+		//layout_ans1 = (LinearLayout) rootView.findViewById (R.id.answer1Layout);
 		layout_ans1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -151,7 +166,7 @@ public class QuestionFragment extends Fragment{
 			}
 		});
 
-		layout_ans2 = (LinearLayout) rootView.findViewById (R.id.answer2Layout);
+		//layout_ans2 = (LinearLayout) rootView.findViewById (R.id.answer2Layout);
 		layout_ans2.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -159,7 +174,7 @@ public class QuestionFragment extends Fragment{
 			}
 		});
 
-		layout_ans3 = (LinearLayout) rootView.findViewById (R.id.answer3Layout);
+		//layout_ans3 = (LinearLayout) rootView.findViewById (R.id.answer3Layout);
 		layout_ans3.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -167,7 +182,7 @@ public class QuestionFragment extends Fragment{
 			}
 		});
 		
-		layout_ans4 = (LinearLayout) rootView.findViewById (R.id.answer4Layout);
+		//layout_ans4 = (LinearLayout) rootView.findViewById (R.id.answer4Layout);
 		layout_ans4.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -175,7 +190,7 @@ public class QuestionFragment extends Fragment{
 			}
 		});
 
-		layout_ans5 = (LinearLayout) rootView.findViewById (R.id.answer5Layout);
+		//layout_ans5 = (LinearLayout) rootView.findViewById (R.id.answer5Layout);
 		layout_ans5.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
