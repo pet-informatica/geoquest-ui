@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/pink"
-    tools:context=".CreditsFragment">
+    tools:context="example.b.CreditsFragment" >
 
     <ImageView
         android:id="@+id/geoquestCreditosBanner"
