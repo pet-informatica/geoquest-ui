@@ -1,43 +1,40 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/pink"
-    tools:context="example.b.CreditsFragment" >
+    android:background="@color/white"
+    tools:context=".CreditsFragment" >
 
     <ImageView
         android:id="@+id/geoquestCreditosBanner"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
+        android:scaleType="centerInside"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-30px"
-        android:src="@drawable/geoquest_creditos" />
+        android:layout_gravity="top"
+        android:src="@drawable/geoquest_creditos"
+        android:adjustViewBounds="true"/>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/logo_petinfo"
+        android:layout_weight="4"
+        android:src="@drawable/my_image3"
+        android:padding="10dp" />
 
     <ImageView
         android:id="@+id/logo_petGeografia"
         android:layout_width="wrap_content"
-        android:layout_height="250px"
+        android:layout_height="0dp"
         android:layout_marginBottom="40dp"
-        android:minHeight="200px"
-        android:minWidth="300px"
-        android:src="@drawable/my_image"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/logo_petinfo"
-        android:src="@drawable/my_image3"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20px"
-        android:layout_marginRight="20px"
-        android:layout_marginBottom="300px"
-        android:layout_alignParentStart="false"
-        android:layout_below="@+id/geoquestCreditosBanner"
-        android:layout_alignParentBottom="true" />
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:layout_weight="2"
+        android:src="@drawable/my_image" />
 
 
-</RelativeLayout>
+
+
+
+</LinearLayout>
