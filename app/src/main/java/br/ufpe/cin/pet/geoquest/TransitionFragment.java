@@ -72,7 +72,7 @@ public class TransitionFragment extends Fragment {
 
     private void getData(final View rootView){
 
-        String url = "http://www.mocky.io/v2/57f9297e0f000054155a7ce5";
+        String url = "http://www.mocky.io/v2/57f945d10f000007185a7cee";
 
         Log.i("Transition", "Enviando requisição da transicao");
 
@@ -157,11 +157,27 @@ public class TransitionFragment extends Fragment {
         vh.pb1.setProgress((int)v1);
         vh.pb2.setProgress((int)v2);
         vh.pb3.setProgress((int)v3);
-        vh.titulo.setText(cat); //puxar da activity
-        vh.nivel.setText("Nível "+lev); //puxar da activity
+        vh.titulo.setText(cat);
+        vh.nivel.setText("Nível "+lev);
 
         if (v1 <= 50) vh.feedback.setImageResource(R.drawable.fail);
         else if (v1 <= 80) vh.feedback.setImageResource(R.drawable.normal);
         else vh.feedback.setImageResource(R.drawable.victory);
+
+
+        vh.goback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.container, new MainFragment()).commit();
+            }
+        });
+
+        vh.gofront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //chamar novo bloco
+            }
+        });
     }
 }
