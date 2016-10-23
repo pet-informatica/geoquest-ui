@@ -131,7 +131,6 @@ public class TransitionFragment extends Fragment {
     }
 
     void populate(View view) {
-
         ViewHolder vh = new ViewHolder();
 
 

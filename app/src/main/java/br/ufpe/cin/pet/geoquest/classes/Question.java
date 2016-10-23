@@ -9,14 +9,16 @@ public class Question {
     private String exam;
     private ArrayList<String> alternatives;
     private String correctAnswer;
+    private int id;
 	
 	public Question(){}
 
-    public Question(String question, String exam, ArrayList<String> alternatives, String correctAnswer) {
+    public Question(String question, String exam, ArrayList<String> alternatives, String correctAnswer, int id) {
         this.question = question;
         this.exam = exam;
         this.alternatives = alternatives;
         this.correctAnswer = correctAnswer;
+        this.id = id;
     }
 
     public String getQuestion() {
@@ -49,5 +51,9 @@ public class Question {
 
     public void setCorrectAnswer(String correctAnswer) {
         this.correctAnswer = correctAnswer;
+    }
+
+    public int getId() {
+        return this.id;
     }
 }
