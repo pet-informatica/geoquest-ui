@@ -1,8 +1,5 @@
 package br.ufpe.cin.pet.geoquest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -22,6 +19,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import br.ufpe.cin.pet.geoquest.classes.Question;
 
@@ -181,7 +180,7 @@ public class QuestionFragment extends Fragment {
 				checkAnswer("C", rightAnswer);
 			}
 		});
-		
+
 		//layout_ans4 = (LinearLayout) rootView.findViewById (R.id.answer4Layout);
 		layout_ans4.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -206,7 +205,7 @@ public class QuestionFragment extends Fragment {
 			LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.answerResultLayout);
 			Button dialogButton = (Button) dialog.findViewById(R.id.btnNext); 
 			TextView ansDialog = (TextView) dialog.findViewById(R.id.answerDialogResult); 
-			TextView ansDescDialog = (TextView) dialog.findViewById(R.id.answerDialogDesc); 
+			TextView ansDescDialog = (TextView) dialog.findViewById(R.id.answerDialogDesc);
 			ImageView imgAns = (ImageView) dialog.findViewById(R.id.answerSymbol);
 			
 			ll.setBackgroundColor(getResources().getColor(R.color.bordeaux));

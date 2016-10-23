@@ -4,3 +4,4 @@
 /.idea/libraries
 .DS_Store
 /build
+app/src/main/java/br/ufpe/cin/pet/geoquest/QuestionFragment.java

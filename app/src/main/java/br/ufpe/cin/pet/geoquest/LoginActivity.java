@@ -2,17 +2,14 @@ package br.ufpe.cin.pet.geoquest;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import br.ufpe.cin.pet.geoquest.MainActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -26,7 +23,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -35,7 +31,7 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.*;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,7 +42,7 @@ import java.util.Map;
 
 public class LoginActivity extends Activity {
 
-    public final static String ACCESS_TOKEN = "br.ufpe.cin.pet.geoquest.ACCESS_TOKEN";
+    //public final static String ACCESS_TOKEN = "br.ufpe.cin.pet.geoquest.ACCESS_TOKEN";
 
     private LoginButton authButton;
 
@@ -64,6 +60,9 @@ public class LoginActivity extends Activity {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
+        callbackManager = CallbackManager.Factory.create();
+
+        setContentView(R.layout.activity_login);
         Log.i("LoginActivity", "User already logged in?");
         Log.i("LoginActivity", "Config.key: " + Config.key);
         Log.i("LoginActivity", "LoggedIn: " + isLoggedIn());
@@ -73,64 +72,61 @@ public class LoginActivity extends Activity {
                 Profile.fetchProfileForCurrentAccessToken();
                 waitProfileLoad();
             }else{
+                SharedPreferences sharedPref = getSharedPreferences("keyToken", Context.MODE_PRIVATE);
+                Config.key = sharedPref.getString("key", "");
+
                 loggedInCallback();
             }
         }else{
             Log.i("LoginActivity", "User is NOT logged in");
+
+            authButton = (LoginButton) findViewById(R.id.auth_button);
+            //Session session = Session.getActiveSession();
+            //Log.i("LoginActivity", ""+session.getAccessToken().getToken());
+
+            Log.i("LoginActivity", ""+AccessToken.getCurrentAccessToken());
+
+
+            authButton.setReadPermissions(Arrays.asList("public_profile, email, user_friends, publish_actions"));
+
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Carregando...");
+            progressDialog.setCancelable(false);
+            progressDialog.setIndeterminate(true);
+
+            // Callback registration
+
+            authButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+
+                    Log.i("FacebookLogin", "User logged in with success -> AccessToken:");
+                    Log.i("FacebookLogin", loginResult.getAccessToken().getToken());
+                    Log.i("FacebookLogin", "User logged in with success -> UserID:");
+
+                    Profile.fetchProfileForCurrentAccessToken();
+                    AccessToken.setCurrentAccessToken(loginResult.getAccessToken());
+                    Profile.setCurrentProfile(Profile.getCurrentProfile());
+
+                    progressDialog.show();
+
+                    Log.i("LoginActivity", "Registering user to server");
+                    waitRegister();
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.i("FacebookLogin", "LoginCanceled");
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    Log.i("FacebookLogin", "LoginError");
+                    Log.e("LoginActivity", exception.getMessage());
+                }
+            });
         }
-
-        callbackManager = CallbackManager.Factory.create();
-
-        setContentView(R.layout.activity_login);
-
-        authButton = (LoginButton) findViewById(R.id.auth_button);
-        //Session session = Session.getActiveSession();
-        //Log.i("LoginActivity", ""+session.getAccessToken().getToken());
-
-        Log.i("LoginActivity", ""+AccessToken.getCurrentAccessToken());
-
-        authButton.setReadPermissions(Arrays.asList("public_profile, email, user_friends, publish_actions"));
-
-
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Carregando...");
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(true);
-
-        // Callback registration
-
-        authButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-                Log.i("FacebookLogin", "User logged in with success -> AccessToken:");
-                Log.i("FacebookLogin", loginResult.getAccessToken().getToken());
-                Log.i("FacebookLogin", "User logged in with success -> UserID:");
-
-                Profile.fetchProfileForCurrentAccessToken();
-                AccessToken.setCurrentAccessToken(loginResult.getAccessToken());
-                Profile.setCurrentProfile(Profile.getCurrentProfile());
-
-                progressDialog.show();
-
-                Log.i("LoginActivity", "Registering user to server");
-                waitRegister();
-            }
-
-            @Override
-            public void onCancel() {
-                Log.i("FacebookLogin", "LoginCanceled");
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                Log.i("FacebookLogin", "LoginError");
-                Log.e("LoginActivity", exception.getMessage());
-            }
-        });
-
 
     }
 
@@ -148,6 +144,10 @@ public class LoginActivity extends Activity {
             public void onResponse(String response) {
                 try {
                     JSONObject j = new JSONObject(response);
+                    SharedPreferences sharedPref = getSharedPreferences("keyToken", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("key", j.getString("key"));
+                    editor.commit();
                     Config.key = j.getString("key");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -212,10 +212,11 @@ public class LoginActivity extends Activity {
                 }
             };
 
-            loggedInCallback();
+
             progressDialog.hide();
 
             tracker.startTracking();
+            loggedInCallback();
     }
 
     public void loggedInCallback(){
