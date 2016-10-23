@@ -13,11 +13,14 @@ public class Category {
 
     private int total;
 
-    public Category(String name, String description, int done, int total){
+    private int id;
+
+    public Category(String name, String description, int done, int total, int id){
         this.name = name;
         this.description = description;
         this.done = done;
         this.total = total;
+        this.id = id;
     }
 
     public String getName() {
@@ -46,5 +49,11 @@ public class Category {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public int getId() {return id;}
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

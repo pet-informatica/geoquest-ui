@@ -1,5 +1,9 @@
 package br.ufpe.cin.pet.geoquest;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -20,13 +24,13 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
+import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
 
 public class QuestionFragment extends Fragment {
 
     ArrayList<Question> questions;
+	HashMap<Integer, Integer> is_right = new HashMap<Integer, Integer>();
 
     private int currentQuestion;
 	
@@ -42,6 +46,16 @@ public class QuestionFragment extends Fragment {
 	TextView answer3;
 	TextView answer4;
 	TextView answer5;
+
+	Category category;
+	String cat;
+	int lev;
+
+	public QuestionFragment(Category category, int level) {
+		this.category = category;
+		this.cat = category.getName();
+		this.lev = level;
+	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -65,24 +79,22 @@ public class QuestionFragment extends Fragment {
 		layout_ans4 = (LinearLayout) rootView.findViewById(R.id.answer4Layout);
 		layout_ans5 = (LinearLayout) rootView.findViewById(R.id.answer5Layout);
 
-        //requestQuestions(rootView);
+		currentQuestion = 0;
 
+        requestQuestions(rootView);
+
+		/*
 		ArrayList<String> lista = new ArrayList<String>();
 		lista.add("babaca");
 		lista.add("mt babaca");
 		lista.add("cuzao");
 		lista.add("cuzao cuzao");
 		lista.add("BIRL");
-		Question quest = new Question("Higor é um ...", "ENEM", lista, "E");
+		Question quest = new Question("Higor é um ...", "ENEM", lista, "E", 1);
 
 		questions = new ArrayList<Question>();
 		questions.add(quest);
-
-		currentQuestion = 0;
-
-		updateUI();
-
-
+		*/
 
 		return rootView;
 	}
@@ -104,15 +116,17 @@ public class QuestionFragment extends Fragment {
     private void requestQuestions(final View rootView){
         Log.i("QuestionFragment", "Fetching questions...");
 
-        String categoryId = getArguments().getString("category_id");
+        String categoryId = category.getId()+"000"+lev;
 
-        String url = R.string.base_url + "questions/?category=" + categoryId;
-		//String url = "http://www.mocky.io/v2/57dbe2ee0f00008a2a8b7043";
+        //String url = R.string.base_url + "questions/?category=" + categoryId;
+		String url = "http://www.mocky.io/v2/580d323a10000034185404a9";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>(){
             @Override
             public void onResponse(JSONArray response) {
                 try {
+
+					Log.d("response", response.toString());
 
                     questions = new ArrayList<Question>();
 
@@ -120,6 +134,7 @@ public class QuestionFragment extends Fragment {
                         JSONObject question = response.getJSONObject(i);
 
                         String title = question.getString("question");
+						int id = question.getInt("id");
                         String exam = question.getString("exam");
                         String correctAnswer = question.getString("correct_answer");
 
@@ -131,7 +146,7 @@ public class QuestionFragment extends Fragment {
                         alternatives.add( question.getString("option_e"));
 
 
-                        questions.add(new Question(title, exam, alternatives, correctAnswer));
+                        questions.add(new Question(title, exam, alternatives, correctAnswer, id));
 
                     }
 
@@ -152,7 +167,6 @@ public class QuestionFragment extends Fragment {
             }
         });
 
-        // Add the request to the RequestQueue.
         RequestSingleton.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
     }
 	
@@ -180,7 +194,7 @@ public class QuestionFragment extends Fragment {
 				checkAnswer("C", rightAnswer);
 			}
 		});
-
+		
 		//layout_ans4 = (LinearLayout) rootView.findViewById (R.id.answer4Layout);
 		layout_ans4.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -202,10 +216,12 @@ public class QuestionFragment extends Fragment {
 		Dialog dialog = createDialog();
 		
 		if(!ans.equals(rightAnswer)){
+			is_right.put(questions.get(currentQuestion).getId(), 0);
+
 			LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.answerResultLayout);
 			Button dialogButton = (Button) dialog.findViewById(R.id.btnNext); 
 			TextView ansDialog = (TextView) dialog.findViewById(R.id.answerDialogResult); 
-			TextView ansDescDialog = (TextView) dialog.findViewById(R.id.answerDialogDesc);
+			TextView ansDescDialog = (TextView) dialog.findViewById(R.id.answerDialogDesc); 
 			ImageView imgAns = (ImageView) dialog.findViewById(R.id.answerSymbol);
 			
 			ll.setBackgroundColor(getResources().getColor(R.color.bordeaux));
@@ -215,7 +231,9 @@ public class QuestionFragment extends Fragment {
 			ansDescDialog.setTextColor(getResources().getColor(R.color.bordeaux));
 			ansDescDialog.setText("Não rolou não, amiguinho. Tenta de novo, vai que vai.");
 			imgAns.setImageResource(R.drawable.wrong);
-		}else{
+		} else {
+			is_right.put(questions.get(currentQuestion).getId(), 1);
+
             LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.answerResultLayout);
             Button dialogButton = (Button) dialog.findViewById(R.id.btnNext);
             TextView ansDialog = (TextView) dialog.findViewById(R.id.answerDialogResult);
@@ -233,6 +251,11 @@ public class QuestionFragment extends Fragment {
 		
 		dialog.show();
 	}
+
+	private void updateBack() {
+		//Percorrer o is_right e informar ao back quais as questoes ja foram respondidas e
+		//estao indisponiveis. Deixar salvo la o precentual de acerto no ultimo bloco
+	}
 	
 	private Dialog createDialog(){
 		final Dialog dialog = new Dialog(getActivity());
@@ -245,8 +268,15 @@ public class QuestionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
                 currentQuestion++;
-                updateUI();
-				dialog.dismiss();
+				if (currentQuestion >= questions.size()) {
+					updateBack();
+					dialog.dismiss();
+					getFragmentManager().beginTransaction()
+							.replace(R.id.container, new TransitionFragment(category, lev, 0)).commit();
+				} else {
+					updateUI();
+					dialog.dismiss();
+				}
 			}
 		});
 		

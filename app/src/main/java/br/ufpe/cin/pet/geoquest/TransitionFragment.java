@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Stats;
 
 /**
@@ -42,7 +43,9 @@ public class TransitionFragment extends Fragment {
     private double v2;
     private double v3;
     private String cat;
-    private String lev;
+    private int lev;
+    private int type;
+    private Category category;
 
     static class ViewHolder {
         protected TextView txt1;
@@ -58,12 +61,21 @@ public class TransitionFragment extends Fragment {
         protected ProgressBar pb3;
     }
 
+    public TransitionFragment(Category category, int level, int type) {
+        this.category = category;
+        this.cat = category.getName();
+        this.lev = level;
+        this.type = type;
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_transition, container, false);
+        if (type == 1) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container, new QuestionFragment(category, lev)).commit();
+        }
 
-        cat = "Hidrografia";
-        lev = "1";
+        View view = inflater.inflate(R.layout.fragment_transition, container, false);
 
         getData(view);
 
@@ -131,7 +143,6 @@ public class TransitionFragment extends Fragment {
     }
 
     void populate(View view) {
-
         ViewHolder vh = new ViewHolder();
 
 
@@ -142,18 +153,16 @@ public class TransitionFragment extends Fragment {
         vh.pb2 = (ProgressBar) view.findViewById(R.id.progressBar2);
         vh.pb3 = (ProgressBar) view.findViewById(R.id.progressBar3);
         vh.goback = (ImageButton) view.findViewById(R.id.returnMenoButton);
-        //setar onclick
         vh.gofront = (ImageButton) view.findViewById(R.id.goFowardButton);
-        //setar onclick
         vh.titulo = (TextView) view.findViewById(R.id.trasitionTitle);
         vh.nivel = (TextView) view.findViewById(R.id.transitionLevel);
         vh.feedback = (ImageView) view.findViewById(R.id.feedbackImg);
 
         vh.goback.setImageResource(R.drawable.voltar);
         vh.gofront.setImageResource(R.drawable.continuar);
-        vh.txt1.setText(v1+"% de acertos no bloco");
-        vh.txt2.setText(v2+"% da categoria concluída");
-        vh.txt3.setText(v3+"% do jogo concluído");
+        vh.txt1.setText(v1+"% do bloco");
+        vh.txt2.setText(v2+"% da categoria");
+        vh.txt3.setText(v3+"% do jogo");
         vh.pb1.setProgress((int)v1);
         vh.pb2.setProgress((int)v2);
         vh.pb3.setProgress((int)v3);
@@ -176,7 +185,8 @@ public class TransitionFragment extends Fragment {
         vh.gofront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //chamar novo bloco
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.container, new QuestionFragment(category, lev)).commit();
             }
         });
     }

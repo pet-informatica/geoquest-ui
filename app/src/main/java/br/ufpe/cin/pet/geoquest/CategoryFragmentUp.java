@@ -44,8 +44,8 @@ public class CategoryFragmentUp extends Fragment {
         }
         */
 
-        Category cat = new Category("Hidrografia", "Área da geografia física que classifica e estuda as águas do planeta Terra", 73, 100);
-        Category cat2 = new Category("Geologia", "Área da geografia física que classifica e estuda as rochas e minerais", 22, 100);
+        Category cat = new Category("Hidrografia", "Área da geografia física que classifica e estuda as águas do planeta Terra", 73, 100, 1);
+        Category cat2 = new Category("Geologia", "Área da geografia física que classifica e estuda as rochas e minerais", 22, 100, 2);
         items.add(cat);
         items.add(cat2);
 
