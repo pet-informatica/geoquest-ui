@@ -69,8 +69,9 @@ public class CategoryRequest extends AsyncTask<String, Void, List<Category> > {
                 String descricao = object.getString("descricao");
                 int total = object.getInt("total");
                 int done = object.getInt("done");
+                int id = object.getInt("id");
 
-                Category cat = new Category(nome, descricao, done, total);
+                Category cat = new Category(nome, descricao, done, total, id);
                 items.add(cat);
             }
 

@@ -89,6 +89,7 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
 		return super.onOptionsItemSelected(item);
 	}
 
+	/*
     public void onCategorySelected(String id){
         Log.i("CategoryFragment", "Selected category " + id);
 
@@ -102,6 +103,7 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
                 .replace(R.id.container, f).commit();
 
     }
+    */
 
 
     public Bitmap getUserImage() {

@@ -190,7 +190,7 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onCategorySelected(DummyContent.ITEMS.get(position).id);
+            //mListener.onCategorySelected(DummyContent.ITEMS.get(position).id);
         }
     }
 
@@ -219,7 +219,7 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onCategorySelected(String id);
+        //public void onCategorySelected(String id);
     }
 
 }

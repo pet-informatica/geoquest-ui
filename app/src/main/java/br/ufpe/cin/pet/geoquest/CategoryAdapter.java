@@ -98,7 +98,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                         public void onClick(DialogInterface dialog, int pos) {
                             MainActivity ma = (MainActivity) ctx;
                             ma.getFragmentManager().beginTransaction()
-                                    .replace(R.id.container, new QuestionFragment()).commit();
+                                    .replace(R.id.container, new TransitionFragment(category, pos+1, 1)).commit();
                         }
                     }).create();
 

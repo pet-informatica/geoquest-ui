@@ -129,7 +129,7 @@ public class MainFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				getFragmentManager().beginTransaction()
-						.replace(R.id.container, new TransitionFragment()).commit();
+						.replace(R.id.container, new CategoryFragmentUp()).commit();
 			}
 		});
 

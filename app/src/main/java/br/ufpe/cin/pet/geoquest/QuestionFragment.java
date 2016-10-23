@@ -24,6 +24,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
 
 public class QuestionFragment extends Fragment {
@@ -45,6 +46,16 @@ public class QuestionFragment extends Fragment {
 	TextView answer3;
 	TextView answer4;
 	TextView answer5;
+
+	Category category;
+	String cat;
+	int lev;
+
+	public QuestionFragment(Category category, int level) {
+		this.category = category;
+		this.cat = category.getName();
+		this.lev = level;
+	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -68,8 +79,11 @@ public class QuestionFragment extends Fragment {
 		layout_ans4 = (LinearLayout) rootView.findViewById(R.id.answer4Layout);
 		layout_ans5 = (LinearLayout) rootView.findViewById(R.id.answer5Layout);
 
-        //requestQuestions(rootView);
+		currentQuestion = 0;
 
+        requestQuestions(rootView);
+
+		/*
 		ArrayList<String> lista = new ArrayList<String>();
 		lista.add("babaca");
 		lista.add("mt babaca");
@@ -80,10 +94,7 @@ public class QuestionFragment extends Fragment {
 
 		questions = new ArrayList<Question>();
 		questions.add(quest);
-
-		currentQuestion = 0;
-
-		updateUI();
+		*/
 
 		return rootView;
 	}
@@ -105,15 +116,17 @@ public class QuestionFragment extends Fragment {
     private void requestQuestions(final View rootView){
         Log.i("QuestionFragment", "Fetching questions...");
 
-        String categoryId = getArguments().getString("category_id");
+        String categoryId = category.getId()+"000"+lev;
 
-        String url = R.string.base_url + "questions/?category=" + categoryId;
-		//String url = "http://www.mocky.io/v2/57dbe2ee0f00008a2a8b7043";
+        //String url = R.string.base_url + "questions/?category=" + categoryId;
+		String url = "http://www.mocky.io/v2/580d323a10000034185404a9";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>(){
             @Override
             public void onResponse(JSONArray response) {
                 try {
+
+					Log.d("response", response.toString());
 
                     questions = new ArrayList<Question>();
 
@@ -259,7 +272,7 @@ public class QuestionFragment extends Fragment {
 					updateBack();
 					dialog.dismiss();
 					getFragmentManager().beginTransaction()
-							.replace(R.id.container, new TransitionFragment()).commit();
+							.replace(R.id.container, new TransitionFragment(category, lev, 0)).commit();
 				} else {
 					updateUI();
 					dialog.dismiss();
