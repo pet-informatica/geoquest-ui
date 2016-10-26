@@ -30,24 +30,19 @@ public class CategoryFragmentUp extends Fragment {
 
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //CategoryRequest cr = new CategoryRequest("http://www.mocky.io/v2/57da0a671100002017d6e9d5");
-        //cr.execute();
+        CategoryRequest cr = new CategoryRequest("http://www.mocky.io/v2/5810e66e3a0000780760985d");
+        cr.execute();
 
         List<Category> items = new ArrayList<Category>();
 
-        /*
+
         try {
             items = cr.get();
         } catch (Exception e) {
             Log.i("ERROR", "Não foi possível obter as suas categorias");
             e.printStackTrace();
         }
-        */
 
-        Category cat = new Category("Hidrografia", "Área da geografia física que classifica e estuda as águas do planeta Terra", 73, 100, 1);
-        Category cat2 = new Category("Geologia", "Área da geografia física que classifica e estuda as rochas e minerais", 22, 100, 2);
-        items.add(cat);
-        items.add(cat2);
 
         adapter = new CategoryAdapter(getActivity().getApplicationContext(), items, this.getActivity());
 
