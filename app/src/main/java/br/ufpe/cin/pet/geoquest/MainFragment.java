@@ -1,17 +1,6 @@
 package br.ufpe.cin.pet.geoquest;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.Shader.TileMode;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +22,6 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 
@@ -63,7 +51,7 @@ public class MainFragment extends Fragment{
 
 	private ProgressDialog progressDialog;
 
-	private int fullStars;
+	private static int fullStars = 0;
 
 	private final int[] STARS_IDS = {R.id.star1, R.id.star2, R.id.star3, R.id.star4, R.id.star5};
 
@@ -142,9 +130,15 @@ public class MainFragment extends Fragment{
     public void updateProfile(View rootView){
         Log.i("MainFragment", "Updating user information " + Profile.getCurrentProfile().getName());
         Profile profile = Profile.getCurrentProfile();
-		getStars(rootView);
-		// userImage = (ImageView) rootView.findViewById(R.id.imgUserPerfil)
-        userName.setText(profile.getName());
+		if(fullStars == 0)
+			getStars(rootView);
+		else
+		{
+			updateStars(rootView);
+			progressDialog.hide();
+		}
+
+		userName.setText(profile.getName());
 		activity.setUserName(profile.getName());
     }
 
@@ -165,7 +159,7 @@ public class MainFragment extends Fragment{
 			@Override
 			public void onResponse(String response) {
 				Log.d("Response", response);
-				try {
+				try	 {
 					JSONObject jsonResponse = new JSONObject(response);
 					fullStars = jsonResponse.getInt("fullstars");
 					updateStars(rootView);

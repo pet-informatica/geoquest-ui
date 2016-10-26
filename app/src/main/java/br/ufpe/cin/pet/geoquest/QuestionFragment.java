@@ -1,9 +1,5 @@
 package br.ufpe.cin.pet.geoquest;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -23,6 +19,9 @@ import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
@@ -248,7 +247,8 @@ public class QuestionFragment extends Fragment {
             ansDescDialog.setText("Boa boy. Botando quente.");
             imgAns.setImageResource(R.drawable.check);
         }
-		
+		dialog.setCancelable(false);
+		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
 	}
 
