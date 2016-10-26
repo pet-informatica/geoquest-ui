@@ -228,7 +228,7 @@ public class QuestionFragment extends Fragment {
 			ansDialog.setText("RESPOSTA ERRADA");
 			ansDialog.setTextColor(getResources().getColor(R.color.bordeaux));
 			ansDescDialog.setTextColor(getResources().getColor(R.color.bordeaux));
-			ansDescDialog.setText("Não rolou não, amiguinho. Tenta de novo, vai que vai.");
+			ansDescDialog.setText("Que pena!");
 			imgAns.setImageResource(R.drawable.wrong);
 		} else {
 			is_right.put(questions.get(currentQuestion).getId(), 1);
@@ -244,9 +244,10 @@ public class QuestionFragment extends Fragment {
             ansDialog.setText("RESPOSTA CERTA");
             ansDialog.setTextColor(getResources().getColor(R.color.green));
             ansDescDialog.setTextColor(getResources().getColor(R.color.green));
-            ansDescDialog.setText("Boa boy. Botando quente.");
+            ansDescDialog.setText("Parabéns!");
             imgAns.setImageResource(R.drawable.check);
         }
+
 		dialog.setCancelable(false);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.show();
