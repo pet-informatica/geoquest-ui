@@ -1,20 +1,19 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
 public class MainActivity extends Activity implements CategoryFragment.OnFragmentInteractionListener{
 
-    private Bitmap userImage;
+    private static Bitmap userImage;
 	private String userName;
     private ProgressDialog progressDialog;
 

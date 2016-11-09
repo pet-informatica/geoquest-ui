@@ -1,26 +1,8 @@
 package br.ufpe.cin.pet.geoquest;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.MalformedInputException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Shader.TileMode;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,14 +24,16 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import br.ufpe.cin.pet.geoquest.Utils.CropImage;
 import br.ufpe.cin.pet.geoquest.classes.Badge;
-import br.ufpe.cin.pet.geoquest.classes.Stats;
 
 public class MyBadgesFragment extends Fragment {
 
@@ -157,6 +141,7 @@ public class MyBadgesFragment extends Fragment {
 	private void populateView(View rootView) {
 
 		MainActivity mainActivity = (MainActivity)getActivity();
+
 
 		getActivity().getActionBar().setTitle(mainActivity.getUserName());
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);

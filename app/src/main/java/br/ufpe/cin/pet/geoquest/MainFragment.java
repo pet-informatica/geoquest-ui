@@ -60,8 +60,7 @@ public class MainFragment extends Fragment{
 			Bundle savedInstanceState) {
 
 		rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        activity = (MainActivity) getActivity();
+		activity = (MainActivity) getActivity();
 
 		getActivity().getActionBar().setTitle("Geoquest");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
@@ -138,7 +137,8 @@ public class MainFragment extends Fragment{
 			progressDialog.hide();
 		}
 
-		userName.setText(profile.getName());
+
+        userName.setText(profile.getName());
 		activity.setUserName(profile.getName());
     }
 
