@@ -2,9 +2,12 @@ package br.ufpe.cin.pet.geoquest;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -63,6 +66,7 @@ public class QuestionFragment extends Fragment {
 
         getActivity().getActionBar().setTitle("GeoQuest");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActivity().getActionBar().hide();
 		
 		questionExam = (TextView) rootView.findViewById(R.id.questionTitle);
 		questionDescription = (TextView) rootView.findViewById(R.id.questionDescription);
@@ -82,21 +86,9 @@ public class QuestionFragment extends Fragment {
 
         requestQuestions(rootView);
 
-		/*
-		ArrayList<String> lista = new ArrayList<String>();
-		lista.add("babaca");
-		lista.add("mt babaca");
-		lista.add("cuzao");
-		lista.add("cuzao cuzao");
-		lista.add("BIRL");
-		Question quest = new Question("Higor é um ...", "ENEM", lista, "E", 1);
-
-		questions = new ArrayList<Question>();
-		questions.add(quest);
-		*/
-
 		return rootView;
 	}
+
 
     private void updateUI() {
         Question quest = questions.get(currentQuestion);
@@ -170,6 +162,7 @@ public class QuestionFragment extends Fragment {
     }
 	
 	private void setOnClickListeners(View rootView, final String rightAnswer){
+
 		//layout_ans1 = (LinearLayout) rootView.findViewById (R.id.answer1Layout);
 		layout_ans1.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -272,8 +265,10 @@ public class QuestionFragment extends Fragment {
 				if (currentQuestion >= questions.size()) {
 					updateBack();
 					dialog.dismiss();
-					getFragmentManager().beginTransaction()
-							.replace(R.id.container, new TransitionFragment(category, lev, 0)).commit();
+					FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+					ft.replace(R.id.container, new TransitionFragment(category, lev, 0));
+					ft.addToBackStack("transition_fragment");
+					ft.commit();
 				} else {
 					updateUI();
 					dialog.dismiss();

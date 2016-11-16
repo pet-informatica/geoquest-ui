@@ -1,5 +1,6 @@
 package br.ufpe.cin.pet.geoquest;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,7 +56,6 @@ public class MainFragment extends Fragment{
 
 	private final int[] STARS_IDS = {R.id.star1, R.id.star2, R.id.star3, R.id.star4, R.id.star5};
 
-
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
@@ -88,8 +88,10 @@ public class MainFragment extends Fragment{
 		app_ranking.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getFragmentManager().beginTransaction()
-				.replace(R.id.container, new RankingFragment()).commit();
+				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+				ft.replace(R.id.container, new RankingFragment());
+				ft.addToBackStack("ranking_fragment");
+				ft.commit();
 			}
 		});
 
@@ -97,8 +99,10 @@ public class MainFragment extends Fragment{
 		app_statistics.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.container, new StatsFragment()).commit();
+				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+				ft.replace(R.id.container, new StatsFragment());
+				ft.addToBackStack("stats_fragment");
+				ft.commit();
 			}
 		});
 
@@ -106,8 +110,10 @@ public class MainFragment extends Fragment{
 		app_myBadges.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getFragmentManager().beginTransaction()
-				.replace(R.id.container, new MyBadgesFragment()).commit();
+				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+				ft.replace(R.id.container, new MyBadgesFragment());
+				ft.addToBackStack("badges_fragment");
+				ft.commit();
 			}
 		});
 
@@ -115,8 +121,10 @@ public class MainFragment extends Fragment{
 		btn_play.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getFragmentManager().beginTransaction()
-						.replace(R.id.container, new CategoryFragmentUp()).commit();
+				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+				ft.replace(R.id.container, new CategoryFragmentUp());
+				ft.addToBackStack("category_fragment");
+				ft.commit();
 			}
 		});
 

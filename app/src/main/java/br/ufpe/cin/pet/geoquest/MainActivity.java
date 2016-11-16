@@ -1,22 +1,26 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.util.Log;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+
+import br.ufpe.cin.pet.geoquest.classes.Question;
 
 public class MainActivity extends Activity implements CategoryFragment.OnFragmentInteractionListener{
 
     private static Bitmap userImage;
 	private String userName;
     private ProgressDialog progressDialog;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +51,17 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
 		return true;
 	}
 
-	public void onBackPressed()
-	{
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.container, new MainFragment()).commit();
+	public void onBackPressed() {
+		int index = getFragmentManager().getBackStackEntryCount() - 1;
+		if (index >= 0) {
+			FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(index);
+			String tag = backEntry.getName();
+			Log.e(tag, tag);
+			if (tag.equals("question_fragment") == false && tag.equals("transition_fragment") == false) {
+				getFragmentManager().beginTransaction()
+						.replace(R.id.container, new MainFragment()).commit();
+			}
+		}
 	}
 
 	@Override
@@ -62,15 +73,15 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
 
 		if (id == R.id.menu_help) {
 			getFragmentManager().beginTransaction()
-			.replace(R.id.container, new HelpFragment()).commit();
+			.replace(R.id.container, new HelpFragment()).addToBackStack("help").commit();
 			return true;
 		} else if (id == R.id.menu_credits) {
 			getFragmentManager().beginTransaction()
-			.replace(R.id.container, new CreditsFragment()).commit();
+			.replace(R.id.container, new CreditsFragment()).addToBackStack("credits").commit();
 			return true;
 		} else if (id == R.id.arrow){
 			getFragmentManager().beginTransaction()
-			.replace(R.id.container, new MainFragment()).commit();
+			.replace(R.id.container, new MainFragment()).addToBackStack("main_fragment").commit();
 			return true;
 		}else if(id == R.id.menu_logout){
             LoginManager.getInstance().logOut();

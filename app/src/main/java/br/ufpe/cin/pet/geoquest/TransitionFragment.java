@@ -1,6 +1,7 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -177,16 +178,20 @@ public class TransitionFragment extends Fragment {
         vh.goback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.container, new MainFragment()).commit();
+                FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                ft.replace(R.id.container, new MainFragment());
+                ft.addToBackStack("main_fragment");
+                ft.commit();
             }
         });
 
         vh.gofront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.container, new QuestionFragment(category, lev)).commit();
+                FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                ft.replace(R.id.container, new QuestionFragment(category, lev));
+                ft.addToBackStack("question_fragment");
+                ft.commit();
             }
         });
     }
