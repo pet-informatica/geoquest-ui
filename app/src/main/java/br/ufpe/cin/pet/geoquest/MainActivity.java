@@ -14,7 +14,7 @@ import com.facebook.login.LoginManager;
 public class MainActivity extends Activity implements CategoryFragment.OnFragmentInteractionListener{
 
     private static Bitmap userImage;
-	private String userName;
+	private static String userName;
     private ProgressDialog progressDialog;
 
 

@@ -1,24 +1,9 @@
 package br.ufpe.cin.pet.geoquest;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
-import android.app.Fragment;
-import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,10 +22,12 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.facebook.AccessToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import br.ufpe.cin.pet.geoquest.classes.Stats;
 
@@ -82,6 +69,8 @@ public class StatsFragment extends Fragment{
 
 
     private void getStatistics(final View rootView){
+
+        //adicionar o Config.Key na url
 
         String url = "http://www.mocky.io/v2/575da6b90f0000b72222ae2f";
 

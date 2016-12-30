@@ -36,6 +36,14 @@
                 android:lineSpacingMultiplier="1.1"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/questionImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:onClick="imageClick"/>
         </LinearLayout>
 
         <LinearLayout
