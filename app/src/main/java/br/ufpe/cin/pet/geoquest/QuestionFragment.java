@@ -38,6 +38,7 @@ public class QuestionFragment extends Fragment {
 	
 	TextView questionExam;
 	TextView questionDescription;
+	ImageView questionImage;
 	LinearLayout layout_ans1;
 	LinearLayout layout_ans2;
 	LinearLayout layout_ans3;
@@ -48,7 +49,6 @@ public class QuestionFragment extends Fragment {
 	TextView answer3;
 	TextView answer4;
 	TextView answer5;
-
 	Category category;
 	String cat;
 	int lev;
@@ -67,9 +67,10 @@ public class QuestionFragment extends Fragment {
         getActivity().getActionBar().setTitle("GeoQuest");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().getActionBar().hide();
-		
+
 		questionExam = (TextView) rootView.findViewById(R.id.questionTitle);
 		questionDescription = (TextView) rootView.findViewById(R.id.questionDescription);
+		questionImage = (ImageView) rootView.findViewById(R.id.questionImage);
 		answer1 = (TextView) rootView.findViewById(R.id.answer1);
 		answer2 = (TextView) rootView.findViewById(R.id.answer2);
 		answer3 = (TextView) rootView.findViewById(R.id.answer3);
@@ -109,7 +110,7 @@ public class QuestionFragment extends Fragment {
 
         String categoryId = category.getId()+"000"+lev;
 
-        //String url = R.string.base_url + "questions/?category=" + categoryId;
+        //String url = R.string.base_url + "questions/?category=" + categoryId + Config.Key;
 		String url = "http://www.mocky.io/v2/580d323a10000034185404a9";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>(){
@@ -162,6 +163,9 @@ public class QuestionFragment extends Fragment {
     }
 	
 	private void setOnClickListeners(View rootView, final String rightAnswer){
+
+		rootView.setClickable(false);
+		rootView.setEnabled(false);
 
 		//layout_ans1 = (LinearLayout) rootView.findViewById (R.id.answer1Layout);
 		layout_ans1.setOnClickListener(new View.OnClickListener() {
@@ -277,6 +281,12 @@ public class QuestionFragment extends Fragment {
 		});
 		
 		return dialog;
+	}
+
+	public void imageClick(View view)
+	{
+		Dialog dialog = new Dialog(getActivity());
+
 	}
 
 }

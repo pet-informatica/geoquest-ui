@@ -158,6 +158,7 @@ public class MainFragment extends Fragment{
 
 	private void getStars(final View rootView){
 
+		//https://geoquest.herokuapp.com/stars/
 		String url = "http://www.mocky.io/v2/57678dc30f00000a08291dc8";
 
 		Log.i("Statistics", "Enviando requisição de estrelas");

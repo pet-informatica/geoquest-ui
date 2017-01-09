@@ -19,7 +19,7 @@ import br.ufpe.cin.pet.geoquest.classes.Question;
 public class MainActivity extends Activity implements CategoryFragment.OnFragmentInteractionListener{
 
     private static Bitmap userImage;
-	private String userName;
+	private static String userName;
     private ProgressDialog progressDialog;
 
 	@Override
