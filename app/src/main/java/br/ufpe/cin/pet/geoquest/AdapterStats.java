@@ -4,8 +4,6 @@ package br.ufpe.cin.pet.geoquest;
  * Created by Tomer Simis on 26/07/2015.
  */
 
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
@@ -15,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.classes.Stats;
 

@@ -1,26 +1,24 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.util.Log;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
-import br.ufpe.cin.pet.geoquest.classes.Question;
-
-public class MainActivity extends Activity implements CategoryFragment.OnFragmentInteractionListener{
+public class MainActivity extends Activity {
 
     private static Bitmap userImage;
 	private static String userName;
     private ProgressDialog progressDialog;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,23 +90,6 @@ public class MainActivity extends Activity implements CategoryFragment.OnFragmen
 
 		return super.onOptionsItemSelected(item);
 	}
-
-	/*
-    public void onCategorySelected(String id){
-        Log.i("CategoryFragment", "Selected category " + id);
-
-        Bundle b = new Bundle();
-        b.putString("category_id", id);
-
-        Fragment f = new QuestionFragment();
-        f.setArguments(b);
-
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, f).commit();
-
-    }
-    */
-
 
     public Bitmap getUserImage() {
         return userImage;

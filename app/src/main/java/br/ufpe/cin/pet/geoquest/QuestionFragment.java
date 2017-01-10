@@ -3,6 +3,9 @@ package br.ufpe.cin.pet.geoquest;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,10 +22,15 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.cloudinary.Cloudinary;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -87,6 +95,19 @@ public class QuestionFragment extends Fragment {
 
         requestQuestions(rootView);
 
+		/*
+		ArrayList<String> lista = new ArrayList<String>();
+		lista.add("babaca");
+		lista.add("mt babaca");
+		lista.add("cuzao");
+		lista.add("cuzao cuzao");
+		lista.add("BIRL");
+		Question quest = new Question("Higor é um ...", "ENEM", lista, "E", 1);
+
+		questions = new ArrayList<Question>();
+		questions.add(quest);
+		*/
+
 		return rootView;
 	}
 
@@ -102,8 +123,47 @@ public class QuestionFragment extends Fragment {
         answer4.setText(quest.getAlternatives().get(3));
         answer5.setText(quest.getAlternatives().get(4));
 
+		quest.setImage("teste.jpg");
+
+		Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");
+
+		final String src = cloudinary.url().generate(quest.getImage());
+
+		new AsyncTask<Void, Void, Void>() {
+			Bitmap bm = null;
+
+			@Override
+			protected Void doInBackground(Void... params) {
+					bm = getBitmapFromURL(src);
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void v) {
+				questionImage.setImageBitmap(bm);
+			}
+		}.execute();
+
         setOnClickListeners(getView(), quest.getCorrectAnswer());
     }
+
+	public static Bitmap getBitmapFromURL(String src) {
+		try {
+			Log.e("src",src);
+			URL url = new URL(src);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoInput(true);
+			connection.connect();
+			InputStream input = connection.getInputStream();
+			Bitmap myBitmap = BitmapFactory.decodeStream(input);
+			Log.e("Bitmap","returned");
+			return myBitmap;
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.e("Exception",e.getMessage());
+			return null;
+		}
+	}
 
     private void requestQuestions(final View rootView){
         Log.i("QuestionFragment", "Fetching questions...");
@@ -130,6 +190,10 @@ public class QuestionFragment extends Fragment {
                         String exam = question.getString("exam");
                         String correctAnswer = question.getString("correct_answer");
 
+
+						//precisa ver como vai pegar a imagem do servidor
+
+
                         ArrayList<String> alternatives = new ArrayList<String>();
                         alternatives.add( question.getString("option_a"));
                         alternatives.add( question.getString("option_b"));
@@ -138,7 +202,7 @@ public class QuestionFragment extends Fragment {
                         alternatives.add( question.getString("option_e"));
 
 
-                        questions.add(new Question(title, exam, alternatives, correctAnswer, id));
+                        questions.add(new Question(title, exam, alternatives, correctAnswer, id, null));
 
                     }
 
@@ -206,8 +270,20 @@ public class QuestionFragment extends Fragment {
 				checkAnswer("E", rightAnswer);
 			}
 		});
+
+		questionImage.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View v) {
+				Dialog dialog = new Dialog(getActivity());
+				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				dialog.setContentView(R.layout.dialog_image);
+
+				ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
+				image.setImageDrawable(questionImage.getDrawable());
+				dialog.show();
+			}
+		});
 	}
-	
+
 	private void checkAnswer(String ans, String rightAnswer){
 		Dialog dialog = createDialog();
 		
@@ -282,11 +358,4 @@ public class QuestionFragment extends Fragment {
 		
 		return dialog;
 	}
-
-	public void imageClick(View view)
-	{
-		Dialog dialog = new Dialog(getActivity());
-
-	}
-
 }

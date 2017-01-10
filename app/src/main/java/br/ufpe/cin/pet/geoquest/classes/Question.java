@@ -10,19 +10,21 @@ public class Question implements Serializable{
     private ArrayList<String> alternatives;
     private String correctAnswer;
     private int id;
+    private String image;
 	
 	public Question(){}
 
-    public Question(String question, String exam, ArrayList<String> alternatives, String correctAnswer, int id) {
+    public Question(String question, String exam, ArrayList<String> alternatives, String correctAnswer, int id, String image) {
         this.question = question;
         this.exam = exam;
         this.alternatives = alternatives;
         this.correctAnswer = correctAnswer;
         this.id = id;
+        this.image = image;
     }
 
     public String getQuestion() {
-        return question;
+        return this.question;
     }
 
     public void setQuestion(String question) {
@@ -30,7 +32,7 @@ public class Question implements Serializable{
     }
 
     public String getExam() {
-        return exam;
+        return this.exam;
     }
 
     public void setExam(String exam) {
@@ -38,7 +40,7 @@ public class Question implements Serializable{
     }
 
     public ArrayList<String> getAlternatives() {
-        return alternatives;
+        return this.alternatives;
     }
 
     public void setAlternatives(ArrayList<String> alternatives) {
@@ -46,7 +48,7 @@ public class Question implements Serializable{
     }
 
     public String getCorrectAnswer() {
-        return correctAnswer;
+        return this.correctAnswer;
     }
 
     public void setCorrectAnswer(String correctAnswer) {
@@ -56,4 +58,8 @@ public class Question implements Serializable{
     public int getId() {
         return this.id;
     }
+
+    public String getImage() { return this.image;}
+
+    public void setImage(String Image){this.image = Image;}
 }
