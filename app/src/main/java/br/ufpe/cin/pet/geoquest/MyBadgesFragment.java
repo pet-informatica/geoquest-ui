@@ -3,6 +3,8 @@ package br.ufpe.cin.pet.geoquest;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,25 +14,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import br.ufpe.cin.pet.geoquest.Utils.CropImage;
 import br.ufpe.cin.pet.geoquest.classes.Badge;
@@ -40,10 +35,8 @@ public class MyBadgesFragment extends Fragment {
 	private ProgressDialog progressDialog;
 	private String area;
 	private double percentage;
-	private String[] badge_tipos = {"caseiro", "flash", "dev", "badge3", "badge4",
-									"badge6", "badge7", "lerdo", "badge9"};
-	private List<Badge> lista;
 	private AdapterBadge adapter;
+	private final OkHttpClient client = new OkHttpClient();
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,89 +57,88 @@ public class MyBadgesFragment extends Fragment {
 
 	private void getBadges(final View rootView) {
 
-		String url = "http://www.mocky.io/v2/576caef810000027005fdb69";
+		try {
 
-		Log.i("Badges", "Enviando requisição das badges");
+			new AsyncTask<Void, Void, Void>() {
+				List<Badge> items = new ArrayList<Badge>();
 
-		StringRequest sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-			@Override
-			public void onResponse(String response) {
-				Log.d("Response", response);
-				try {
-					JSONObject jsonResponse = new JSONObject(response);
-					area = jsonResponse.getString("area");
-					percentage = jsonResponse.getDouble("percentage");
-					JSONObject badgeresponse = jsonResponse.getJSONObject("badges");
-
-					Badge badge = null;
-					List<Badge> list = new ArrayList<Badge>();
-					boolean found;
-					for(int i = 0; i < badge_tipos.length; i++) {
-						found = false;
-						for(int j = 0; j < badgeresponse.length(); j++) {
-							if (badgeresponse.get((j+1)+"").toString().equalsIgnoreCase(badge_tipos[i])) {
-								badge = new Badge(getIdBadgeImg(badge_tipos[i]), badge_tipos[i], "Voce possui essa badge!", true);
-								found = true;
-								break;
-							}
-						}
-						if (found == false) badge = new Badge(getIdBadgeImg(badge_tipos[i]), "Desconhecido", "Voce não possui essa badge!", false);
-						list.add(badge);
+				@Override
+				protected Void doInBackground(Void... params) {
+					try {
+						items = run();
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					lista = list;
-
-					populateView(rootView);
-
-					progressDialog.hide();
-				} catch (JSONException e) {
-					e.printStackTrace();
-					Log.e("ParserError", "Can't parse response into json object");
+					return null;
 				}
-			}
-		}, new Response.ErrorListener() {
-			@Override
-			public void onErrorResponse(VolleyError error) {
 
-				if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-					Log.e("Error", "TimeoutError");
-				} else if (error instanceof AuthFailureError) {
-					Log.e("Error", "AuthFailureError");
-				} else if (error instanceof ServerError) {
-					Log.e("Error", "ServerError");
-				} else if (error instanceof NetworkError) {
-					Log.e("Error", "NetworkError");
-				} else if (error instanceof ParseError) {
-					Log.e("Error", "ParseError");
+				@Override
+				protected void onPostExecute(Void v) {
+					populateView(rootView, items);
 				}
-				Log.e("Error", " Code " + error.networkResponse);
-			}
-		}){
-			@Override
-			protected Map<String,String> getParams(){
-				Map<String,String> params = new HashMap<String, String>();
-				return params;
-			}
+			}.execute();
 
-		};
-
-		sr.setRetryPolicy(new DefaultRetryPolicy(
-				10000,
-				DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-		RequestSingleton.getInstance(this.getActivity()).addToRequestQueue(sr);
-
+		} catch (Exception e) {
+			Log.i("ERROR", "Não foi possível obter as suas badges");
+			e.printStackTrace();
+		}
 	}
 
-	private void populateView(View rootView) {
+	private List<Badge> run() throws Exception {
+
+		String url = "http://www.mocky.io/v2/587477820f0000182552e28f";
+		String backUrl = getResources().getString(R.string.base_url)+"users/badge/";
+
+		Request request = new Request.Builder()
+				.url(url)
+				.header("TOKEN", Config.key)
+				.build();
+		Response response = client.newCall(request).execute();
+		if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+		List<Badge> auxiliar = new ArrayList<Badge>();
+		try {
+			JSONObject jsonResponse = new JSONObject(response.body().string());
+			area = jsonResponse.getString("area");
+			percentage = jsonResponse.getDouble("percentage");
+			JSONArray badgeresponse = jsonResponse.getJSONArray("badges");
+
+			int size = badgeresponse.length();
+			Bitmap bm = null;
+			InputStream in;
+			Badge badge;
+			for(int i = 0; i < size; i++) {
+				JSONObject obj = badgeresponse.getJSONObject(i);
+
+				int id = obj.getInt("id");
+				String name = obj.getString("name");
+				String desc = obj.getString("description");
+				int has = obj.getInt("has");
+				boolean b;
+				if (has == 1) b = true;
+				else b = false;
+				String img = obj.getString("image");
+
+				in = new URL(img).openStream();
+				bm = BitmapFactory.decodeStream(in);
+				badge = new Badge(id, name, desc, bm, b);
+				auxiliar.add(badge);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.i("JSONError", "Erro na formatação do response");
+		}
+		return auxiliar;
+	}
+
+	private void populateView(View rootView, List<Badge> items) {
 
 		MainActivity mainActivity = (MainActivity)getActivity();
-
 
 		getActivity().getActionBar().setTitle(mainActivity.getUserName());
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		ImageView userImgBorda = (ImageView) rootView.findViewById(R.id.userBadgesImgBorda);
 		ImageView userImg = (ImageView) rootView.findViewById(R.id.userBadgesImg);
 		TextView description = (TextView) rootView.findViewById(R.id.descUserBadges);
 		ImageView star1 = (ImageView) rootView.findViewById(R.id.star1Badges);
@@ -174,78 +166,8 @@ public class MyBadgesFragment extends Fragment {
 		else star5.setImageResource(R.drawable.star);
 
 
-		adapter = new AdapterBadge(getActivity().getApplicationContext(), lista);
+		adapter = new AdapterBadge(getActivity().getApplicationContext(), items);
 		listView.setAdapter(adapter);
-
-		/*
-		View view = null;
-		for(int i = 0; i < badge_tipos.length; i++) {
-			ViewHolder viewHolder = new ViewHolder();
-
-			viewHolder.descript = (TextView) rootView.findViewById(R.id.badge_description);
-			viewHolder.title = (TextView) rootView.findViewById(R.id.badge_title);
-			viewHolder.token = (ImageView) rootView.findViewById(R.id.Bagde_image);
-
-			if (has_badge[i] == 1) {
-				viewHolder.descript.setText("Você possui essa Badge!");
-				viewHolder.title.setText(badge_tipos[i].toUpperCase()+"");
-				viewHolder.token.setImageResource(getIdBadgeImg(badge_tipos[i]));
-			} else {
-				viewHolder.descript.setText("Acerte mais questões para conquistar essa badge!");
-				viewHolder.title.setText("Badge desconhecida");
-				viewHolder.token.setImageResource(getIdBadgeImg(badge_tipos[i]));
-				viewHolder.token.setImageAlpha(2);
-			}
-
-			view.setTag(viewHolder);
-			listView.addFooterView(view);
-		}
-		*/
 	}
-
-	/*
-	
-	public int getIdBadge(String x){
-		if (x.equals("caseiro")) return R.id.badge1;
-		if (x.equals("dev")) return R.id.badge2;
-		if (x.equals("badge3")) return R.id.badge3;
-		if (x.equals("badge4")) return R.id.badge4;
-		if (x.equals("flash")) return R.id.badge5;
-		if (x.equals("badge6")) return R.id.badge6;
-		if (x.equals("badge7")) return R.id.badge7;
-		if (x.equals("lerdo")) return R.id.badge8;
-		if (x.equals("badge9")) return R.id.badge9;
-		return 0;
-	}
-
-	*/
-	
-	public static int getIdBadgeImg(String badge){
-		if (badge.equals("caseiro")) return R.drawable.badge_caseiro;
-		if (badge.equals("flash")) return R.drawable.badge_flash;
-		if (badge.equals("lerdo")) return R.drawable.badge_lerdo;
-		if (badge.equals("dev")) return R.drawable.badge_dev;
-		return 0;
-	}
-
-	/*
-	
-	public static String getNomeBadge(String badge){
-		if (badge.equals("caseiro")) return "\"Caseiro\"";
-		if (badge.equals("flash")) return "\"The Flash\"";
-		if (badge.equals("lerdo")) return "\"Lerdo\"";
-		if (badge.equals("dev")) return "\"Dev\"";
-		return "";
-	}
-	
-	
-	public String getBadgeDesc(String badge){
-		if (badge.equals("caseiro")) return "Caseiro: participou de uma sa�da onde n�o houve sugest�es.";
-		if (badge.equals("flash")) return "Flash: clicou rapidamente.";
-		if (badge.equals("lerdo")) return "Lerdo: clicou lentamente.";
-		if (badge.equals("dev")) return "Desenvolvedor: participou do desenvolvimento do Geoquest.";	
-		return "";
-	}
-	*/
 	
 }

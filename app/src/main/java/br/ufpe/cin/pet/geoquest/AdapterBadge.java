@@ -56,10 +56,15 @@ public class AdapterBadge extends ArrayAdapter<Badge> {
         if (pos < list.size()) {
             Badge badge = list.get(pos);
 
-            viewHolder.title.setText(badge.getNome().toUpperCase()+"");
-            viewHolder.descript.setText(badge.getDescricao()+"");
-            viewHolder.token.setImageResource(badge.getId());
-            //if (badge.temBadge() == false) viewHolder.token.setImageAlpha(2);
+            if (badge.getPossui() == true) {
+                viewHolder.title.setText(badge.getNome().toUpperCase()+"");
+                viewHolder.descript.setText(badge.getDescricao()+"");
+                //viewHolder.token.setImageResource(badge.getId());
+            } else {
+                viewHolder.title.setText("DESCONHECIDO");
+                viewHolder.descript.setText("Conquinta ainda não alcançada");
+                //viewHolder.token.setImageResource(badge.getId());
+            }
         }
 
         return view;
