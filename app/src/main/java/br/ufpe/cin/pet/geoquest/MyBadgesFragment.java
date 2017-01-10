@@ -75,6 +75,7 @@ public class MyBadgesFragment extends Fragment {
 				@Override
 				protected void onPostExecute(Void v) {
 					populateView(rootView, items);
+					progressDialog.hide();
 				}
 			}.execute();
 
@@ -86,7 +87,7 @@ public class MyBadgesFragment extends Fragment {
 
 	private List<Badge> run() throws Exception {
 
-		String url = "http://www.mocky.io/v2/587477820f0000182552e28f";
+		String url = "http://www.mocky.io/v2/5874839f0f0000d12652e2b3";
 		String backUrl = getResources().getString(R.string.base_url)+"users/badge/";
 
 		Request request = new Request.Builder()
