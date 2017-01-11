@@ -1,6 +1,8 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +83,7 @@ public class AdapterRaking extends ArrayAdapter<Raking> implements Filterable {
 
 			viewHolder.number.setText(raking.getNumber());
 			raking.setColor();
-			viewHolder.number.setTextColor(view.getResources().getColor(raking.getColor()));
+			viewHolder.number.setTextColor(raking.getColor());
 			viewHolder.number.setTextSize(24);
 
 			CropImage cim = new CropImage(50, raking.getPicture());

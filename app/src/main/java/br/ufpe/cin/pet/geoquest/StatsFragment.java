@@ -41,7 +41,7 @@ public class StatsFragment extends Fragment{
         progressDialog.setIndeterminate(true);
         progressDialog.show();
 
-        getActivity().getActionBar().setTitle("Geoquest");
+        getActivity().getActionBar().setTitle("Estatísticas");
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
         getStatistics(rootView);

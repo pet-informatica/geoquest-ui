@@ -61,6 +61,6 @@ public class Category {
     }
 
     public boolean is_available (int level) {
-        return (level <= max_level);
+        return (level <= this.max_level);
     }
 }

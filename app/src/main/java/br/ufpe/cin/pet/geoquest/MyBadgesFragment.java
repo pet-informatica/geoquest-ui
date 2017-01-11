@@ -137,7 +137,7 @@ public class MyBadgesFragment extends Fragment {
 
 		MainActivity mainActivity = (MainActivity)getActivity();
 
-		getActivity().getActionBar().setTitle(mainActivity.getUserName());
+		getActivity().getActionBar().setTitle("Conquistas");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		ImageView userImg = (ImageView) rootView.findViewById(R.id.userBadgesImg);

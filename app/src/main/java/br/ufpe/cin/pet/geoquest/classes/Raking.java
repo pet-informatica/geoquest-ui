@@ -1,6 +1,8 @@
 package br.ufpe.cin.pet.geoquest.classes;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.util.Log;
 
 import br.ufpe.cin.pet.geoquest.R;
 
@@ -38,10 +40,10 @@ public class Raking {
     }
 
     public void setColor() {
-        if (this.number == "1") this.color = R.color.gold;
-        else if (this.number == "2") this.color = R.color.silver;
-        else if (this.number == "3") this.color = R.color.bronze;
-        else this.color = R.color.grey;
+        if (this.number.equals("1")) this.color = Color.rgb(255, 215, 0);
+        else if (this.number.equals("2")) this.color = Color.rgb(169, 169, 169);
+        else if (this.number.equals( "3")) this.color = Color.rgb(215, 127, 50);
+        else this.color = Color.rgb(190, 190, 190);
     }
 
     public int getColor() {
