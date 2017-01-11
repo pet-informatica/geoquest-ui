@@ -17,8 +17,6 @@ public class MainActivity extends Activity {
 
     private static Bitmap userImage;
 	private static String userName;
-    private ProgressDialog progressDialog;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

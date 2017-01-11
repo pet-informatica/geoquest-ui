@@ -67,18 +67,18 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
             double pr = (double)100*category.getDone()/(double)category.getTotal();
 
-            final CharSequence mess = pr+"%";
+            final CharSequence message = pr+"%";
+            final CharSequence unavailability = "Nível Indisponível";
 
             vh.descricao.setText(category.getDescription());
             vh.progresso.setProgress(category.getDone());
 
             vh.progresso.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    Toast toast = Toast.makeText(ctx, mess, Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(ctx, message, Toast.LENGTH_SHORT);
                     toast.show();
                 }
             });
-
 
             vh.nome.setText(category.getName());
 
@@ -86,9 +86,14 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                 public void onClick(View view) {
                     AlertDialog alert = new AlertDialog.Builder(ctx).setItems(levels, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int pos) {
-                            MainActivity ma = (MainActivity) ctx;
-                            ma.getFragmentManager().beginTransaction()
-                                    .replace(R.id.container, new TransitionFragment(category, pos+1, 1)).addToBackStack("transition_fragment").commit();
+                            if (category.is_available(pos + 1)) {
+                                MainActivity ma = (MainActivity) ctx;
+                                ma.getFragmentManager().beginTransaction()
+                                        .replace(R.id.container, new TransitionFragment(category, pos + 1, 1)).addToBackStack("transition_fragment").commit();
+                            } else {
+                                Toast toast = Toast.makeText(ctx, unavailability, Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
                         }
                     }).create();
 

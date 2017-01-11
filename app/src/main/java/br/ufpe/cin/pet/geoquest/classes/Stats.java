@@ -8,17 +8,16 @@ public class Stats {
 
     public int rankingPos;
     public String favoriteArea;
-    public int percentageCompleted;
+    public double percentageCompleted;
     public Vector<PairAreaPercentage> areas = new Vector<PairAreaPercentage>();
 
-    public static final String rankingPosKey = "posicao";
-    public static final String favoriteAreaKey = "categoria";
-    public static final String percentageCompletedKey = "porcentagem";
-    public static final String areasKey = "categorias_porcentagem";
+    public static final String rankingPosKey = "position";
+    public static final String favoriteAreaKey = "category";
+    public static final String percentageCompletedKey = "percentage";
+    public static final String areasKey = "categories";
 
     public static final String[] CATEGORIES = {
-            "Matemática", "História", "Português", "Geografia", "Inglês",
-            "Sociologia", "Literatura", "Física", "Química", "Biologia"
+            "geologia", "hidrografia", "geografia_politica", "população", "urbanismo"
     };
 
 
@@ -35,9 +34,9 @@ public class Stats {
     public static class PairAreaPercentage{
 
         public String area;
-        public int percentage;
+        public double percentage;
 
-        public PairAreaPercentage(String area, int percentage){
+        public PairAreaPercentage(String area, double percentage){
             this.area = area;
             this.percentage = percentage;
         }

@@ -15,12 +15,15 @@ public class Category {
 
     private int id;
 
-    public Category(String name, String description, int done, int total, int id){
+    private int max_level;
+
+    public Category(String name, String description, int done, int total, int id, int level){
         this.name = name;
         this.description = description;
         this.done = done;
         this.total = total;
         this.id = id;
+        this.max_level = level;
     }
 
     public String getName() {
@@ -55,5 +58,9 @@ public class Category {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean is_available (int level) {
+        return (level <= max_level);
     }
 }

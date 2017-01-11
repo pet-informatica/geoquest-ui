@@ -24,7 +24,7 @@ import okhttp3.Response;
 /**
  * Created by rbb3 on 29/08/16.
  */
-public class CategoryFragmentUp extends Fragment {
+public class CategoryFragment extends Fragment {
 
     private CategoryAdapter adapter;
     private final OkHttpClient client = new OkHttpClient();
@@ -35,8 +35,8 @@ public class CategoryFragmentUp extends Fragment {
 
         final View rootView = inflater.inflate(R.layout.fragment_category, container, false);
 
+        getActivity().getActionBar().setTitle("Geoquest");
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         try {
             new AsyncTask<Void, Void, Void>() {
@@ -69,8 +69,12 @@ public class CategoryFragmentUp extends Fragment {
     }
 
     private List<Category> run() throws Exception {
+
+        String url = "http://www.mocky.io/v2/5876877a100000970f8b5cc6";
+        //String backUrl = getResources().getString(R.string.base_url)+"categories/";
+
         Request request = new Request.Builder()
-                .url("http://www.mocky.io/v2/5810e66e3a0000780760985d")
+                .url(url)
                 .header("TOKEN", Config.key)
                 .build();
         Response response = client.newCall(request).execute();
@@ -84,13 +88,14 @@ public class CategoryFragmentUp extends Fragment {
             for (int i = 0; i < tam; i++) {
                 JSONObject object = obj.getJSONObject(i);
 
-                String nome = object.getString("nome");
-                String descricao = object.getString("descricao");
+                String nome = object.getString("name");
+                String descricao = object.getString("description");
                 int total = object.getInt("total");
                 int done = object.getInt("done");
                 int id = object.getInt("id");
+                int level = object.getInt("level");
 
-                Category cat = new Category(nome, descricao, done, total, id);
+                Category cat = new Category(nome, descricao, done, total, id, level);
                 items.add(cat);
             }
 

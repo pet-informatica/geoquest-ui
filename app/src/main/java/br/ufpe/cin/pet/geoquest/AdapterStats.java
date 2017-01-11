@@ -60,7 +60,7 @@ public class AdapterStats extends ArrayAdapter<Stats.PairAreaPercentage>{
 
         Stats.PairAreaPercentage pair = areas.get(position);
         viewHolder.statsArea.setText(pair.area);
-        viewHolder.areaPercentageCompleted.setProgress(pair.percentage);
+        viewHolder.areaPercentageCompleted.setProgress((int)pair.percentage);
         viewHolder.areaPercentageCompleted.getProgressDrawable().setColorFilter(Color.parseColor("#FF8C00") , Mode.SRC_IN);
 
         return view;

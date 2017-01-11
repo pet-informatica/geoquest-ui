@@ -112,7 +112,7 @@ public class MainFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-				ft.replace(R.id.container, new CategoryFragmentUp());
+				ft.replace(R.id.container, new CategoryFragment());
 				ft.addToBackStack("category_fragment");
 				ft.commit();
 			}
