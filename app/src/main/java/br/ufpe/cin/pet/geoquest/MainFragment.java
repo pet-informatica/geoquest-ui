@@ -2,6 +2,7 @@ package br.ufpe.cin.pet.geoquest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,25 +13,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import com.facebook.Profile;
-import com.facebook.ProfileTracker;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
 public class MainFragment extends Fragment{
 
@@ -46,8 +36,6 @@ public class MainFragment extends Fragment{
 
     private MainActivity activity;
 
-    private ProfileTracker profileTracker;
-
     private ImageView userImage;
 
 	private ProgressDialog progressDialog;
@@ -55,6 +43,8 @@ public class MainFragment extends Fragment{
 	private static int fullStars = 0;
 
 	private final int[] STARS_IDS = {R.id.star1, R.id.star2, R.id.star3, R.id.star4, R.id.star5};
+
+	private final OkHttpClient client = new OkHttpClient();
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -128,23 +118,18 @@ public class MainFragment extends Fragment{
 			}
 		});
 
-
-
-
 		return rootView;
 	}
 
     public void updateProfile(View rootView){
         Log.i("MainFragment", "Updating user information " + Profile.getCurrentProfile().getName());
         Profile profile = Profile.getCurrentProfile();
-		if(fullStars == 0)
+		if(fullStars == 0) {
 			getStars(rootView);
-		else
-		{
+		} else {
 			updateStars(rootView);
 			progressDialog.hide();
 		}
-
 
         userName.setText(profile.getName());
 		activity.setUserName(profile.getName());
@@ -154,67 +139,52 @@ public class MainFragment extends Fragment{
         new FacebookImageTask(userImage, activity).execute(Profile.getCurrentProfile().getProfilePictureUri(150,150).toString());
     }
 
-
-
 	private void getStars(final View rootView){
 
-		//https://geoquest.herokuapp.com/stars/
-		String url = "http://www.mocky.io/v2/57678dc30f00000a08291dc8";
+		try {
+			new AsyncTask<Void, Void, Void>() {
+				@Override
+				protected Void doInBackground(Void... params) {
+					try {
+						run();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
 
-		Log.i("Statistics", "Enviando requisição de estrelas");
-
-		StringRequest sr;
-		sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-			@Override
-			public void onResponse(String response) {
-				Log.d("Response", response);
-				try	 {
-					JSONObject jsonResponse = new JSONObject(response);
-					fullStars = jsonResponse.getInt("fullstars");
+				@Override
+				protected void onPostExecute(Void v) {
 					updateStars(rootView);
 					progressDialog.hide();
-				} catch (JSONException e) {
-					e.printStackTrace();
-					Log.e("ParserError", "Can't parse response into json object");
 				}
-				//   waitProfileLoad();
-				// response.
+			}.execute();
 
+		} catch (Exception e) {
+			Log.i("ERROR", "Não foi possível obter as suas estrelas");
+			e.printStackTrace();
+		}
+	}
 
+	private void run() throws Exception {
 
-			}
-		}, new Response.ErrorListener() {
-			@Override
-			public void onErrorResponse(VolleyError error) {
+		//String backUrl = getResources().getString(R.string.base_url)+"stars/";
+		String url = "http://www.mocky.io/v2/57678dc30f00000a08291dc8";
 
-				if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-					Log.e("Error", "TimeoutError");
-				} else if (error instanceof AuthFailureError) {
-					Log.e("Error", "AuthFailureError");
-				} else if (error instanceof ServerError) {
-					Log.e("Error", "ServerError");
-				} else if (error instanceof NetworkError) {
-					Log.e("Error", "NetworkError");
-				} else if (error instanceof ParseError) {
-					Log.e("Error", "ParseError");
-				}
+		Request request = new Request.Builder()
+				.url(url)
+				.header("TOKEN", Config.key)
+				.build();
+		Response response = client.newCall(request).execute();
+		if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-				Log.e("Error", " Code " + error.networkResponse);
-			}
-		}){
-			@Override
-			protected Map<String,String> getParams(){
-				Map<String,String> params = new HashMap<String, String>();
-				return params;
-			}
-
-		};
-
-		sr.setRetryPolicy(new DefaultRetryPolicy(
-				10000,
-				DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-				DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-		RequestSingleton.getInstance(this.getActivity()).addToRequestQueue(sr);
+		try {
+			JSONObject jsonResponse = new JSONObject(response.body().string());
+			fullStars = jsonResponse.getInt("fullstars");
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.i("JSONError", "Erro na formatação do response");
+		}
 	}
 
 
@@ -224,7 +194,4 @@ public class MainFragment extends Fragment{
 			star.setImageResource(R.drawable.star_full);
 		}
 	}
-
-
-
 }

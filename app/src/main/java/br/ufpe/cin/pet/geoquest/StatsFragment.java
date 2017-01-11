@@ -72,7 +72,7 @@ public class StatsFragment extends Fragment{
 
         //adicionar o Config.Key na url
 
-        String url = "http://www.mocky.io/v2/575da6b90f0000b72222ae2f";
+        String url = "http://www.mocky.io/v2/587668bc100000190c8b5c8c";
 
         Log.i("Statistics", "Enviando requisição das statistics");
 

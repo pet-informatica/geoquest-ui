@@ -1,6 +1,7 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ public class RankingFragment extends Fragment implements
 
 	private AdapterRaking adapter;
 	private final OkHttpClient client = new OkHttpClient();
+	private ProgressDialog progressDialog;
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
@@ -52,6 +54,12 @@ public class RankingFragment extends Fragment implements
 
 		getActivity().getActionBar().setTitle("Ranking");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		progressDialog = new ProgressDialog(rootView.getContext());
+		progressDialog.setMessage("Carregando...");
+		progressDialog.setCancelable(false);
+		progressDialog.setIndeterminate(true);
+		progressDialog.show();
 
 		try {
 			new AsyncTask<Void, Void, Void>() {
@@ -73,6 +81,8 @@ public class RankingFragment extends Fragment implements
 
 					ListView listView = (ListView) rootView.findViewById(R.id.listViewRaking);
 					listView.setAdapter(adapter);
+
+					progressDialog.hide();
 				}
 			}.execute();
 
@@ -103,8 +113,12 @@ public class RankingFragment extends Fragment implements
 	}
 
 	private List<Raking> run() throws Exception {
+
+		String url = "http://www.mocky.io/v2/587665d1100000b70b8b5c85";
+		//String backUrl = getResources().getString(R.string.base_url)+"users/rank/";
+
 		Request request = new Request.Builder()
-				.url(getResources().getString(R.string.base_url)+"users/rank/")
+				.url(url)
 				.header("TOKEN", Config.key)
 				.build();
 		Response response = client.newCall(request).execute();
@@ -120,7 +134,7 @@ public class RankingFragment extends Fragment implements
 			for (int i = 0; i < tam; i++) {
 				JSONObject object = obj.getJSONObject(i);
 
-				String nome = object.getString("nome");
+				String nome = object.getString("name");
 				String foto = object.getString("picture");
 				int pontuacao = object.getInt("points");
 

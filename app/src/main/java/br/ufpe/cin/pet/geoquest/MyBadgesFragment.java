@@ -88,7 +88,7 @@ public class MyBadgesFragment extends Fragment {
 	private List<Badge> run() throws Exception {
 
 		String url = "http://www.mocky.io/v2/5874839f0f0000d12652e2b3";
-		String backUrl = getResources().getString(R.string.base_url)+"users/badge/";
+		//String backUrl = getResources().getString(R.string.base_url)+"users/badge/";
 
 		Request request = new Request.Builder()
 				.url(url)

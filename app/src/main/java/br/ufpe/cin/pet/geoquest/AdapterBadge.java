@@ -60,10 +60,12 @@ public class AdapterBadge extends ArrayAdapter<Badge> {
                 viewHolder.title.setText(badge.getNome().toUpperCase()+"");
                 viewHolder.descript.setText(badge.getDescricao()+"");
                 //viewHolder.token.setImageResource(badge.getId());
+                viewHolder.token.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.title.setText("DESCONHECIDO");
                 viewHolder.descript.setText("Conquinta ainda não alcançada");
                 //viewHolder.token.setImageResource(badge.getId());
+                viewHolder.token.setVisibility(View.GONE);
             }
         }
 
