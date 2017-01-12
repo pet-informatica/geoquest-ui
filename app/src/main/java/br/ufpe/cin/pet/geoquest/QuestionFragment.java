@@ -9,9 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -35,8 +33,10 @@ import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class QuestionFragment extends Fragment {
@@ -77,13 +77,13 @@ public class QuestionFragment extends Fragment {
 
 		final View rootView = inflater.inflate(R.layout.fragment_question, container, false);
 
+        getActivity().getActionBar().setTitle("GeoQuest");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().getActionBar().hide();
 
 		questionExam = (TextView) rootView.findViewById(R.id.questionTitle);
 		questionDescription = (TextView) rootView.findViewById(R.id.questionDescription);
 		questionImage = (ImageView) rootView.findViewById(R.id.questionImage);
-
 		answer1 = (TextView) rootView.findViewById(R.id.answer1);
 		answer2 = (TextView) rootView.findViewById(R.id.answer2);
 		answer3 = (TextView) rootView.findViewById(R.id.answer3);
@@ -132,8 +132,6 @@ public class QuestionFragment extends Fragment {
 
 		String str = quest.getImage();
 
-		//quest.setImage("teste.jpg");
-
 		Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");
 		final String src = cloudinary.url().generate(str);
 
@@ -157,6 +155,7 @@ public class QuestionFragment extends Fragment {
 	public static Bitmap getBitmapFromURL(String src) {
 
 		try {
+			Log.e("src",src);
 			URL url = new URL(src);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoInput(true);
@@ -175,6 +174,7 @@ public class QuestionFragment extends Fragment {
 	}
 
     private void requestQuestions(final View rootView){
+        Log.i("QuestionFragment", "Fetching questions...");
 
 		try {
 
@@ -367,9 +367,44 @@ public class QuestionFragment extends Fragment {
 		dialog.show();
 	}
 
-	private void updateBack() {
+	public static final MediaType JSON
+			= MediaType.parse("application/json; charset=utf-8");
+	private void updateBack(final int right) {
 		//Percorrer o is_right e informar ao back quais as questoes ja foram respondidas e
 		//estao indisponiveis. Deixar salvo la o precentual de acerto no ultimo bloco
+		try {
+			new AsyncTask<Void, Void, Void>() {
+				@Override
+				protected Void doInBackground(Void... params) {
+					try {
+						//backurl = getResources().getString(R.string.base_url)+acertos/
+
+						Log.d("POST", post("http://www.roundsapp.com/post", "{ 'Questoes' : " + right + "}"));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void v) { 	}
+			}.execute();
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	String post(String url, String json) throws IOException {
+		RequestBody body = RequestBody.create(JSON, json);
+		Request request = new Request.Builder()
+				.url(url)
+				.post(body)
+				.build();
+		try (Response response = client.newCall(request).execute()) {
+			return response.body().toString();
+		}
 	}
 	
 	private Dialog createDialog(){
@@ -384,7 +419,11 @@ public class QuestionFragment extends Fragment {
 			public void onClick(View v) {
                 currentQuestion++;
 				if (currentQuestion >= questions.size()) {
-					updateBack();
+					int right = 0;
+					for (int i: is_right.values()) {
+						if(i == 1) right++;
+					}
+					updateBack(right);
 					dialog.dismiss();
 					FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 					ft.replace(R.id.container, new TransitionFragment(category, lev, 0));
