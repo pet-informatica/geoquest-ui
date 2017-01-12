@@ -2,62 +2,49 @@ package br.ufpe.cin.pet.geoquest;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.cloudinary.Cloudinary;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
+import br.ufpe.cin.pet.geoquest.classes.Badge;
 import br.ufpe.cin.pet.geoquest.classes.Category;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by rbb3 on 03/10/16.
  */
 public class TransitionFragment extends Fragment {
 
-    private double v1;
-    private double v2;
-    private double v3;
     private String cat;
     private int lev;
     private int type;
     private Category category;
 
     static class ViewHolder {
-        protected TextView txt1;
-        protected TextView txt2;
-        protected TextView txt3;
         protected TextView titulo;
         protected TextView nivel;
         protected ImageButton gofront;
         protected ImageButton goback;
         protected ImageView feedback;
-        protected ProgressBar pb1;
-        protected ProgressBar pb2;
-        protected ProgressBar pb3;
+        protected TextView nameBadge;
+        protected TextView description;
     }
 
     public TransitionFragment(Category category, int level, int type) {
@@ -67,111 +54,110 @@ public class TransitionFragment extends Fragment {
         this.type = type;
     }
 
+    private final OkHttpClient client = new OkHttpClient();
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = null;
         if (type == 1) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.container, new QuestionFragment(category, lev)).commit();
         }
-
-        View view = inflater.inflate(R.layout.fragment_transition, container, false);
-
-        getData(view);
+        else
+        {
+            view = inflater.inflate(R.layout.fragment_transition, container, false);
+            getData(view);
+        }
 
         return view;
     }
-
+    List<Badge> items = new ArrayList<>();
     private void getData(final View rootView){
 
-        String url = "http://www.mocky.io/v2/57f945d10f000007185a7cee";
+        try {
+            new AsyncTask<Void, Void, Void>() {
 
-        Log.i("Transition", "Enviando requisição da transicao");
 
-        StringRequest sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("Response", response);
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    v1 = jsonResponse.getDouble("valor1");
-                    v2 = jsonResponse.getDouble("valor2");
-                    v3 = jsonResponse.getDouble("valor3");
-                    //lidar com badges
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        items = run();
 
-                    JSONArray categoriesResponse = jsonResponse.getJSONArray("badges");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
 
+                @Override
+                protected void onPostExecute(Void v) {
                     populate(rootView);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e("ParserError", "Can't parse response into json object");
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+            }.execute();
 
-                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e("Error", "TimeoutError");
-                } else if (error instanceof AuthFailureError) {
-                    Log.e("Error", "AuthFailureError");
-                } else if (error instanceof ServerError) {
-                    Log.e("Error", "ServerError");
-                } else if (error instanceof NetworkError) {
-                    Log.e("Error", "NetworkError");
-                } else if (error instanceof ParseError) {
-                    Log.e("Error", "ParseError");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<Badge> run() throws IOException {
+
+        String url = "http://www.mocky.io/v2/5876edad100000e41a8b5d12";
+        //String backUrl = getResources().getString(R.string.base_url)+"transition/";
+
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .header("TOKEN", Config.key)
+                .build();
+        okhttp3.Response response = client.newCall(request).execute();
+        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+        List<Badge> items = new ArrayList<>();
+
+        try {
+            JSONArray obj = new JSONArray(response.body().string());
+            int tam = obj.length();
+            for (int i = 0; i < tam; i++) {
+                JSONObject object = obj.getJSONObject(i);
+
+                String name = object.getString("name");
+                String description = object.getString("description");
+                String image = object.getString("image");
+                int id = object.getInt("id");
+
+                Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");
+                final String src = cloudinary.url().generate(image);
+                Bitmap bm = null;
+                bm = new BitmapFromURL(src).getBitmapFromURL();
+
+                items.add(new Badge(id, name, description, bm, true));
+
                 }
-
-                Log.e("Error", " Code " + error.networkResponse);
-            }
-        }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                return params;
-            }
-
-        };
-
-        sr.setRetryPolicy(new DefaultRetryPolicy(
-                10000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestSingleton.getInstance(this.getActivity()).addToRequestQueue(sr);
+            } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+        return items;
     }
 
     void populate(View view) {
         ViewHolder vh = new ViewHolder();
 
-
-        vh.txt1 = (TextView) view.findViewById(R.id.textView3);
-        vh.txt2 = (TextView) view.findViewById(R.id.textView4);
-        vh.txt3 = (TextView) view.findViewById(R.id.textView5);
-        vh.pb1 = (ProgressBar) view.findViewById(R.id.progressBar);
-        vh.pb2 = (ProgressBar) view.findViewById(R.id.progressBar2);
-        vh.pb3 = (ProgressBar) view.findViewById(R.id.progressBar3);
         vh.goback = (ImageButton) view.findViewById(R.id.returnMenoButton);
         vh.gofront = (ImageButton) view.findViewById(R.id.goFowardButton);
         vh.titulo = (TextView) view.findViewById(R.id.trasitionTitle);
         vh.nivel = (TextView) view.findViewById(R.id.transitionLevel);
         vh.feedback = (ImageView) view.findViewById(R.id.feedbackImg);
+        vh.nameBadge = (TextView) view.findViewById(R.id.nameBadge);
+        vh.description = (TextView) view.findViewById(R.id.description);
+
 
         vh.goback.setImageResource(R.drawable.voltar);
         vh.gofront.setImageResource(R.drawable.continuar);
-        vh.txt1.setText(v1+"% do bloco");
-        vh.txt2.setText(v2+"% da categoria");
-        vh.txt3.setText(v3+"% do jogo");
-        vh.pb1.setProgress((int)v1);
-        vh.pb2.setProgress((int)v2);
-        vh.pb3.setProgress((int)v3);
         vh.titulo.setText(cat);
         vh.nivel.setText("Nível "+lev);
-
-        if (v1 <= 50) vh.feedback.setImageResource(R.drawable.fail);
-        else if (v1 <= 80) vh.feedback.setImageResource(R.drawable.normal);
-        else vh.feedback.setImageResource(R.drawable.victory);
-
+        vh.feedback.setImageBitmap(items.get(0).getImage());
+        vh.nameBadge.setText(items.get(0).getNome());
+        vh.description.setText(items.get(0).getDescricao());
 
         vh.goback.setOnClickListener(new View.OnClickListener() {
             @Override
