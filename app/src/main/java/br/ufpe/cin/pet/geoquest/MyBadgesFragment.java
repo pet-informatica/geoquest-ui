@@ -41,6 +41,9 @@ public class MyBadgesFragment extends Fragment {
 	private double percentage;
 	private AdapterBadge adapter;
 	private final OkHttpClient client = new OkHttpClient();
+	private View root;
+	private List<Badge> list;
+	private Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,8 +81,13 @@ public class MyBadgesFragment extends Fragment {
 
 				@Override
 				protected void onPostExecute(Void v) {
-					populateView(rootView, items);
-					progressDialog.hide();
+
+					for(int i = 0; i < items.size(); i++) {
+						items.get(i).setImage(updateImage(items.get(i), i == items.size()-1).getImage());
+					}
+
+					up(rootView, items);
+
 				}
 			}.execute();
 
@@ -87,6 +95,11 @@ public class MyBadgesFragment extends Fragment {
 			Log.i("ERROR", "Não foi possível obter as suas badges");
 			e.printStackTrace();
 		}
+	}
+
+	final void up(View view, List<Badge> list) {
+		this.root = view;
+		this.list = list;
 	}
 
 	private List<Badge> run() throws Exception {
@@ -123,12 +136,7 @@ public class MyBadgesFragment extends Fragment {
 				b = (has == 1);
 				String img = obj.getString("image");
 
-				Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");
-				final String src = cloudinary.url().generate(img);
-
-				bm = (new BitmapFromURL(src)).getBitmapFromURL();
-
-				badge = new Badge(id, name, desc, bm, b);
+				badge = new Badge(id, name, desc, null, b, img);
 				auxiliar.add(badge);
 			}
 
@@ -137,6 +145,34 @@ public class MyBadgesFragment extends Fragment {
 			Log.i("JSONError", "Erro na formatação do response");
 		}
 		return auxiliar;
+	}
+
+	private Badge updateImage(Badge badge, final boolean can_update) {
+
+		final Badge b = badge;
+
+		final String src = cloudinary.url().generate(b.getStr());
+
+		new AsyncTask<Void, Void, Void>() {
+			Bitmap bm = null;
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				bm = new BitmapFromURL(src).getBitmapFromURL();
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void v) {
+				b.setImage(bm);
+				if (can_update) {
+					progressDialog.hide();
+					populateView(root, list);
+				}
+			}
+		}.execute();
+
+		return b;
 	}
 
 	private void populateView(View rootView, List<Badge> items) {
