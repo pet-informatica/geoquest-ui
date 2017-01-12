@@ -3,6 +3,7 @@ package br.ufpe.cin.pet.geoquest;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -19,9 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.cloudinary.Cloudinary;
 
 import org.json.JSONArray;
@@ -33,14 +31,19 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class QuestionFragment extends Fragment {
 
-    ArrayList<Question> questions;
+    List<Question> questions;
 	HashMap<Integer, Integer> is_right = new HashMap<Integer, Integer>();
+	private ProgressDialog progressDialog;
 
     private int currentQuestion;
 	
@@ -61,6 +64,8 @@ public class QuestionFragment extends Fragment {
 	String cat;
 	int lev;
 
+	private final OkHttpClient client = new OkHttpClient();
+
 	public QuestionFragment(Category category, int level) {
 		this.category = category;
 		this.cat = category.getName();
@@ -72,13 +77,13 @@ public class QuestionFragment extends Fragment {
 
 		final View rootView = inflater.inflate(R.layout.fragment_question, container, false);
 
-        getActivity().getActionBar().setTitle("GeoQuest");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().getActionBar().hide();
 
 		questionExam = (TextView) rootView.findViewById(R.id.questionTitle);
 		questionDescription = (TextView) rootView.findViewById(R.id.questionDescription);
 		questionImage = (ImageView) rootView.findViewById(R.id.questionImage);
+
 		answer1 = (TextView) rootView.findViewById(R.id.answer1);
 		answer2 = (TextView) rootView.findViewById(R.id.answer2);
 		answer3 = (TextView) rootView.findViewById(R.id.answer3);
@@ -91,50 +96,53 @@ public class QuestionFragment extends Fragment {
 		layout_ans4 = (LinearLayout) rootView.findViewById(R.id.answer4Layout);
 		layout_ans5 = (LinearLayout) rootView.findViewById(R.id.answer5Layout);
 
+		progressDialog = new ProgressDialog(rootView.getContext());
+		progressDialog.setMessage("Carregando...");
+		progressDialog.setCancelable(false);
+		progressDialog.setIndeterminate(true);
+		progressDialog.show();
+
 		currentQuestion = 0;
 
         requestQuestions(rootView);
-
-		/*
-		ArrayList<String> lista = new ArrayList<String>();
-		lista.add("babaca");
-		lista.add("mt babaca");
-		lista.add("cuzao");
-		lista.add("cuzao cuzao");
-		lista.add("BIRL");
-		Question quest = new Question("Higor é um ...", "ENEM", lista, "E", 1);
-
-		questions = new ArrayList<Question>();
-		questions.add(quest);
-		*/
 
 		return rootView;
 	}
 
 
     private void updateUI() {
+
         Question quest = questions.get(currentQuestion);
 
         questionExam.setText(quest.getExam());
         questionDescription.setText(quest.getQuestion());
+
         answer1.setText(quest.getAlternatives().get(0));
         answer2.setText(quest.getAlternatives().get(1));
         answer3.setText(quest.getAlternatives().get(2));
         answer4.setText(quest.getAlternatives().get(3));
         answer5.setText(quest.getAlternatives().get(4));
 
-		quest.setImage("teste.jpg");
+		updateImage(quest);
+
+		setOnClickListeners(getView(), quest.getCorrectAnswer());
+    }
+
+	private void updateImage(Question quest) {
+
+		String str = quest.getImage();
+
+		//quest.setImage("teste.jpg");
 
 		Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");
-
-		final String src = cloudinary.url().generate(quest.getImage());
+		final String src = cloudinary.url().generate(str);
 
 		new AsyncTask<Void, Void, Void>() {
 			Bitmap bm = null;
 
 			@Override
 			protected Void doInBackground(Void... params) {
-					bm = getBitmapFromURL(src);
+				bm = getBitmapFromURL(src);
 				return null;
 			}
 
@@ -144,87 +152,122 @@ public class QuestionFragment extends Fragment {
 			}
 		}.execute();
 
-        setOnClickListeners(getView(), quest.getCorrectAnswer());
-    }
+	}
 
 	public static Bitmap getBitmapFromURL(String src) {
+
 		try {
-			Log.e("src",src);
 			URL url = new URL(src);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoInput(true);
 			connection.connect();
+
 			InputStream input = connection.getInputStream();
 			Bitmap myBitmap = BitmapFactory.decodeStream(input);
-			Log.e("Bitmap","returned");
+
 			return myBitmap;
+
 		} catch (IOException e) {
 			e.printStackTrace();
-			Log.e("Exception",e.getMessage());
+
 			return null;
 		}
 	}
 
     private void requestQuestions(final View rootView){
-        Log.i("QuestionFragment", "Fetching questions...");
 
-        String categoryId = category.getId()+"000"+lev;
+		try {
 
-        //String url = R.string.base_url + "questions/?category=" + categoryId + Config.Key;
-		String url = "http://www.mocky.io/v2/580d323a10000034185404a9";
+			new AsyncTask<Void, Void, Void>() {
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>(){
-            @Override
-            public void onResponse(JSONArray response) {
-                try {
+				@Override
+				protected Void doInBackground(Void... params) {
+					try {
+						questions = new ArrayList<Question>();
+						questions = run();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
 
-					Log.d("response", response.toString());
+				@Override
+				protected void onPostExecute(Void v) {
+					updateUI();
+					progressDialog.hide();
+				}
 
-                    questions = new ArrayList<Question>();
+			}.execute();
 
-                    for (int i = 0; i < response.length(); i++) {
-                        JSONObject question = response.getJSONObject(i);
-
-                        String title = question.getString("question");
-						int id = question.getInt("id");
-                        String exam = question.getString("exam");
-                        String correctAnswer = question.getString("correct_answer");
-
-
-						//precisa ver como vai pegar a imagem do servidor
-
-
-                        ArrayList<String> alternatives = new ArrayList<String>();
-                        alternatives.add( question.getString("option_a"));
-                        alternatives.add( question.getString("option_b"));
-                        alternatives.add( question.getString("option_c"));
-                        alternatives.add( question.getString("option_d"));
-                        alternatives.add( question.getString("option_e"));
-
-
-                        questions.add(new Question(title, exam, alternatives, correctAnswer, id, null));
-
-                    }
-
-                    Log.i("QuestionFragment", "Fetched " + response.length() + " questions.");
-
-                    updateUI();
-
-                }catch(Exception e){
-                    Log.e("QuestionFragment", e.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // TODO Auto-generated method stub
-                Log.e("QuestionFragment", error.getMessage());
-            }
-        });
-
-        RequestSingleton.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
+		} catch (Exception e) {
+			Log.i("ERROR", "Não foi possível obter as suas questões");
+			e.printStackTrace();
+		}
     }
+
+	private List<Question> run() throws Exception {
+
+		//String categoryId = category.getId()+"xxx"+lev;
+
+		String url = "http://www.mocky.io/v2/5876b99e100000a2148b5ced";
+		//String backUrl = getResources().getString(R.string.base_url)+"questions/?category="+categoryId;
+
+		Request request = new Request.Builder()
+				.url(url)
+				.header("TOKEN", Config.key)
+				.build();
+		Response jResponse = client.newCall(request).execute();
+		if (!jResponse.isSuccessful()) throw new IOException("Unexpected code " + jResponse);
+
+		List<Question> quest = new ArrayList<Question>();
+
+		try {
+			JSONArray response = new JSONArray(jResponse.body().string());
+
+			for (int i = 0; i < response.length(); i++) {
+				JSONObject question = response.getJSONObject(i);
+
+				String title = question.getString("question");
+				int id = question.getInt("id");
+				String exam = question.getString("exam");
+				String correctAnswer = question.getString("correct_answer");
+				String image = question.getString("image");
+
+				ArrayList<String> alternatives = new ArrayList<String>();
+				alternatives.add( question.getString("option_a"));
+				alternatives.add( question.getString("option_b"));
+				alternatives.add( question.getString("option_c"));
+				alternatives.add( question.getString("option_d"));
+				alternatives.add( question.getString("option_e"));
+
+
+				quest.add(new Question(title, exam, alternatives, correctAnswer, id, image));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.i("JSONError", "Erro na formatação do response");
+		}
+		return quest;
+	}
+
+	static class ViewHolder {
+		protected LinearLayout ll;
+		protected Button dialogButton;
+		protected TextView ansDialog;
+		protected TextView ansDescDialog;
+		protected ImageView imgAns;
+	}
+
+	private ViewHolder populateViewHolder(ViewHolder vw, Dialog dialog) {
+		vw.ll = (LinearLayout) dialog.findViewById(R.id.answerResultLayout);
+		vw.dialogButton = (Button) dialog.findViewById(R.id.btnNext);
+		vw.ansDialog = (TextView) dialog.findViewById(R.id.answerDialogResult);
+		vw.ansDescDialog = (TextView) dialog.findViewById(R.id.answerDialogDesc);
+		vw.imgAns = (ImageView) dialog.findViewById(R.id.answerSymbol);
+
+		return vw;
+	}
 	
 	private void setOnClickListeners(View rootView, final String rightAnswer){
 
@@ -288,37 +331,35 @@ public class QuestionFragment extends Fragment {
 		Dialog dialog = createDialog();
 		
 		if(!ans.equals(rightAnswer)){
+
 			is_right.put(questions.get(currentQuestion).getId(), 0);
 
-			LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.answerResultLayout);
-			Button dialogButton = (Button) dialog.findViewById(R.id.btnNext); 
-			TextView ansDialog = (TextView) dialog.findViewById(R.id.answerDialogResult); 
-			TextView ansDescDialog = (TextView) dialog.findViewById(R.id.answerDialogDesc); 
-			ImageView imgAns = (ImageView) dialog.findViewById(R.id.answerSymbol);
+			ViewHolder vw = new ViewHolder();
+			vw = populateViewHolder(vw, dialog);
 			
-			ll.setBackgroundColor(getResources().getColor(R.color.bordeaux));
-			dialogButton.setBackgroundResource(R.drawable.next_question_red);
-			ansDialog.setText("RESPOSTA ERRADA");
-			ansDialog.setTextColor(getResources().getColor(R.color.bordeaux));
-			ansDescDialog.setTextColor(getResources().getColor(R.color.bordeaux));
-			ansDescDialog.setText("Que pena!");
-			imgAns.setImageResource(R.drawable.wrong);
+			vw.ll.setBackgroundColor(getResources().getColor(R.color.bordeaux));
+			vw.dialogButton.setBackgroundResource(R.drawable.next_question_red);
+			vw.ansDialog.setText("RESPOSTA ERRADA");
+			vw.ansDialog.setTextColor(getResources().getColor(R.color.bordeaux));
+			vw.ansDescDialog.setTextColor(getResources().getColor(R.color.bordeaux));
+			vw.ansDescDialog.setText("Que pena!");
+			vw.imgAns.setImageResource(R.drawable.wrong);
+
 		} else {
+
 			is_right.put(questions.get(currentQuestion).getId(), 1);
 
-            LinearLayout ll = (LinearLayout) dialog.findViewById(R.id.answerResultLayout);
-            Button dialogButton = (Button) dialog.findViewById(R.id.btnNext);
-            TextView ansDialog = (TextView) dialog.findViewById(R.id.answerDialogResult);
-            TextView ansDescDialog = (TextView) dialog.findViewById(R.id.answerDialogDesc);
-            ImageView imgAns = (ImageView) dialog.findViewById(R.id.answerSymbol);
+			ViewHolder vw = new ViewHolder();
+			vw = populateViewHolder(vw, dialog);
 
-            ll.setBackgroundColor(getResources().getColor(R.color.green));
-            dialogButton.setBackgroundResource(R.drawable.next_question);
-            ansDialog.setText("RESPOSTA CERTA");
-            ansDialog.setTextColor(getResources().getColor(R.color.green));
-            ansDescDialog.setTextColor(getResources().getColor(R.color.green));
-            ansDescDialog.setText("Parabéns!");
-            imgAns.setImageResource(R.drawable.check);
+            vw.ll.setBackgroundColor(getResources().getColor(R.color.green));
+			vw.dialogButton.setBackgroundResource(R.drawable.next_question);
+			vw.ansDialog.setText("RESPOSTA CERTA");
+			vw.ansDialog.setTextColor(getResources().getColor(R.color.green));
+			vw.ansDescDialog.setTextColor(getResources().getColor(R.color.green));
+			vw.ansDescDialog.setText("Parabéns!");
+			vw.imgAns.setImageResource(R.drawable.check);
+
         }
 
 		dialog.setCancelable(false);
