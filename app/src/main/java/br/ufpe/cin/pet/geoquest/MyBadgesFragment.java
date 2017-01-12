@@ -91,7 +91,7 @@ public class MyBadgesFragment extends Fragment {
 
 	private List<Badge> run() throws Exception {
 
-		String url = "http://www.mocky.io/v2/5876e4c7100000b1198b5cfe";
+		String url = "http://www.mocky.io/v2/5876f4d9100000c51b8b5d22";
 		//String backUrl = getResources().getString(R.string.base_url)+"users/badge/";
 
 		Request request = new Request.Builder()
@@ -120,8 +120,7 @@ public class MyBadgesFragment extends Fragment {
 				String desc = obj.getString("description");
 				int has = obj.getInt("has");
 				boolean b;
-				if (has == 1) b = true;
-				else b = false;
+				b = (has == 1);
 				String img = obj.getString("image");
 
 				Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");

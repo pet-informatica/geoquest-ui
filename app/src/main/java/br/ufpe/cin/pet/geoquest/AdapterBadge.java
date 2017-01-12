@@ -1,6 +1,9 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,14 +64,17 @@ public class AdapterBadge extends ArrayAdapter<Badge> {
                 viewHolder.title.setText(badge.getNome().toUpperCase()+"");
                 viewHolder.descript.setText(badge.getDescricao()+"");
                 viewHolder.token.setImageBitmap(badge.getImage());
-                //viewHolder.token.setVisibility(View.VISIBLE);
-                Log.e("lala", badge.getImage()+"");
             } else {
                 viewHolder.title.setText("DESCONHECIDO");
                 viewHolder.descript.setText("Conquinta ainda não alcançada");
+
+                ColorMatrix cm = new ColorMatrix();
+                cm.setSaturation(0);
+                ColorMatrixColorFilter filter = new ColorMatrixColorFilter(cm);
+
                 viewHolder.token.setImageBitmap(badge.getImage());
-                //viewHolder.token.setVisibility(View.GONE);
-                Log.e("lala", badge.getImage()+"");
+                viewHolder.token.setColorFilter(filter);
+                viewHolder.token.setAlpha(0.25f);
             }
         }
 
