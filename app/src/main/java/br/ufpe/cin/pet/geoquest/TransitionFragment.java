@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
+import br.ufpe.cin.pet.geoquest.Utils.Cloud;
 import br.ufpe.cin.pet.geoquest.classes.Badge;
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import okhttp3.OkHttpClient;
@@ -125,8 +126,7 @@ public class TransitionFragment extends Fragment {
                 String image = object.getString("image");
                 int id = object.getInt("id");
 
-                Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");
-                final String src = cloudinary.url().generate(image);
+                final String src = Cloud.cloudinary.url().generate(image);
                 Bitmap bm = null;
                 bm = new BitmapFromURL(src).getBitmapFromURL();
 

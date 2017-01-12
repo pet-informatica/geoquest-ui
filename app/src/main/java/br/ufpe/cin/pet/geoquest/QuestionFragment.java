@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
+import br.ufpe.cin.pet.geoquest.Utils.Cloud;
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
 import okhttp3.MediaType;
@@ -129,8 +130,7 @@ public class QuestionFragment extends Fragment {
 
 		String str = quest.getImage();
 
-		Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");
-		final String src = cloudinary.url().generate(str);
+		final String src = Cloud.cloudinary.url().generate(str);
 
 		new AsyncTask<Void, Void, Void>() {
 			Bitmap bm = null;
