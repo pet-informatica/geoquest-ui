@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,9 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -357,7 +353,7 @@ public class QuestionFragment extends Fragment {
 				@Override
 				protected Void doInBackground(Void... params) {
 					try {
-						//backurl = getResources().getString(R.string.base_url)+acertos/
+						//backurl = getResources().getString(R.string.base_url)+"result/"
 
 						Log.d("POST", post("http://www.roundsapp.com/post", "{ 'Questoes' : " + right + "}"));
 					} catch (Exception e) {
