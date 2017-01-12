@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
 import okhttp3.MediaType;
@@ -140,7 +141,7 @@ public class QuestionFragment extends Fragment {
 
 			@Override
 			protected Void doInBackground(Void... params) {
-				bm = getBitmapFromURL(src);
+				bm = new BitmapFromURL(src).getBitmapFromURL();
 				return null;
 			}
 
@@ -150,27 +151,6 @@ public class QuestionFragment extends Fragment {
 			}
 		}.execute();
 
-	}
-
-	public static Bitmap getBitmapFromURL(String src) {
-
-		try {
-			Log.e("src",src);
-			URL url = new URL(src);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setDoInput(true);
-			connection.connect();
-
-			InputStream input = connection.getInputStream();
-			Bitmap myBitmap = BitmapFactory.decodeStream(input);
-
-			return myBitmap;
-
-		} catch (IOException e) {
-			e.printStackTrace();
-
-			return null;
-		}
 	}
 
     private void requestQuestions(final View rootView){

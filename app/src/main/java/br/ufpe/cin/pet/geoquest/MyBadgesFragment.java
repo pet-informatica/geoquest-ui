@@ -14,15 +14,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cloudinary.Cloudinary;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +91,7 @@ public class MyBadgesFragment extends Fragment {
 
 	private List<Badge> run() throws Exception {
 
-		String url = "http://www.mocky.io/v2/5874839f0f0000d12652e2b3";
+		String url = "http://www.mocky.io/v2/5876e4c7100000b1198b5cfe";
 		//String backUrl = getResources().getString(R.string.base_url)+"users/badge/";
 
 		Request request = new Request.Builder()
@@ -120,8 +124,11 @@ public class MyBadgesFragment extends Fragment {
 				else b = false;
 				String img = obj.getString("image");
 
-				in = new URL(img).openStream();
-				bm = BitmapFactory.decodeStream(in);
+				Cloudinary cloudinary = new Cloudinary("cloudinary://789778297459378:24aizLA7T6j7iUNKTqKDAbR-ZXw@ufpe");
+				final String src = cloudinary.url().generate(img);
+
+				bm = (new BitmapFromURL(src)).getBitmapFromURL();
+
 				badge = new Badge(id, name, desc, bm, b);
 				auxiliar.add(badge);
 			}

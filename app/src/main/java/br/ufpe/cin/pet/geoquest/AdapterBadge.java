@@ -1,6 +1,7 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,16 +57,18 @@ public class AdapterBadge extends ArrayAdapter<Badge> {
         if (pos < list.size()) {
             Badge badge = list.get(pos);
 
-            if (badge.getPossui() == true) {
+            if (badge.getPossui()) {
                 viewHolder.title.setText(badge.getNome().toUpperCase()+"");
                 viewHolder.descript.setText(badge.getDescricao()+"");
-                //viewHolder.token.setImageResource(badge.getId());
-                viewHolder.token.setVisibility(View.VISIBLE);
+                viewHolder.token.setImageBitmap(badge.getImage());
+                //viewHolder.token.setVisibility(View.VISIBLE);
+                Log.e("lala", badge.getImage()+"");
             } else {
                 viewHolder.title.setText("DESCONHECIDO");
                 viewHolder.descript.setText("Conquinta ainda não alcançada");
-                //viewHolder.token.setImageResource(badge.getId());
-                viewHolder.token.setVisibility(View.GONE);
+                viewHolder.token.setImageBitmap(badge.getImage());
+                //viewHolder.token.setVisibility(View.GONE);
+                Log.e("lala", badge.getImage()+"");
             }
         }
 
