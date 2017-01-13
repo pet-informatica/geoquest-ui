@@ -7,14 +7,14 @@ public class Question implements Serializable{
 	
 	private String question;
     private String exam;
-    private ArrayList<String> alternatives;
+    private ArrayList<Alternative> alternatives;
     private String correctAnswer;
     private int id;
     private String image;
 	
 	public Question(){}
 
-    public Question(String question, String exam, ArrayList<String> alternatives, String correctAnswer, int id, String image) {
+    public Question(String question, String exam, ArrayList<Alternative> alternatives, String correctAnswer, int id, String image) {
         this.question = question;
         this.exam = exam;
         this.alternatives = alternatives;
@@ -39,11 +39,11 @@ public class Question implements Serializable{
         this.exam = exam;
     }
 
-    public ArrayList<String> getAlternatives() {
+    public ArrayList<Alternative> getAlternatives() {
         return this.alternatives;
     }
 
-    public void setAlternatives(ArrayList<String> alternatives) {
+    public void setAlternatives(ArrayList<Alternative> alternatives) {
         this.alternatives = alternatives;
     }
 

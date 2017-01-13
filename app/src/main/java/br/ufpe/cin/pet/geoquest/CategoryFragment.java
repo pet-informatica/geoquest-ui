@@ -1,6 +1,7 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,12 +29,19 @@ public class CategoryFragment extends Fragment {
 
     private CategoryAdapter adapter;
     private final OkHttpClient client = new OkHttpClient();
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_category, container, false);
+
+        progressDialog = new ProgressDialog(rootView.getContext());
+        progressDialog.setMessage("Carregando...");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
 
         getActivity().getActionBar().setTitle("Geoquest");
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -58,6 +66,7 @@ public class CategoryFragment extends Fragment {
 
                     ListView listView = (ListView) rootView.findViewById(R.id.listViewCategories);
                     listView.setAdapter(adapter);
+                    progressDialog.hide();
                 }
             }.execute();
 

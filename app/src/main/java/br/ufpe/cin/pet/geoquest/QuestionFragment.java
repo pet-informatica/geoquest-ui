@@ -7,14 +7,18 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cloudinary.Cloudinary;
@@ -29,6 +33,7 @@ import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
 import br.ufpe.cin.pet.geoquest.Utils.Cloud;
+import br.ufpe.cin.pet.geoquest.classes.Alternative;
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
 import okhttp3.MediaType;
@@ -42,22 +47,16 @@ public class QuestionFragment extends Fragment {
     List<Question> questions;
 	HashMap<Integer, Integer> is_right = new HashMap<Integer, Integer>();
 	private ProgressDialog progressDialog;
+	private AdapterAlternatives adapter;
 
     private int currentQuestion;
 	
 	TextView questionExam;
 	TextView questionDescription;
 	ImageView questionImage;
-	LinearLayout layout_ans1;
-	LinearLayout layout_ans2;
-	LinearLayout layout_ans3;
-	LinearLayout layout_ans4;
-	LinearLayout layout_ans5;
-	TextView answer1;
-	TextView answer2;
-	TextView answer3;
-	TextView answer4;
-	TextView answer5;
+	ListView questionAlternatives;
+	TextView questionSequence;
+	TextView timer;
 	Category category;
 	String cat;
 	int lev;
@@ -73,32 +72,25 @@ public class QuestionFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		final View rootView = inflater.inflate(R.layout.fragment_question, container, false);
-
-        getActivity().getActionBar().setTitle("GeoQuest");
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActivity().getActionBar().hide();
-
-		questionExam = (TextView) rootView.findViewById(R.id.questionTitle);
-		questionDescription = (TextView) rootView.findViewById(R.id.questionDescription);
-		questionImage = (ImageView) rootView.findViewById(R.id.questionImage);
-		answer1 = (TextView) rootView.findViewById(R.id.answer1);
-		answer2 = (TextView) rootView.findViewById(R.id.answer2);
-		answer3 = (TextView) rootView.findViewById(R.id.answer3);
-		answer4 = (TextView) rootView.findViewById(R.id.answer4);
-		answer5 = (TextView) rootView.findViewById(R.id.answer5);
-		
-		layout_ans1 = (LinearLayout) rootView.findViewById(R.id.answer1Layout);
-		layout_ans2 = (LinearLayout) rootView.findViewById(R.id.answer2Layout);
-		layout_ans3 = (LinearLayout) rootView.findViewById(R.id.answer3Layout);
-		layout_ans4 = (LinearLayout) rootView.findViewById(R.id.answer4Layout);
-		layout_ans5 = (LinearLayout) rootView.findViewById(R.id.answer5Layout);
+		final View rootView = inflater.inflate(R.layout.fragment_questionup, container, false);
 
 		progressDialog = new ProgressDialog(rootView.getContext());
 		progressDialog.setMessage("Carregando...");
 		progressDialog.setCancelable(false);
 		progressDialog.setIndeterminate(true);
 		progressDialog.show();
+
+		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActivity().getActionBar().hide();
+
+		questionExam = (TextView) rootView.findViewById(R.id.question_exam);
+		questionDescription = (TextView) rootView.findViewById(R.id.question_description);
+		questionImage = (ImageView) rootView.findViewById(R.id.question_image);
+		questionAlternatives = (ListView) rootView.findViewById(R.id.listViewQuestion);
+		questionSequence = (TextView) rootView.findViewById(R.id.question_number);
+		timer = (TextView) rootView.findViewById(R.id.timer);
+
+		questionDescription.setMovementMethod(new ScrollingMovementMethod());
 
 		currentQuestion = 0;
 
@@ -111,17 +103,20 @@ public class QuestionFragment extends Fragment {
     private void updateUI() {
 
         Question quest = questions.get(currentQuestion);
+		String problem = "Questão ";
+		int seq = currentQuestion+1;
+		String examFrom = "FONTE: ";
 
-        questionExam.setText(quest.getExam());
+		questionExam.setText(examFrom+quest.getExam());
         questionDescription.setText(quest.getQuestion());
+		questionSequence.setText(problem+seq);
 
-        answer1.setText(quest.getAlternatives().get(0));
-        answer2.setText(quest.getAlternatives().get(1));
-        answer3.setText(quest.getAlternatives().get(2));
-        answer4.setText(quest.getAlternatives().get(3));
-        answer5.setText(quest.getAlternatives().get(4));
+		adapter = new AdapterAlternatives(getActivity().getApplicationContext(), quest.getAlternatives());
+		questionAlternatives.setAdapter(adapter);
 
 		updateImage(quest);
+
+		setTimer();
 
 		setOnClickListeners(getView(), quest.getCorrectAnswer());
     }
@@ -181,6 +176,46 @@ public class QuestionFragment extends Fragment {
 		}
     }
 
+	private void setTimer() {
+
+		new CountDownTimer(180000, 1000) {
+
+			public void onTick(long millis) {
+				long seconds = millis / 1000;
+				long minutes = seconds/60;
+				seconds = seconds - (minutes*60);
+				String leadingZero = "";
+				if (seconds < 10) leadingZero = "0";
+				timer.setText("0"+minutes+":"+leadingZero+seconds);
+			}
+
+			public void onFinish() {
+				timer.setText("00:00");
+
+				Dialog dialog = createDialog();
+
+				is_right.put(questions.get(currentQuestion).getId(), 0);
+
+				ViewHolder vw = new ViewHolder();
+				vw = populateViewHolder(vw, dialog);
+
+				vw.ll.setBackgroundColor(getResources().getColor(R.color.bordeaux));
+				vw.dialogButton.setBackgroundResource(R.drawable.next_question_red);
+				vw.ansDialog.setText("TEMPO EXCEDIDO");
+				vw.ansDialog.setTextColor(getResources().getColor(R.color.bordeaux));
+				vw.ansDescDialog.setTextColor(getResources().getColor(R.color.bordeaux));
+				vw.ansDescDialog.setText("Que pena!");
+				vw.imgAns.setImageResource(R.drawable.wrong);
+
+				dialog.setCancelable(false);
+				dialog.setCanceledOnTouchOutside(false);
+				dialog.show();
+			}
+
+		}.start();
+
+	}
+
 	private List<Question> run() throws Exception {
 
 		//String categoryId = category.getId()+"xxx"+lev;
@@ -209,13 +244,12 @@ public class QuestionFragment extends Fragment {
 				String correctAnswer = question.getString("correct_answer");
 				String image = question.getString("image");
 
-				ArrayList<String> alternatives = new ArrayList<String>();
-				alternatives.add( question.getString("option_a"));
-				alternatives.add( question.getString("option_b"));
-				alternatives.add( question.getString("option_c"));
-				alternatives.add( question.getString("option_d"));
-				alternatives.add( question.getString("option_e"));
-
+				ArrayList<Alternative> alternatives = new ArrayList<Alternative>();
+				alternatives.add(new Alternative(question.getString("option_a"), "A"));
+				alternatives.add(new Alternative(question.getString("option_b"), "B"));
+				alternatives.add(new Alternative(question.getString("option_c"), "C"));
+				alternatives.add(new Alternative(question.getString("option_d"), "D"));
+				alternatives.add(new Alternative(question.getString("option_e"), "E"));
 
 				quest.add(new Question(title, exam, alternatives, correctAnswer, id, image));
 			}
@@ -250,43 +284,25 @@ public class QuestionFragment extends Fragment {
 		rootView.setClickable(false);
 		rootView.setEnabled(false);
 
-		//layout_ans1 = (LinearLayout) rootView.findViewById (R.id.answer1Layout);
-		layout_ans1.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				checkAnswer("A", rightAnswer);
-			}
-		});
-
-		//layout_ans2 = (LinearLayout) rootView.findViewById (R.id.answer2Layout);
-		layout_ans2.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				checkAnswer("B", rightAnswer);
-			}
-		});
-
-		//layout_ans3 = (LinearLayout) rootView.findViewById (R.id.answer3Layout);
-		layout_ans3.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				checkAnswer("C", rightAnswer);
-			}
-		});
-		
-		//layout_ans4 = (LinearLayout) rootView.findViewById (R.id.answer4Layout);
-		layout_ans4.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				checkAnswer("D", rightAnswer);
-			}
-		});
-
-		//layout_ans5 = (LinearLayout) rootView.findViewById (R.id.answer5Layout);
-		layout_ans5.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				checkAnswer("E", rightAnswer);
+		questionAlternatives.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+				switch (pos) {
+					case 0:
+						checkAnswer("A", rightAnswer);
+						break;
+					case 1:
+						checkAnswer("B", rightAnswer);
+						break;
+					case 2:
+						checkAnswer("C", rightAnswer);
+						break;
+					case 3:
+						checkAnswer("D", rightAnswer);
+						break;
+					case 4:
+						checkAnswer("E", rightAnswer);
+						break;
+				}
 			}
 		});
 
