@@ -15,6 +15,11 @@ public class Stats {
     public static final String favoriteAreaKey = "category";
     public static final String percentageCompletedKey = "percentage";
     public static final String areasKey = "categories";
+    public static final String areaNameKey = "name";
+    public static final String areaPercKey = "perc";
+    public static final String level1Key = "1";
+    public static final String level2Key = "2";
+    public static final String level3Key = "3";
 
     public static final String[] CATEGORIES = {
             "geologia", "hidrografia", "geografia_politica", "população", "urbanismo"
@@ -35,10 +40,16 @@ public class Stats {
 
         public String area;
         public double percentage;
+        public double l1;
+        public double l2;
+        public double l3;
 
-        public PairAreaPercentage(String area, double percentage){
+        public PairAreaPercentage(String area, double percentage, double l1, double l2, double l3){
             this.area = area;
             this.percentage = percentage;
+            this.l1 = l1;
+            this.l2 = l2;
+            this.l3 = l3;
         }
     }
 

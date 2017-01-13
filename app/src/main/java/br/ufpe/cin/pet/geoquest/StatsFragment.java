@@ -1,17 +1,25 @@
 package br.ufpe.cin.pet.geoquest;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import okhttp3.OkHttpClient;
@@ -29,6 +37,8 @@ public class StatsFragment extends Fragment{
     private ProgressDialog progressDialog;
 
     private final OkHttpClient client = new OkHttpClient();
+
+    private AdapterStats adapter;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,7 +90,7 @@ public class StatsFragment extends Fragment{
 
     private void run() throws Exception {
 
-        String url = "http://www.mocky.io/v2/5876809b100000f70e8b5cb7";
+        String url = "http://www.mocky.io/v2/5878fc682600008d081c35d6";
         //String backUrl = getResources().getString(R.string.base_url)+"users/stats/";
 
         Request request = new Request.Builder()
@@ -96,15 +106,26 @@ public class StatsFragment extends Fragment{
             stats.favoriteArea = jsonResponse.getString(Stats.favoriteAreaKey);
             stats.percentageCompleted = jsonResponse.getDouble(Stats.percentageCompletedKey);
 
-            JSONObject categoriesResponse = jsonResponse.getJSONObject(Stats.areasKey);
+            JSONArray categoriesResponse = jsonResponse.getJSONArray(Stats.areasKey);
             double categorie_percentage;
+            double l1, l2, l3;
             stats.areas.clear();
-            for(String categorie : Stats.CATEGORIES){
+            for(String cat : Stats.CATEGORIES) {
                 categorie_percentage = 0;
-                if(categoriesResponse.has(categorie.toLowerCase())){
-                    categorie_percentage = categoriesResponse.getInt(categorie.toLowerCase());
+                l1 = 0;
+                l2 = 0;
+                l3 = 0;
+                for(int i = 0; i < categoriesResponse.length(); i++) {
+                    JSONObject area = categoriesResponse.getJSONObject(i);
+                    if (area.getString(Stats.areaNameKey).toLowerCase().equals(cat.toLowerCase())) {
+                        categorie_percentage = area.getDouble(Stats.areaPercKey);
+                        l1 = area.getDouble(Stats.level1Key);
+                        l2 = area.getDouble(Stats.level2Key);
+                        l3 = area.getDouble(Stats.level3Key);
+                        break;
+                    }
                 }
-                stats.areas.add(new Stats.PairAreaPercentage(categorie,categorie_percentage));
+                stats.areas.add(new Stats.PairAreaPercentage(cat, categorie_percentage, l1, l2, l3));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,12 +147,60 @@ public class StatsFragment extends Fragment{
         progressBarText.setText(stats.percentageCompleted + "% ");
         progressBarPercentageCompleted.setProgress((int)stats.percentageCompleted);
 
-        AdapterStats adapter = new AdapterStats(getActivity().getApplicationContext(), stats.areas);
+        adapter = new AdapterStats(getActivity().getApplicationContext(), stats.areas);
 
         stats.sortAreas();
 
-        ListView listView = (ListView) rootView.findViewById(R.id.listViewStats);
+        final ListView listView = (ListView) rootView.findViewById(R.id.listViewStats);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                Dialog dialog = new Dialog(getActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_level_stats);
+
+                Stats.PairAreaPercentage area = (Stats.PairAreaPercentage) listView.getItemAtPosition(pos);
+
+                TextView l1_name = (TextView) dialog.findViewById(R.id.level1_name);
+                TextView l1_perc = (TextView) dialog.findViewById(R.id.level1_perc);
+                ImageView l1_img = (ImageView) dialog.findViewById(R.id.level1_img);
+
+                TextView l2_name = (TextView) dialog.findViewById(R.id.level2_name);
+                TextView l2_perc = (TextView) dialog.findViewById(R.id.level2_perc);
+                ImageView l2_img = (ImageView) dialog.findViewById(R.id.level2_img);
+
+                TextView l3_name = (TextView) dialog.findViewById(R.id.level3_name);
+                TextView l3_perc = (TextView) dialog.findViewById(R.id.level3_perc);
+                ImageView l3_img = (ImageView) dialog.findViewById(R.id.level3_img);
+
+                l1_name.setText("Nível 1");
+                l2_name.setText("Nível 2");
+                l3_name.setText("Nível 3");
+
+                l1_perc.setText((int)area.l1+"%");
+                l2_perc.setText((int)area.l2+"%");
+                l3_perc.setText((int)area.l3+"%");
+
+                ColorMatrix cm = new ColorMatrix();
+                cm.setSaturation(0);
+                ColorMatrixColorFilter filter = new ColorMatrixColorFilter(cm);
+
+                l1_img.setColorFilter(filter);
+                l2_img.setColorFilter(filter);
+                l3_img.setColorFilter(filter);
+
+                l1_img.setImageResource(R.drawable.lock_full);
+                l1_img.setAlpha(0.25f);
+                l2_img.setImageResource(R.drawable.lock_full);
+                if (area.l1 >= 75) l2_img.setAlpha(0.25f);
+                l3_img.setImageResource(R.drawable.lock_full);
+                if (area.l2 >= 75) l3_img.setAlpha(0.25f);
+
+                dialog.show();
+            }
+        });
     }
 
 }

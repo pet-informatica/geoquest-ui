@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="345dp"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/dim_foreground_disabled_material_dark">
+
+            <TextView
+                android:layout_width="130dp"
+                android:layout_height="24dp"
+                android:text="Nível 1"
+                android:id="@+id/level1_name"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="false"
+                android:textStyle="bold"
+                android:textSize="22dp" />
+
+            <TextView
+                android:layout_width="62dp"
+                android:layout_height="wrap_content"
+                android:text="10%"
+                android:id="@+id/level1_perc"
+                android:layout_alignTop="@+id/level1_name"
+                android:layout_toEndOf="@+id/level1_name"
+                android:layout_marginLeft="60dp"
+                android:textStyle="bold"
+                android:textSize="22dp"
+                android:textAlignment="center" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/level1_img"
+                android:layout_alignParentEnd="false"
+                android:layout_alignBottom="@+id/level1_perc"
+                android:layout_toEndOf="@+id/level1_perc"
+                android:layout_alignTop="@+id/level1_perc"
+                android:src="@drawable/lock_empty"
+                android:layout_marginLeft="15dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <TextView
+                android:layout_width="130dp"
+                android:layout_height="24dp"
+                android:text="Nível 1"
+                android:id="@+id/level2_name"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="false"
+                android:textStyle="bold"
+                android:textSize="22dp" />
+
+            <TextView
+                android:layout_width="62dp"
+                android:layout_height="wrap_content"
+                android:text="10%"
+                android:id="@+id/level2_perc"
+                android:layout_alignTop="@+id/level2_name"
+                android:layout_toEndOf="@+id/level2_name"
+                android:layout_marginLeft="60dp"
+                android:textStyle="bold"
+                android:textSize="22dp"
+                android:textAlignment="center" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/level2_img"
+                android:layout_alignParentEnd="false"
+                android:layout_alignBottom="@+id/level2_perc"
+                android:layout_toEndOf="@+id/level2_perc"
+                android:layout_alignTop="@+id/level2_perc"
+                android:src="@drawable/lock_empty"
+                android:layout_marginLeft="15dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/dim_foreground_disabled_material_dark">
+
+            <TextView
+                android:layout_width="130dp"
+                android:layout_height="24dp"
+                android:text="Nível 1"
+                android:id="@+id/level3_name"
+                android:layout_marginStart="20dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="false"
+                android:textStyle="bold"
+                android:textSize="22dp" />
+
+            <TextView
+                android:layout_width="62dp"
+                android:layout_height="wrap_content"
+                android:text="10%"
+                android:id="@+id/level3_perc"
+                android:layout_alignTop="@+id/level3_name"
+                android:layout_toEndOf="@+id/level3_name"
+                android:layout_marginLeft="60dp"
+                android:textStyle="bold"
+                android:textSize="22dp"
+                android:textAlignment="center" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/level3_img"
+                android:layout_alignParentEnd="false"
+                android:layout_alignBottom="@+id/level3_perc"
+                android:layout_toEndOf="@+id/level3_perc"
+                android:layout_alignTop="@+id/level3_perc"
+                android:src="@drawable/lock_empty"
+                android:layout_marginLeft="15dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
