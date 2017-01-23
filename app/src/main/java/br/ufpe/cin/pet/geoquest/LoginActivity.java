@@ -5,23 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -35,9 +25,13 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 
 public class LoginActivity extends Activity {
@@ -54,6 +48,11 @@ public class LoginActivity extends Activity {
 
     ProfileTracker tracker;
 
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
+    private final OkHttpClient client = new OkHttpClient();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,26 +65,25 @@ public class LoginActivity extends Activity {
         Log.i("LoginActivity", "User already logged in?");
         Log.i("LoginActivity", "Config.key: " + Config.key);
         Log.i("LoginActivity", "LoggedIn: " + isLoggedIn());
-        if(AccessToken.getCurrentAccessToken() != null){
+        if (AccessToken.getCurrentAccessToken() != null) {
             Log.i("LoginActivity", "User already logged.");
-            if(Profile.getCurrentProfile() == null) {
+            if (Profile.getCurrentProfile() == null) {
                 Profile.fetchProfileForCurrentAccessToken();
                 waitProfileLoad();
-            }else{
+            } else {
                 SharedPreferences sharedPref = getSharedPreferences("keyToken", Context.MODE_PRIVATE);
                 Config.key = sharedPref.getString("key", "");
 
                 loggedInCallback();
             }
-        }else{
+        } else {
             Log.i("LoginActivity", "User is NOT logged in");
 
             authButton = (LoginButton) findViewById(R.id.auth_button);
             //Session session = Session.getActiveSession();
             //Log.i("LoginActivity", ""+session.getAccessToken().getToken());
 
-            Log.i("LoginActivity", ""+AccessToken.getCurrentAccessToken());
-
+            Log.i("LoginActivity", "" + AccessToken.getCurrentAccessToken());
 
             authButton.setReadPermissions(Arrays.asList("public_profile, email, user_friends, publish_actions"));
 
@@ -135,91 +133,74 @@ public class LoginActivity extends Activity {
         return accessToken != null;
     }
 
-    private void waitRegister(){
+    private void waitRegister() {
 
         Log.i("FacebookLogin", "Enviando token para o servidor");
 
-        StringRequest sr = new StringRequest(Request.Method.POST, getResources().getString(R.string.facebook_auth_url), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject j = new JSONObject(response);
-                    SharedPreferences sharedPref = getSharedPreferences("keyToken", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("key", j.getString("key"));
-                    editor.commit();
-                    Config.key = j.getString("key");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e("error", "JSON can't be read from response");
-                }
-                //Log.d("Response", response.toString());
-                Log.e("LoginActivity", "User registered with success");
-                waitProfileLoad();
-            }
+        try {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        String backurl = getResources().getString(R.string.facebook_auth_url);
+                        Log.e("param[acess_token]", AccessToken.getCurrentAccessToken().getToken());
+                        RequestBody formBody = new FormBody.Builder()
+                                .add("access_token", AccessToken.getCurrentAccessToken().getToken())
+                                .add("code", "login")
+                                .build();
+                        //RequestBody body = RequestBody.create(JSON, "{ 'access_token' : " + AccessToken.getCurrentAccessToken().getToken() + ", 'code' : 'login'}");
+                        okhttp3.Request request = new okhttp3.Request.Builder()
+                                .url(backurl)
+                                .post(formBody)
+                                .build();
 
+                        okhttp3.Response response = client.newCall(request).execute();
+                        String json = response.body().string();
+                        JSONObject j = new JSONObject(json);
 
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("LoginActivity", "Error on user registration");
-                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Log.e("Error", "TimeoutError");
-              } else if (error instanceof AuthFailureError) {
-                    Log.e("Error", "AuthFailureError");
-                } else if (error instanceof ServerError) {
-                    Log.e("Error", error.getStackTrace().toString());
-                    Log.e("Error", "ServerError");
-                } else if (error instanceof NetworkError) {
-                    Log.e("Error", "NetworkError");
-                } else if (error instanceof ParseError) {
-                    Log.e("Error", "ParseError");
+                        SharedPreferences sharedPref = getSharedPreferences("keyToken", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("key", j.getString("key"));
+                        editor.commit();
+                        Config.key = j.getString("key");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
                 }
 
-                Log.e("Error", " Code " + error.networkResponse);
+                @Override
+                protected void onPostExecute(Void v) {
+                    waitProfileLoad();
+                }
+            }.execute();
 
-//                Log.e("Error", " Code " + error.networkResponse.statusCode);
-            }
-        }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("access_token", AccessToken.getCurrentAccessToken().getToken());
-                Log.e("param[acess_token]", AccessToken.getCurrentAccessToken().getToken());
-                // params.put("code", "login");
-                return params;
-            }
-
-        };
-
-        sr.setRetryPolicy(new DefaultRetryPolicy(
-                10000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestSingleton.getInstance(this).addToRequestQueue(sr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void waitProfileLoad() {
 
         Log.i("FacebookLogin", "Aguardando carregamento do perfil.");
 
-            tracker = new ProfileTracker() {
-                @Override
-                protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                    Log.i("FacebookLogin", "User profile has changed.");
-                }
-            };
+        tracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                Log.i("FacebookLogin", "User profile has changed.");
+            }
+        };
 
 
-            progressDialog.hide();
+        progressDialog.hide();
 
-            tracker.startTracking();
-            loggedInCallback();
+        tracker.startTracking();
+        loggedInCallback();
     }
 
-    public void loggedInCallback(){
+    public void loggedInCallback() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

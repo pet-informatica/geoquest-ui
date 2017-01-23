@@ -21,8 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.cloudinary.Cloudinary;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -116,6 +114,7 @@ public class QuestionFragment extends Fragment {
 
 		updateImage(quest);
 
+		if (downTimer != null) downTimer.cancel();
 		setTimer();
 
 		setOnClickListeners(getView(), quest.getCorrectAnswer());
@@ -175,10 +174,10 @@ public class QuestionFragment extends Fragment {
 			e.printStackTrace();
 		}
     }
-
+	CountDownTimer downTimer;
 	private void setTimer() {
-
-		new CountDownTimer(180000, 1000) {
+		downTimer = null;
+		downTimer = new CountDownTimer(180000, 1000) {
 
 			public void onTick(long millis) {
 				long seconds = millis / 1000;
@@ -191,27 +190,26 @@ public class QuestionFragment extends Fragment {
 
 			public void onFinish() {
 				timer.setText("00:00");
+				if (currentQuestion < questions.size()) {
+					is_right.put(questions.get(currentQuestion).getId(), 0);
+					Dialog dialog = createDialog();
 
-				Dialog dialog = createDialog();
+					ViewHolder vw = new ViewHolder();
+					vw = populateViewHolder(vw, dialog);
 
-				is_right.put(questions.get(currentQuestion).getId(), 0);
+					vw.ll.setBackgroundColor(getResources().getColor(R.color.bordeaux));
+					vw.dialogButton.setBackgroundResource(R.drawable.next_question_red);
+					vw.ansDialog.setText("TEMPO EXCEDIDO");
+					vw.ansDialog.setTextColor(getResources().getColor(R.color.bordeaux));
+					vw.ansDescDialog.setTextColor(getResources().getColor(R.color.bordeaux));
+					vw.ansDescDialog.setText("Que pena!");
+					vw.imgAns.setImageResource(R.drawable.wrong);
 
-				ViewHolder vw = new ViewHolder();
-				vw = populateViewHolder(vw, dialog);
-
-				vw.ll.setBackgroundColor(getResources().getColor(R.color.bordeaux));
-				vw.dialogButton.setBackgroundResource(R.drawable.next_question_red);
-				vw.ansDialog.setText("TEMPO EXCEDIDO");
-				vw.ansDialog.setTextColor(getResources().getColor(R.color.bordeaux));
-				vw.ansDescDialog.setTextColor(getResources().getColor(R.color.bordeaux));
-				vw.ansDescDialog.setText("Que pena!");
-				vw.imgAns.setImageResource(R.drawable.wrong);
-
-				dialog.setCancelable(false);
-				dialog.setCanceledOnTouchOutside(false);
-				dialog.show();
+					dialog.setCancelable(false);
+					dialog.setCanceledOnTouchOutside(false);
+					dialog.show();
+				}
 			}
-
 		}.start();
 
 	}
@@ -336,6 +334,7 @@ public class QuestionFragment extends Fragment {
 			vw.ansDescDialog.setTextColor(getResources().getColor(R.color.bordeaux));
 			vw.ansDescDialog.setText("Que pena!");
 			vw.imgAns.setImageResource(R.drawable.wrong);
+
 
 		} else {
 

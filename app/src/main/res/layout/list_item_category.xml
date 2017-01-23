@@ -39,9 +39,7 @@
             android:minLines="1"
             android:textIsSelectable="false"
             android:textStyle="bold"
-            android:layout_alignRight="@+id/category_description"
             android:layout_alignEnd="@+id/category_description"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
         <Button
@@ -55,9 +53,8 @@
             android:layout_alignWithParentIfMissing="false"
             android:textColor="@color/abc_input_method_navigation_guard"
             android:layout_centerVertical="true"
-            android:layout_alignLeft="@+id/progressCategoria"
             android:layout_alignStart="@+id/progressCategoria"
-            android:layout_marginLeft="27dp"
+            android:layout_marginStart="27dp"
             android:layout_marginTop="30dp"
             android:layout_alignParentStart="false"
             android:layout_alignParentEnd="false"
@@ -74,7 +71,6 @@
             android:max="100"
             android:progress="45"
             android:layout_above="@+id/category_description"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
