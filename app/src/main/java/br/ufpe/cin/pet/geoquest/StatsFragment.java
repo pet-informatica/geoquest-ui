@@ -95,7 +95,7 @@ public class StatsFragment extends Fragment{
 
         Request request = new Request.Builder()
                 .url(url)
-                .header("TOKEN", Config.key)
+                .header("Authorization", Config.key)
                 .build();
         Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);

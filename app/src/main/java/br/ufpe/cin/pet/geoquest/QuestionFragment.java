@@ -223,7 +223,7 @@ public class QuestionFragment extends Fragment {
 
 		Request request = new Request.Builder()
 				.url(url)
-				.header("TOKEN", Config.key)
+				.header("Authorization", Config.key)
 				.build();
 		Response jResponse = client.newCall(request).execute();
 		if (!jResponse.isSuccessful()) throw new IOException("Unexpected code " + jResponse);
@@ -391,7 +391,7 @@ public class QuestionFragment extends Fragment {
 		RequestBody body = RequestBody.create(JSON, json);
 		Request request = new Request.Builder()
 				.url(url)
-				.header("TOKEN", Config.key)
+				.header("Authorization", Config.key)
 				.post(body)
 				.build();
 		try (Response response = client.newCall(request).execute()) {

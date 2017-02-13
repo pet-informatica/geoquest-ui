@@ -108,7 +108,7 @@ public class TransitionFragment extends Fragment {
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
-                .header("TOKEN", Config.key)
+                .header("Authorization", Config.key)
                 .build();
         okhttp3.Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);

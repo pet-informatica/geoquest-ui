@@ -168,19 +168,19 @@ public class MainFragment extends Fragment{
 
 	private void run() throws Exception {
 
-		//String backUrl = getResources().getString(R.string.base_url)+"stars/";
-		String url = "http://www.mocky.io/v2/57678dc30f00000a08291dc8";
+		String url = getResources().getString(R.string.base_url)+"users/stars/";
+		//String url = "http://www.mocky.io/v2/57678dc30f00000a08291dc8";
 
 		Request request = new Request.Builder()
 				.url(url)
-				.header("TOKEN", Config.key)
+				.header("Authorization", Config.key)
 				.build();
 		Response response = client.newCall(request).execute();
 		if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
 		try {
 			JSONObject jsonResponse = new JSONObject(response.body().string());
-			fullStars = jsonResponse.getInt("fullstars");
+			fullStars = jsonResponse.getInt("stars");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.i("JSONError", "Erro na formatação do response");

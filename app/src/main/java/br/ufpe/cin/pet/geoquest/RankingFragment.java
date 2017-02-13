@@ -114,12 +114,12 @@ public class RankingFragment extends Fragment implements
 
 	private List<Raking> run() throws Exception {
 
-		String url = "http://www.mocky.io/v2/587665d1100000b70b8b5c85";
-		//String backUrl = getResources().getString(R.string.base_url)+"users/rank/";
+		//String url = "http://www.mocky.io/v2/587665d1100000b70b8b5c85";
+		String url = getResources().getString(R.string.base_url)+"users/ranking/";
 
 		Request request = new Request.Builder()
 				.url(url)
-				.header("TOKEN", Config.key)
+				.header("Authorization", Config.key)
 				.build();
 		Response response = client.newCall(request).execute();
 		if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
@@ -135,8 +135,8 @@ public class RankingFragment extends Fragment implements
 				JSONObject object = obj.getJSONObject(i);
 
 				String nome = object.getString("name");
-				String foto = object.getString("picture");
-				int pontuacao = object.getInt("points");
+				String foto = object.getString("profile_picture");
+				int pontuacao = object.getInt("score");
 
 				in = new URL(foto).openStream();
 				bm = BitmapFactory.decodeStream(in);

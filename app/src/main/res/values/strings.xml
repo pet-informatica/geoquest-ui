@@ -37,7 +37,7 @@
     <string name="endQuestionsText">Parabéns! Você concluiu todas as questões. O que deseja fazer agora?</string>
     <string name="refazerQuestoesText">Refazer questões</string>
     <string name="retornarMenuText">Retornar ao menu principal</string>
-    <string name="base_url">https://geoquest.herokuapp.com/</string>
+    <string name="base_url">https://geoquest-backend.herokuapp.com/api/</string>
     <string name="facebook_auth_url">https://geoquest.herokuapp.com/rest-auth/facebook/</string>
     <string name="statistics_url">https://geoquest.herokuapp.com/statistics/</string>
 
