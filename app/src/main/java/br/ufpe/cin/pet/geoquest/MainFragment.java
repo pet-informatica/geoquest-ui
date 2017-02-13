@@ -13,16 +13,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-import com.facebook.AccessToken;
 import com.facebook.Profile;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainFragment extends Fragment{
 
@@ -170,8 +169,8 @@ public class MainFragment extends Fragment{
 
 	private void run() throws Exception {
 
-		String url = getResources().getString(R.string.base_url)+"users/stars/";
-		//String url = "http://www.mocky.io/v2/57678dc30f00000a08291dc8";
+		//String backUrl = getResources().getString(R.string.base_url)+"stars/";
+		String url = "http://www.mocky.io/v2/57678dc30f00000a08291dc8";
 
 		Request request = new Request.Builder()
 				.url(url)
@@ -182,7 +181,7 @@ public class MainFragment extends Fragment{
 
 		try {
 			JSONObject jsonResponse = new JSONObject(response.body().string());
-			fullStars = jsonResponse.getInt("stars");
+			fullStars = jsonResponse.getInt("fullstars");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.i("JSONError", "Erro na formatação do response");

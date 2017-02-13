@@ -92,6 +92,8 @@ public class QuestionFragment extends Fragment {
 
 		currentQuestion = 0;
 
+
+
         requestQuestions(rootView);
 
 		return rootView;
@@ -359,7 +361,7 @@ public class QuestionFragment extends Fragment {
 
 	public static final MediaType JSON
 			= MediaType.parse("application/json; charset=utf-8");
-	private void updateBack(final int right) {
+	private void updateBack(final JSONArray list) {
 		//Percorrer o is_right e informar ao back quais as questoes ja foram respondidas e
 		//estao indisponiveis. Deixar salvo la o precentual de acerto no ultimo bloco
 		try {
@@ -367,9 +369,9 @@ public class QuestionFragment extends Fragment {
 				@Override
 				protected Void doInBackground(Void... params) {
 					try {
-						//backurl = getResources().getString(R.string.base_url)+"result/"
-
-						Log.d("POST", post("http://www.roundsapp.com/post", "{ 'Questoes' : " + right + "}"));
+						String backurl = getResources().getString(R.string.base_url)+"/questions/process_as_solved/";
+						/*"http://www.roundsapp.com/post"*/
+						Log.d("POST", post(backurl, "{ \"solved_question_ids\": " + list.toString() + "}"));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -410,11 +412,11 @@ public class QuestionFragment extends Fragment {
 			public void onClick(View v) {
                 currentQuestion++;
 				if (currentQuestion >= questions.size()) {
-					int right = 0;
+					JSONArray list = new JSONArray();
 					for (int i: is_right.values()) {
-						if(i == 1) right++;
+						if(i == 1) list.put(questions.get(currentQuestion - 1).getId());
 					}
-					updateBack(right);
+					updateBack(list);
 					dialog.dismiss();
 					FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 					ft.replace(R.id.container, new TransitionFragment(category, lev, 0));
