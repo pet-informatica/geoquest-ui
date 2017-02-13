@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.facebook.AccessToken;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -119,7 +121,7 @@ public class RankingFragment extends Fragment implements
 
 		Request request = new Request.Builder()
 				.url(url)
-				.header("Authorization", Config.key)
+				.header("Authorization", Config.getKey())
 				.build();
 		Response response = client.newCall(request).execute();
 		if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
@@ -135,7 +137,7 @@ public class RankingFragment extends Fragment implements
 				JSONObject object = obj.getJSONObject(i);
 
 				String nome = object.getString("name");
-				String foto = object.getString("profile_picture");
+				String foto = object.getString("picture");
 				int pontuacao = object.getInt("score");
 
 				in = new URL(foto).openStream();

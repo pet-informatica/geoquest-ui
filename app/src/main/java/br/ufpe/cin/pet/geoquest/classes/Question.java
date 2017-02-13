@@ -9,12 +9,12 @@ public class Question implements Serializable{
     private String exam;
     private ArrayList<Alternative> alternatives;
     private String correctAnswer;
-    private int id;
+    private String id;
     private String image;
 	
 	public Question(){}
 
-    public Question(String question, String exam, ArrayList<Alternative> alternatives, String correctAnswer, int id, String image) {
+    public Question(String question, String exam, ArrayList<Alternative> alternatives, String correctAnswer, String id, String image) {
         this.question = question;
         this.exam = exam;
         this.alternatives = alternatives;
@@ -55,7 +55,7 @@ public class Question implements Serializable{
         this.correctAnswer = correctAnswer;
     }
 
-    public int getId() {
+    public String getId() {
         return this.id;
     }
 

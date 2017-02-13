@@ -9,11 +9,11 @@ public class Badge {
 
     String nome;
     String descricao;
-    int id;
+    String id;
     boolean possui;
     Bitmap image;
 
-    public Badge(int id, String nome, String descript, Bitmap img, boolean possui) {
+    public Badge(String id, String nome, String descript, Bitmap img, boolean possui) {
         this.id = id;
         this.nome = nome;
         this.descricao = descript;
@@ -21,11 +21,11 @@ public class Badge {
         this.possui = possui;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

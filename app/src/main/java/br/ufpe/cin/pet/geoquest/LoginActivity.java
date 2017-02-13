@@ -63,7 +63,6 @@ public class LoginActivity extends Activity {
 
         setContentView(R.layout.activity_login);
         Log.i("LoginActivity", "User already logged in?");
-        Log.i("LoginActivity", "Config.key: " + Config.key);
         Log.i("LoginActivity", "LoggedIn: " + isLoggedIn());
         if (AccessToken.getCurrentAccessToken() != null) {
             Log.i("LoginActivity", "User already logged.");
@@ -72,7 +71,6 @@ public class LoginActivity extends Activity {
                 waitProfileLoad();
             } else {
                 SharedPreferences sharedPref = getSharedPreferences("keyToken", Context.MODE_PRIVATE);
-                Config.key = sharedPref.getString("key", "");
 
                 loggedInCallback();
             }
@@ -162,7 +160,6 @@ public class LoginActivity extends Activity {
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("key", j.getString("key"));
                         editor.commit();
-                        Config.key = j.getString("key");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     } catch (IOException e) {

@@ -43,7 +43,7 @@ import okhttp3.Response;
 public class QuestionFragment extends Fragment {
 
     List<Question> questions;
-	HashMap<Integer, Integer> is_right = new HashMap<Integer, Integer>();
+	HashMap<String, Integer> is_right = new HashMap<String, Integer>();
 	private ProgressDialog progressDialog;
 	private AdapterAlternatives adapter;
 
@@ -216,14 +216,13 @@ public class QuestionFragment extends Fragment {
 
 	private List<Question> run() throws Exception {
 
-		//String categoryId = category.getId()+"xxx"+lev;
+		String categoryId = "category=" + category.getName() + "&level=" + lev;
 
-		String url = "http://www.mocky.io/v2/5876b99e100000a2148b5ced";
-		//String backUrl = getResources().getString(R.string.base_url)+"questions/?category="+categoryId;
+		String url = getResources().getString(R.string.base_url)+"questions/retrieve_new?"+categoryId;
 
 		Request request = new Request.Builder()
 				.url(url)
-				.header("Authorization", Config.key)
+				.header("Authorization", Config.getKey())
 				.build();
 		Response jResponse = client.newCall(request).execute();
 		if (!jResponse.isSuccessful()) throw new IOException("Unexpected code " + jResponse);
@@ -236,8 +235,8 @@ public class QuestionFragment extends Fragment {
 			for (int i = 0; i < response.length(); i++) {
 				JSONObject question = response.getJSONObject(i);
 
-				String title = question.getString("question");
-				int id = question.getInt("id");
+				String title = question.getString("body");
+				String id = question.getString("id");
 				String exam = question.getString("exam");
 				String correctAnswer = question.getString("correct_answer");
 				String image = question.getString("image");
@@ -391,7 +390,7 @@ public class QuestionFragment extends Fragment {
 		RequestBody body = RequestBody.create(JSON, json);
 		Request request = new Request.Builder()
 				.url(url)
-				.header("Authorization", Config.key)
+				.header("Authorization", Config.getKey())
 				.post(body)
 				.build();
 		try (Response response = client.newCall(request).execute()) {

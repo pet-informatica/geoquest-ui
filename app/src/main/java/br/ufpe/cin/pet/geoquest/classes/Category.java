@@ -13,16 +13,13 @@ public class Category {
 
     private int total;
 
-    private int id;
-
     private int max_level;
 
-    public Category(String name, String description, int done, int total, int id, int level){
+    public Category(String name, String description, int done, int total, int level){
         this.name = name;
         this.description = description;
         this.done = done;
         this.total = total;
-        this.id = id;
         this.max_level = level;
     }
 
@@ -52,12 +49,6 @@ public class Category {
 
     public void setTotal(int total) {
         this.total = total;
-    }
-
-    public int getId() {return id;}
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public boolean is_available (int level) {

@@ -16,6 +16,8 @@ import android.widget.TextView;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import com.facebook.AccessToken;
 import com.facebook.Profile;
 
 import org.json.JSONObject;
@@ -173,7 +175,7 @@ public class MainFragment extends Fragment{
 
 		Request request = new Request.Builder()
 				.url(url)
-				.header("Authorization", Config.key)
+				.header("Authorization", Config.getKey())
 				.build();
 		Response response = client.newCall(request).execute();
 		if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);

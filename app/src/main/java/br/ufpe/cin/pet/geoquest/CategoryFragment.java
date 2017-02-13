@@ -79,12 +79,12 @@ public class CategoryFragment extends Fragment {
 
     private List<Category> run() throws Exception {
 
-        String url = "http://www.mocky.io/v2/5876877a100000970f8b5cc6";
-        //String backUrl = getResources().getString(R.string.base_url)+"categories/";
+        //String url = "http://www.mocky.io/v2/5876877a100000970f8b5cc6";
+        String url = getResources().getString(R.string.base_url)+"questions/categories";
 
         Request request = new Request.Builder()
                 .url(url)
-                .header("Authorization", Config.key)
+                .header("Authorization", Config.getKey())
                 .build();
         Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
@@ -101,10 +101,9 @@ public class CategoryFragment extends Fragment {
                 String descricao = object.getString("description");
                 int total = object.getInt("total");
                 int done = object.getInt("done");
-                int id = object.getInt("id");
                 int level = object.getInt("level");
 
-                Category cat = new Category(nome, descricao, done, total, id, level);
+                Category cat = new Category(nome, descricao, done, total, level);
                 items.add(cat);
             }
 

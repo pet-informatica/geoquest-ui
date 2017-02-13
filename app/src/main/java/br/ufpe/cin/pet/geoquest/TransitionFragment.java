@@ -108,7 +108,7 @@ public class TransitionFragment extends Fragment {
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
-                .header("Authorization", Config.key)
+                .header("Authorization", Config.getKey())
                 .build();
         okhttp3.Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
@@ -124,7 +124,7 @@ public class TransitionFragment extends Fragment {
                 String name = object.getString("name");
                 String description = object.getString("description");
                 String image = object.getString("image");
-                int id = object.getInt("id");
+                String id = object.getString("id");
 
                 final String src = Cloud.cloudinary.url().generate(image);
                 Bitmap bm = null;

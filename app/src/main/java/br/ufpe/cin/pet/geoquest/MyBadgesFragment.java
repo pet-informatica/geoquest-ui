@@ -92,12 +92,12 @@ public class MyBadgesFragment extends Fragment {
 
 	private List<Badge> run() throws Exception {
 
-		String url = "http://www.mocky.io/v2/5876f4d9100000c51b8b5d22";
-		//String backUrl = getResources().getString(R.string.base_url)+"users/badge/";
+		//String url = "http://www.mocky.io/v2/5876f4d9100000c51b8b5d22";
+		String url = getResources().getString(R.string.base_url)+"badges/retrieve_all";
 
 		Request request = new Request.Builder()
 				.url(url)
-				.header("Authorization", Config.key)
+				.header("Authorization", Config.getKey())
 				.build();
 		Response response = client.newCall(request).execute();
 		if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
@@ -106,6 +106,7 @@ public class MyBadgesFragment extends Fragment {
 		try {
 			JSONObject jsonResponse = new JSONObject(response.body().string());
 			area = jsonResponse.getString("area");
+			if (area.equals("Unknown")) area = "Iniciante";
 			percentage = jsonResponse.getDouble("percentage");
 			JSONArray badgeresponse = jsonResponse.getJSONArray("badges");
 
@@ -116,7 +117,7 @@ public class MyBadgesFragment extends Fragment {
 			for(int i = 0; i < size; i++) {
 				JSONObject obj = badgeresponse.getJSONObject(i);
 
-				int id = obj.getInt("id");
+				String id = obj.getString("id");
 				String name = obj.getString("name");
 				String desc = obj.getString("description");
 				int has = obj.getInt("has");
@@ -160,7 +161,8 @@ public class MyBadgesFragment extends Fragment {
 		CropImage cim = new CropImage(200, bm);
 		userImg.setImageBitmap(cim.getCroppedBitmap());
 
-		description.setText("Especialista em " + area);
+		if (area.equals("Iniciante")) description.setText(area);
+		else description.setText("Especialista em " + area);
 		if (percentage >= 20.0) star1.setImageResource(R.drawable.star_full);
 		else star1.setImageResource(R.drawable.star);
 		if (percentage >= 40.0) star2.setImageResource(R.drawable.star_full);
