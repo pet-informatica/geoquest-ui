@@ -103,8 +103,8 @@ public class TransitionFragment extends Fragment {
 
     private List<Badge> run() throws IOException {
 
-        String url = "http://www.mocky.io/v2/5876edad100000e41a8b5d12";
-        //String backUrl = getResources().getString(R.string.base_url)+"transition/";
+        //String url = "http://www.mocky.io/v2/5876edad100000e41a8b5d12";
+        String url = getResources().getString(R.string.base_url)+"badges/transition/";
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
@@ -155,9 +155,12 @@ public class TransitionFragment extends Fragment {
         vh.gofront.setImageResource(R.drawable.continuar);
         vh.titulo.setText(cat);
         vh.nivel.setText("Nível "+lev);
-        vh.feedback.setImageBitmap(items.get(0).getImage());
-        vh.nameBadge.setText(items.get(0).getNome());
-        vh.description.setText(items.get(0).getDescricao());
+
+        if (items.size() > 0) {
+            vh.feedback.setImageBitmap(items.get(0).getImage());
+            vh.nameBadge.setText(items.get(0).getNome());
+            vh.description.setText(items.get(0).getDescricao());
+        }
 
         vh.goback.setOnClickListener(new View.OnClickListener() {
             @Override
