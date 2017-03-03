@@ -69,6 +69,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
             final CharSequence message = pr+"%";
             final CharSequence unavailability = "Nível Indisponível";
+            final CharSequence completed = "Nível concluído";
 
             vh.descricao.setText(category.getDescription());
             vh.progresso.setProgress(category.getDone());
@@ -86,13 +87,18 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                 public void onClick(View view) {
                     AlertDialog alert = new AlertDialog.Builder(ctx).setItems(levels, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int pos) {
-                            if (category.is_available(pos + 1)) {
+                            if (category.is_completed(pos + 1)) {
+                                Toast toast = Toast.makeText(ctx, completed, Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else if (category.is_unavailable(pos + 1)) {
+                                Toast toast = Toast.makeText(ctx, unavailability, Toast.LENGTH_SHORT);
+                                toast.show();
+                            } else {
                                 MainActivity ma = (MainActivity) ctx;
                                 ma.getFragmentManager().beginTransaction()
                                         .replace(R.id.container, new TransitionFragment(category, pos + 1, 1)).addToBackStack("transition_fragment").commit();
-                            } else {
-                                Toast toast = Toast.makeText(ctx, unavailability, Toast.LENGTH_SHORT);
-                                toast.show();
+
+
                             }
                         }
                     }).create();

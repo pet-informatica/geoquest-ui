@@ -127,7 +127,10 @@ public class QuestionFragment extends Fragment {
 
 		String str = quest.getImage();
 
-		if (str == null) return;
+		if (str == null) {
+			questionImage.setImageResource(android.R.color.transparent);
+			return;
+		}
 
 		final String src = Cloud.cloudinary.url().generate(str);
 

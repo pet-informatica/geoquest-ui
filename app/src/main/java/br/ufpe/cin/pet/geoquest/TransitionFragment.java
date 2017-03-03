@@ -37,6 +37,7 @@ public class TransitionFragment extends Fragment {
     private int lev;
     private int type;
     private Category category;
+    private int fim;
 
     static class ViewHolder {
         protected TextView titulo;
@@ -72,6 +73,7 @@ public class TransitionFragment extends Fragment {
 
         return view;
     }
+
     List<Badge> items = new ArrayList<>();
     private void getData(final View rootView){
 
@@ -103,8 +105,8 @@ public class TransitionFragment extends Fragment {
 
     private List<Badge> run() throws IOException {
 
-        //String url = "http://www.mocky.io/v2/5876edad100000e41a8b5d12";
-        String url = getResources().getString(R.string.base_url)+"badges/transition/";
+        String url = "http://www.mocky.io/v2/58b8e8cb0f0000c503f09b5e";
+        //String url = getResources().getString(R.string.base_url)+"badges/transition/";
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
@@ -116,15 +118,20 @@ public class TransitionFragment extends Fragment {
         List<Badge> items = new ArrayList<>();
 
         try {
-            JSONArray obj = new JSONArray(response.body().string());
-            int tam = obj.length();
+            JSONObject obj = new JSONObject(response.body().string());
+            int end = obj.getInt("fim");
+            fim = end;
+
+            JSONArray badges = obj.getJSONArray("badges");
+            int tam = badges.length();
             for (int i = 0; i < tam; i++) {
-                JSONObject object = obj.getJSONObject(i);
+                JSONObject object = badges.getJSONObject(i);
 
                 String name = object.getString("name");
                 String description = object.getString("description");
                 String image = object.getString("image");
                 String id = object.getString("id");
+
 
                 final String src = Cloud.cloudinary.url().generate(image);
                 Bitmap bm = null;
@@ -132,8 +139,8 @@ public class TransitionFragment extends Fragment {
 
                 items.add(new Badge(id, name, description, bm, true));
 
-                }
-            } catch (JSONException e1) {
+            }
+        } catch (JSONException e1) {
             e1.printStackTrace();
         }
         return items;
@@ -152,9 +159,11 @@ public class TransitionFragment extends Fragment {
 
 
         vh.goback.setImageResource(R.drawable.voltar);
-        vh.gofront.setImageResource(R.drawable.continuar);
+        if (fim == 1) {
+            vh.gofront.setImageResource(R.drawable.continuar);
+        }
         vh.titulo.setText(cat);
-        vh.nivel.setText("Nível "+lev);
+        vh.nivel.setText("Nível " + lev);
 
         if (items.size() > 0) {
             vh.feedback.setImageBitmap(items.get(0).getImage());
@@ -175,10 +184,17 @@ public class TransitionFragment extends Fragment {
         vh.gofront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-                ft.replace(R.id.container, new QuestionFragment(category, lev));
-                ft.addToBackStack("question_fragment");
-                ft.commit();
+                if (fim == 1 && lev < 3) {
+                    FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container, new QuestionFragment(category, lev+1));
+                    ft.addToBackStack("question_fragment");
+                    ft.commit();
+                } else if (fim == 0) {
+                    FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container, new QuestionFragment(category, lev));
+                    ft.addToBackStack("question_fragment");
+                    ft.commit();
+                }
             }
         });
     }
