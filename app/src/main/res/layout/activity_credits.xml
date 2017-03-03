@@ -3,34 +3,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
-    tools:context=".CreditsFragment" >
+    android:background="@drawable/bg_xhdpi"
+    android:scaleType="centerCrop"
+    tools:context=".CreditsFragment"
+    android:weightSum="1">
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/exit"
+        android:src="@drawable/ic_exit_to_app_white_xhdpi"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp" />
 
     <ImageView
-        android:id="@+id/geoquestCreditosBanner"
-        android:layout_width="match_parent"
-        android:scaleType="centerInside"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:src="@drawable/geoquest_creditos"
-        android:adjustViewBounds="true"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:id="@+id/logo_petinfo"
-        android:layout_weight="4"
-        android:src="@drawable/my_image3"
-        android:padding="10dp" />
-
-    <ImageView
-        android:id="@+id/logo_petGeografia"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginBottom="40dp"
+        android:layout_width="160dp"
+        android:layout_height="150dp"
+        android:id="@+id/logo"
         android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:layout_weight="2"
-        android:src="@drawable/my_image" />
+        android:src="@drawable/logo_xhdpi"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:layout_width="253dp"
+        android:layout_height="wrap_content"
+        android:text="Obrigado por jogar!"
+        android:id="@+id/thanks"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.05"
+        android:textColor="#ffffff"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="222dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/partner"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.12"
+        android:textStyle="bold"
+        android:typeface="normal"
+        android:textSize="22dp"
+        android:gravity="center" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/petinfo"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/logo_pet_white_xhdpi"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="com o"
+        android:id="@+id/partner2"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#ffffff"
+        android:textSize="22dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="10dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:id="@+id/petcon"
+        android:src="@drawable/logo_conexoes"
+        android:layout_weight="0.5"
+        android:layout_marginTop="5dp" />
 
 </LinearLayout>
