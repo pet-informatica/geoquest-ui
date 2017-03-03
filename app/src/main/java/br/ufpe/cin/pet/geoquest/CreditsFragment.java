@@ -23,6 +23,7 @@ public class CreditsFragment extends Fragment {
 		
 		getActivity().getActionBar().setTitle("Créditos");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActivity().getActionBar().hide();
 
 		populateView(rootView);
 		
