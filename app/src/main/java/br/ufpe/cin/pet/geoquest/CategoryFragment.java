@@ -79,8 +79,8 @@ public class CategoryFragment extends Fragment {
 
     private List<Category> run() throws Exception {
 
-        //String url = "http://www.mocky.io/v2/5876877a100000970f8b5cc6";
-        String url = getResources().getString(R.string.base_url)+"questions/categories";
+        String url = "http://www.mocky.io/v2/58b8edd70f00003604f09b6b";
+        //String url = getResources().getString(R.string.base_url)+"questions/categories";
 
         Request request = new Request.Builder()
                 .url(url)
@@ -101,9 +101,10 @@ public class CategoryFragment extends Fragment {
                 String descricao = object.getString("description");
                 int total = object.getInt("total");
                 int done = object.getInt("done");
-                int level = object.getInt("level");
+                int min_level = object.getInt("min");
+                int max_level = object.getInt("max");
 
-                Category cat = new Category(nome, descricao, done, total, level);
+                Category cat = new Category(nome, descricao, done, total, min_level, max_level);
                 items.add(cat);
             }
 

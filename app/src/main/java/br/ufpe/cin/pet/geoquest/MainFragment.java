@@ -55,6 +55,7 @@ public class MainFragment extends Fragment{
 
 		getActivity().getActionBar().setTitle("Geoquest");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+		getActivity().getActionBar().show();
 
         userName = (TextView) rootView.findViewById(R.id.nameUserPerfil);
 

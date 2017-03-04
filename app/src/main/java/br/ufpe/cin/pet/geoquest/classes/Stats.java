@@ -22,7 +22,15 @@ public class Stats {
     public static final String level3Key = "3";
 
     public static final String[] CATEGORIES = {
-            "geologia", "hidrografia", "geografia_politica", "população", "urbanismo"
+            "Cultura, Sociedade e Globalização",
+            "Geografia do Brasil",
+            "Demografia",
+            "Geopolítica e Geoeconomia",
+            "Geografia Urbana",
+            "Geografia Agrária",
+            "Meio Ambiente e Recursos Naturais",
+            "Geografia Física e Fenômenos Naturais",
+            "Cartografia"
     };
 
 

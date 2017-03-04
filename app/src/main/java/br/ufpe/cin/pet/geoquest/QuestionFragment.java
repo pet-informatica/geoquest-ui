@@ -46,6 +46,7 @@ public class QuestionFragment extends Fragment {
 	HashMap<String, Integer> is_right = new HashMap<String, Integer>();
 	private ProgressDialog progressDialog;
 	private AdapterAlternatives adapter;
+	private CountDownTimer downTimer;
 
     private int currentQuestion;
 	
@@ -58,6 +59,8 @@ public class QuestionFragment extends Fragment {
 	Category category;
 	String cat;
 	int lev;
+
+	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
 	private final OkHttpClient client = new OkHttpClient();
 
@@ -92,8 +95,6 @@ public class QuestionFragment extends Fragment {
 
 		currentQuestion = 0;
 
-
-
         requestQuestions(rootView);
 
 		return rootView;
@@ -126,6 +127,11 @@ public class QuestionFragment extends Fragment {
 
 		String str = quest.getImage();
 
+		if (str == null) {
+			questionImage.setImageResource(android.R.color.transparent);
+			return;
+		}
+
 		final String src = Cloud.cloudinary.url().generate(str);
 
 		new AsyncTask<Void, Void, Void>() {
@@ -139,7 +145,9 @@ public class QuestionFragment extends Fragment {
 
 			@Override
 			protected void onPostExecute(Void v) {
-				questionImage.setImageBitmap(bm);
+				if (isAdded()) {
+					questionImage.setImageBitmap(bm);
+				}
 			}
 		}.execute();
 
@@ -165,8 +173,10 @@ public class QuestionFragment extends Fragment {
 
 				@Override
 				protected void onPostExecute(Void v) {
-					updateUI();
-					progressDialog.hide();
+					if (isAdded()) {
+						updateUI();
+						progressDialog.hide();
+					}
 				}
 
 			}.execute();
@@ -176,11 +186,11 @@ public class QuestionFragment extends Fragment {
 			e.printStackTrace();
 		}
     }
-	CountDownTimer downTimer;
+
 	private void setTimer() {
+
 		downTimer = null;
 		downTimer = new CountDownTimer(180000, 1000) {
-
 			public void onTick(long millis) {
 				long seconds = millis / 1000;
 				long minutes = seconds/60;
@@ -219,8 +229,10 @@ public class QuestionFragment extends Fragment {
 	private List<Question> run() throws Exception {
 
 		String categoryId = "category=" + category.getName() + "&level=" + lev;
+		//String categoryId = "category=geography&level=1";
 
 		String url = getResources().getString(R.string.base_url)+"questions/retrieve_new?"+categoryId;
+		//String url = "http://www.mocky.io/v2/5876b99e100000a2148b5ced";
 
 		Request request = new Request.Builder()
 				.url(url)
@@ -241,7 +253,8 @@ public class QuestionFragment extends Fragment {
 				String id = question.getString("id");
 				String exam = question.getString("exam");
 				String correctAnswer = question.getString("correct_answer");
-				String image = question.getString("image");
+				String image = null;
+				if (question.has("image")) image = question.getString("image");
 
 				ArrayList<Alternative> alternatives = new ArrayList<Alternative>();
 				alternatives.add(new Alternative(question.getString("option_a"), "A"));
@@ -359,19 +372,20 @@ public class QuestionFragment extends Fragment {
 		dialog.show();
 	}
 
-	public static final MediaType JSON
-			= MediaType.parse("application/json; charset=utf-8");
+
+
 	private void updateBack(final JSONArray list) {
-		//Percorrer o is_right e informar ao back quais as questoes ja foram respondidas e
-		//estao indisponiveis. Deixar salvo la o precentual de acerto no ultimo bloco
+
+		final String url = getResources().getString(R.string.base_url)+"/questions/process_as_solved/";
+
 		try {
 			new AsyncTask<Void, Void, Void>() {
 				@Override
 				protected Void doInBackground(Void... params) {
 					try {
-						String backurl = getResources().getString(R.string.base_url)+"/questions/process_as_solved/";
-						/*"http://www.roundsapp.com/post"*/
-						Log.d("POST", post(backurl, "{ \"solved_question_ids\": " + list.toString() + "}"));
+
+						Log.d("POST", post(url, "{ \"solved_question_ids\": " + list.toString() + "}"));
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -414,7 +428,9 @@ public class QuestionFragment extends Fragment {
 				if (currentQuestion >= questions.size()) {
 					JSONArray list = new JSONArray();
 					for (int i: is_right.values()) {
-						if(i == 1) list.put(questions.get(currentQuestion - 1).getId());
+						if(i == 1) {
+							list.put(questions.get(currentQuestion - 1).getId());
+						}
 					}
 					updateBack(list);
 					dialog.dismiss();

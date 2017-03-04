@@ -90,8 +90,8 @@ public class StatsFragment extends Fragment{
 
     private void run() throws Exception {
 
-        String url = "http://www.mocky.io/v2/5878fc682600008d081c35d6";
-        //String backUrl = getResources().getString(R.string.base_url)+"users/stats/";
+        //String url = "http://www.mocky.io/v2/5878fc682600008d081c35d6";
+        String url = getResources().getString(R.string.base_url)+"users/stats/";
 
         Request request = new Request.Builder()
                 .url(url)
