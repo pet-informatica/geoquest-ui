@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -49,7 +50,8 @@ public class QuestionFragment extends Fragment {
 	private CountDownTimer downTimer;
 
     private int currentQuestion;
-	
+
+	TextView categoryName;
 	TextView questionExam;
 	TextView questionDescription;
 	ImageView questionImage;
@@ -84,6 +86,7 @@ public class QuestionFragment extends Fragment {
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().getActionBar().hide();
 
+		categoryName = (TextView) rootView.findViewById(R.id.category_name);
 		questionExam = (TextView) rootView.findViewById(R.id.question_exam);
 		questionDescription = (TextView) rootView.findViewById(R.id.question_description);
 		questionImage = (ImageView) rootView.findViewById(R.id.question_image);
@@ -91,6 +94,13 @@ public class QuestionFragment extends Fragment {
 		questionSequence = (TextView) rootView.findViewById(R.id.question_number);
 		timer = (TextView) rootView.findViewById(R.id.timer);
 
+		categoryName.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "cooper-black.ttf"));
+		questionSequence.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "cooper-black.ttf"));
+		questionExam.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Arial.ttf"));
+		timer.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "TT0590M_.TTF"));
+		questionDescription.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Calibri.ttf"));
+
+		categoryName.setText(category.getName());
 		questionDescription.setMovementMethod(new ScrollingMovementMethod());
 
 		currentQuestion = 0;
@@ -113,6 +123,7 @@ public class QuestionFragment extends Fragment {
 		questionSequence.setText(problem+seq);
 
 		adapter = new AdapterAlternatives(getActivity().getApplicationContext(), quest.getAlternatives());
+
 		questionAlternatives.setAdapter(adapter);
 
 		updateImage(quest);

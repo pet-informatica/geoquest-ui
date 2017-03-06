@@ -2,103 +2,121 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="@drawable/bg_xhdpi">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="59dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/lightgrey">
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/app_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/app_back"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_exit_to_app_white_xhdpi" />
 
         <TextView
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:text="Problema 1"
-            android:id="@+id/question_number"
-            android:layout_marginLeft="5dp"
+            android:text="Hidrografia"
+            android:id="@+id/category_name"
+            android:layout_marginLeft="30dp"
             android:textAlignment="center"
             android:gravity="center"
-            android:textSize="25dp"
-            android:fontFamily="@string/abc_font_family_title_material"
+            android:textSize="30dp"
             android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@+id/app_logo"
-            android:layout_marginTop="10dp" />
+            android:layout_toEndOf="@+id/app_back"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="03:00"
-            android:id="@+id/timer"
-            android:layout_alignBottom="@+id/question_number"
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/question_image"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="21dp"
-            android:layout_marginBottom="5dp"
-            android:textStyle="bold"
-            android:textColor="@color/orange"
-            android:textSize="20dp" />
+            android:src="@android:drawable/ic_input_add"
+            android:layout_marginLeft="30dp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/lightgrey">
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Questão 1"
+                android:textSize="25dp"
+                android:id="@+id/question_number"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/alarm_clock_xhdpi"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="03:00"
+                    android:id="@+id/timer"
+                    android:textStyle="bold"
+                    android:textColor="#ffffff"
+                    android:textSize="25dp"/>
+            </LinearLayout>
+
+
+        </RelativeLayout>
 
         <TextView
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
             android:id="@+id/question_description"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
             android:background="@drawable/rounded_corner"
+            android:textColor="#ffffff"
             android:maxLines="1000"
             android:scrollbars="vertical"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:padding="10dp" />
 
         <TextView
-            android:layout_width="280dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="Enem 2013"
+            android:textColor="#ffffff"
             android:id="@+id/question_exam"
-            android:layout_alignTop="@+id/question_image"
-            android:layout_alignStart="@+id/question_description"
+            android:textStyle="bold|italic"
             android:layout_marginTop="5dp" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/question_image"
-            android:layout_below="@+id/question_description"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/question_exam"
-
-            android:layout_marginRight="15dp"
-            android:src="@android:drawable/ic_input_add"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
 
         <ListView
-            android:layout_width="400dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/listViewQuestion"
-            android:layout_below="@+id/question_image"
-            android:layout_alignStart="@+id/question_exam"
-            android:layout_alignLeft="@+id/question_description"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="15dp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>
