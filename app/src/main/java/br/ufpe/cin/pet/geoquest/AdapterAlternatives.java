@@ -53,7 +53,7 @@ public class AdapterAlternatives extends ArrayAdapter<Alternative> {
             viewHolder = ((ViewHolder) view.getTag());
         }
 
-        viewHolder.description.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "Calibri.TTF"));
+        viewHolder.description.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "Calibri.ttf"));
         if (pos < list.size()) {
             Alternative alternative = list.get(pos);
 

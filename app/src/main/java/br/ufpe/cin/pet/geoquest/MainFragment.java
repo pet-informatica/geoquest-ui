@@ -2,6 +2,9 @@ package br.ufpe.cin.pet.geoquest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +22,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import br.ufpe.cin.pet.geoquest.Utils.CropImage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -38,6 +42,8 @@ public class MainFragment extends Fragment{
     private MainActivity activity;
 
     private ImageView userImage;
+
+	private ImageView backImage;
 
 	private ProgressDialog progressDialog;
 
@@ -69,12 +75,11 @@ public class MainFragment extends Fragment{
 
         updateProfile(rootView);
 
-        if(activity.getUserImage() != null){
+        if (activity.getUserImage() != null) {
             userImage.setImageBitmap(activity.getUserImage());
-        }else{
+        } else {
             updateImage();
         }
-
 
 		app_ranking = (RelativeLayout) rootView.findViewById (R.id.layoutRanking);
 		app_ranking.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +131,7 @@ public class MainFragment extends Fragment{
     public void updateProfile(View rootView){
         Log.i("MainFragment", "Updating user information " + Profile.getCurrentProfile().getName());
         Profile profile = Profile.getCurrentProfile();
+
 		if(fullStars == 0) {
 			getStars(rootView);
 		} else {
@@ -135,9 +141,10 @@ public class MainFragment extends Fragment{
 
         userName.setText(profile.getName());
 		activity.setUserName(profile.getName());
+
     }
 
-    public void updateImage(){
+    public void updateImage() {
         new FacebookImageTask(userImage, activity).execute(Profile.getCurrentProfile().getProfilePictureUri(150,150).toString());
     }
 
@@ -170,8 +177,8 @@ public class MainFragment extends Fragment{
 
 	private void run() throws Exception {
 
-		//String backUrl = getResources().getString(R.string.base_url)+"stars/";
-		String url = "http://www.mocky.io/v2/57678dc30f00000a08291dc8";
+		String url = getResources().getString(R.string.base_url)+"users/stars/";
+		//String url = "http://www.mocky.io/v2/57678dc30f00000a08291dc8";
 
 		Request request = new Request.Builder()
 				.url(url)
@@ -182,7 +189,7 @@ public class MainFragment extends Fragment{
 
 		try {
 			JSONObject jsonResponse = new JSONObject(response.body().string());
-			fullStars = jsonResponse.getInt("fullstars");
+			fullStars = jsonResponse.getInt("stars");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.i("JSONError", "Erro na formatação do response");

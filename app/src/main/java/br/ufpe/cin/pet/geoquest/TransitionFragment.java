@@ -105,8 +105,10 @@ public class TransitionFragment extends Fragment {
 
     private List<Badge> run() throws IOException {
 
-        String url = "http://www.mocky.io/v2/58b8e8cb0f0000c503f09b5e";
-        //String url = getResources().getString(R.string.base_url)+"badges/transition/";
+        //String url = "http://www.mocky.io/v2/58b8e8cb0f0000c503f09b5e";
+
+        String categoryId = "category=" + cat + "&level=" + lev;
+        String url = getResources().getString(R.string.base_url)+"badges/transition?"+categoryId;
 
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)

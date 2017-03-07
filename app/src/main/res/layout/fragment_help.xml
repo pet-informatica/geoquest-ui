@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/bg_xhdpi"
+    android:background="@drawable/background"
     tools:context="example.b.HelpFragment">
 
     <LinearLayout

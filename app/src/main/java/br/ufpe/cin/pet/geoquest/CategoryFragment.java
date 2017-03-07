@@ -79,8 +79,8 @@ public class CategoryFragment extends Fragment {
 
     private List<Category> run() throws Exception {
 
-        String url = "http://www.mocky.io/v2/58b8edd70f00003604f09b6b";
-        //String url = getResources().getString(R.string.base_url)+"questions/categories";
+        //String url = "http://www.mocky.io/v2/58b8edd70f00003604f09b6b";
+        String url = getResources().getString(R.string.base_url)+"questions/categories";
 
         Request request = new Request.Builder()
                 .url(url)

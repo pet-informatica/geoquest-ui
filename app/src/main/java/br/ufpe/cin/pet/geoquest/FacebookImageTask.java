@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import java.net.URL;
 
+import br.ufpe.cin.pet.geoquest.Utils.CropImage;
+
 /**
  * Created by Tomer Simis on 19/04/2015.
  */
@@ -38,9 +40,10 @@ public class FacebookImageTask extends AsyncTask<String, Void, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void result){
-        view.setImageBitmap(image);
+    protected void onPostExecute(Void result) {
+        CropImage cp = new CropImage(130, image);
+        view.setImageBitmap(cp.getCroppedBitmap());
         view.invalidate();
-        activity.setUserImage(image);
+        activity.setUserImage(cp.getCroppedBitmap());
     }
 }

@@ -404,7 +404,12 @@ public class QuestionFragment extends Fragment {
 				}
 
 				@Override
-				protected void onPostExecute(Void v) { 	}
+				protected void onPostExecute(Void v) {
+					FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+					ft.replace(R.id.container, new TransitionFragment(category, lev, 0));
+					ft.addToBackStack("transition_fragment");
+					ft.commit();
+				}
 			}.execute();
 
 
@@ -444,15 +449,10 @@ public class QuestionFragment extends Fragment {
 						}
 					}
 					updateBack(list);
-					dialog.dismiss();
-					FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-					ft.replace(R.id.container, new TransitionFragment(category, lev, 0));
-					ft.addToBackStack("transition_fragment");
-					ft.commit();
 				} else {
 					updateUI();
-					dialog.dismiss();
 				}
+				dialog.dismiss();
 			}
 		});
 		

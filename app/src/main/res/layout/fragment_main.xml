@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:background="@drawable/background">
 
             <RelativeLayout
                 android:layout_width="150dp"
@@ -29,14 +30,10 @@
                 android:id="@+id/imgUserPerfil"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/asset_avatar" />
-                
-                <ImageView
-                android:id="@+id/imgUserPerfilBorda"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/asset_borda" />
-                
+                android:src="@drawable/asset_avatar"
+                    android:background="@drawable/border_image"
+                    android:padding="3dp" />
+
             </RelativeLayout>
           
 
