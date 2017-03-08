@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:background="@drawable/background"
-    >
+    android:background="@drawable/background">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="59dp"
         android:layout_gravity="center_horizontal"
@@ -42,14 +40,14 @@
             android:visibility="invisible" />
 
         <ImageView
+            android:id="@+id/question_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/question_image"
-            android:layout_alignParentEnd="true"
             android:src="@android:drawable/ic_input_add"
-            android:layout_marginLeft="30dp" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -111,7 +109,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13dp"
+            android:textSize="12dp"
             android:text="Enem 2013"
             android:textColor="#ffffff"
             android:id="@+id/question_exam"

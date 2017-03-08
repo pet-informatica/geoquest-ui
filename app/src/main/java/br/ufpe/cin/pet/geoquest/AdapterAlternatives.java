@@ -56,7 +56,9 @@ public class AdapterAlternatives extends ArrayAdapter<Alternative> {
         viewHolder.description.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "Calibri.ttf"));
         if (pos < list.size()) {
             Alternative alternative = list.get(pos);
-
+            String str = alternative.getText();
+            str = str.substring(0, 1).toUpperCase() + str.substring(1);
+            alternative.setText(str);
             viewHolder.description.setText(alternative.getText());
 
             String seq = alternative.getSequence();

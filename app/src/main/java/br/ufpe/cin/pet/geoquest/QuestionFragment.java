@@ -1,9 +1,11 @@
 package br.ufpe.cin.pet.geoquest;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -32,6 +34,7 @@ import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
 import br.ufpe.cin.pet.geoquest.Utils.Cloud;
+import br.ufpe.cin.pet.geoquest.Utils.DialogUtil;
 import br.ufpe.cin.pet.geoquest.classes.Alternative;
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
@@ -44,7 +47,7 @@ import okhttp3.Response;
 public class QuestionFragment extends Fragment {
 
     List<Question> questions;
-	HashMap<String, Integer> is_right = new HashMap<String, Integer>();
+	ArrayList<Integer> is_right = new ArrayList<Integer>();
 	private ProgressDialog progressDialog;
 	private AdapterAlternatives adapter;
 	private CountDownTimer downTimer;
@@ -131,10 +134,11 @@ public class QuestionFragment extends Fragment {
 		updateImage(quest);
 
 		if (downTimer != null) downTimer.cancel();
-		setTimer();
+		setTimer(180000);
 
 		setOnClickListeners(getView(), quest.getCorrectAnswer());
     }
+    Bitmap imagem;
 
 	private void updateImage(Question quest) {
 
@@ -159,7 +163,8 @@ public class QuestionFragment extends Fragment {
 			@Override
 			protected void onPostExecute(Void v) {
 				if (isAdded()) {
-					questionImage.setImageBitmap(bm);
+					imagem = bm;
+					//questionImage.setImageBitmap(bm);
 				}
 			}
 		}.execute();
@@ -200,11 +205,13 @@ public class QuestionFragment extends Fragment {
 		}
     }
 
-	private void setTimer() {
+    long millileft;
+	private void setTimer(long timeMillis) {
 
 		downTimer = null;
-		downTimer = new CountDownTimer(180000, 1000) {
+		downTimer = new CountDownTimer(timeMillis, 1000) {
 			public void onTick(long millis) {
+				millileft = millis;
 				long seconds = millis / 1000;
 				long minutes = seconds/60;
 				seconds = seconds - (minutes*60);
@@ -216,7 +223,7 @@ public class QuestionFragment extends Fragment {
 			public void onFinish() {
 				timer.setText("00:00");
 				if (currentQuestion < questions.size()) {
-					is_right.put(questions.get(currentQuestion).getId(), 0);
+					is_right.add(0);
 					Dialog dialog = createDialog();
 
 					ViewHolder vw = new ViewHolder();
@@ -338,13 +345,36 @@ public class QuestionFragment extends Fragment {
 				dialog.setContentView(R.layout.dialog_image);
 
 				ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
-				image.setImageDrawable(questionImage.getDrawable());
+
+				image.setImageBitmap(imagem);
 				dialog.show();
 			}
 		});
 
 		app_back.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v){
+				//pause time
+				downTimer.cancel();
+
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+				alertDialogBuilder.setTitle("Tem certeza que deseja sair?")
+						.setMessage("Isso será contabilizado como desistência e o jogo encerrará.")
+						.setCancelable(false)
+						.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.dismiss();
+								endGame();
+
+							}
+						})
+						.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								setTimer(millileft);
+								dialog.dismiss();
+							}
+						});
+				AlertDialog alertDialog = alertDialogBuilder.create();
+				alertDialog.show();
 
 			}
 		});
@@ -352,13 +382,12 @@ public class QuestionFragment extends Fragment {
 
 	}
 
-
 	private void checkAnswer(String ans, String rightAnswer){
 		Dialog dialog = createDialog();
 		
 		if(!ans.equals(rightAnswer)){
 
-			is_right.put(questions.get(currentQuestion).getId(), 0);
+			is_right.add(0);
 
 			ViewHolder vw = new ViewHolder();
 			vw = populateViewHolder(vw, dialog);
@@ -374,7 +403,7 @@ public class QuestionFragment extends Fragment {
 
 		} else {
 
-			is_right.put(questions.get(currentQuestion).getId(), 1);
+			is_right.add(1);
 
 			ViewHolder vw = new ViewHolder();
 			vw = populateViewHolder(vw, dialog);
@@ -440,7 +469,7 @@ public class QuestionFragment extends Fragment {
 			return response.body().toString();
 		}
 	}
-	
+
 	private Dialog createDialog(){
 		final Dialog dialog = new Dialog(getActivity());
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -453,13 +482,7 @@ public class QuestionFragment extends Fragment {
 			public void onClick(View v) {
                 currentQuestion++;
 				if (currentQuestion >= questions.size()) {
-					JSONArray list = new JSONArray();
-					for (int i: is_right.values()) {
-						if(i == 1) {
-							list.put(questions.get(currentQuestion - 1).getId());
-						}
-					}
-					updateBack(list);
+					endGame();
 				} else {
 					updateUI();
 				}
@@ -468,5 +491,18 @@ public class QuestionFragment extends Fragment {
 		});
 		
 		return dialog;
+	}
+
+	private void endGame()
+	{
+		JSONArray list = new JSONArray();
+		int index = 0;
+		for (int i: is_right) {
+			if(i == 1) {
+				list.put(questions.get(index).getId());
+			}
+			index++;
+		}
+		updateBack(list);
 	}
 }
