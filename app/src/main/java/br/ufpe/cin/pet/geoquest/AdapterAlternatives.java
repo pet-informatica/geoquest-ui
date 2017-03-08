@@ -60,11 +60,11 @@ public class AdapterAlternatives extends ArrayAdapter<Alternative> {
             viewHolder.description.setText(alternative.getText());
 
             String seq = alternative.getSequence();
-            if (seq.equals("A")) viewHolder.image.setImageResource(R.drawable.question_a_xhdpi);
-            else if (seq.equals("B")) viewHolder.image.setImageResource(R.drawable.question_b_xhdpi);
-            else if (seq.equals("C")) viewHolder.image.setImageResource(R.drawable.question_c_xhdpi);
-            else if (seq.equals("D")) viewHolder.image.setImageResource(R.drawable.question_d_xhdpi);
-            else if (seq.equals("E")) viewHolder.image.setImageResource(R.drawable.question_e_xhdpi);
+            if (seq.equals("A")) viewHolder.image.setImageResource(R.drawable.a);
+            else if (seq.equals("B")) viewHolder.image.setImageResource(R.drawable.b);
+            else if (seq.equals("C")) viewHolder.image.setImageResource(R.drawable.c);
+            else if (seq.equals("D")) viewHolder.image.setImageResource(R.drawable.d);
+            else if (seq.equals("E")) viewHolder.image.setImageResource(R.drawable.e);
         }
 
         return view;

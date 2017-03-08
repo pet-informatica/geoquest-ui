@@ -51,6 +51,7 @@ public class QuestionFragment extends Fragment {
 
     private int currentQuestion;
 
+	ImageView app_back;
 	TextView categoryName;
 	TextView questionExam;
 	TextView questionDescription;
@@ -86,6 +87,7 @@ public class QuestionFragment extends Fragment {
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().getActionBar().hide();
 
+		app_back = (ImageView) rootView.findViewById(R.id.app_back);
 		categoryName = (TextView) rootView.findViewById(R.id.category_name);
 		questionExam = (TextView) rootView.findViewById(R.id.question_exam);
 		questionDescription = (TextView) rootView.findViewById(R.id.question_description);
@@ -340,7 +342,16 @@ public class QuestionFragment extends Fragment {
 				dialog.show();
 			}
 		});
+
+		app_back.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View v){
+
+			}
+		});
+
+
 	}
+
 
 	private void checkAnswer(String ans, String rightAnswer){
 		Dialog dialog = createDialog();
