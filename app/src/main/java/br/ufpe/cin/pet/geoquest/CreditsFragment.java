@@ -12,13 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CreditsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.activity_credits, container,
+		View rootView = inflater.inflate(R.layout.activity_credits , container,
 				false);
 		
 		getActivity().getActionBar().setTitle("Créditos");
@@ -34,7 +35,7 @@ public class CreditsFragment extends Fragment {
 		TextView text;
 		TextView part1;
 		TextView part2;
-		ImageButton img;
+		ImageView img;
 	}
 
 	void populateView (final View rootView) {
@@ -44,7 +45,7 @@ public class CreditsFragment extends Fragment {
 		viewHolder.text = (TextView) rootView.findViewById(R.id.thanks);
 		viewHolder.part1 = (TextView) rootView.findViewById(R.id.partner);
 		viewHolder.part2 = (TextView) rootView.findViewById(R.id.partner2);
-		viewHolder.img = (ImageButton) rootView.findViewById(R.id.exit);
+		viewHolder.img = (ImageView) rootView.findViewById(R.id.exit);
 
 		Typeface type = Typeface.createFromAsset(getActivity().getAssets(), "cooper-black.ttf");
 		viewHolder.text.setTypeface(type);

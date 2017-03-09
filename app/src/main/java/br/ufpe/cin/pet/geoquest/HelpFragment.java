@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class HelpFragment extends Fragment {
@@ -19,7 +20,7 @@ public class HelpFragment extends Fragment {
 	TextView aboutText;
 	TextView worksText;
 	TextView reportText;
-	ImageButton exit;
+	ImageView exit;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,7 +32,7 @@ public class HelpFragment extends Fragment {
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().getActionBar().hide();
 
-		exit = (ImageButton) rootView.findViewById(R.id.exit2);
+		exit = (ImageView) rootView.findViewById(R.id.exit2);
 
 		Typeface type = Typeface.createFromAsset(getActivity().getAssets(), "cooper-black.ttf");
 
