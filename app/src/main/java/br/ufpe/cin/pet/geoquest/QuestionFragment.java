@@ -29,12 +29,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
 import br.ufpe.cin.pet.geoquest.Utils.Cloud;
-import br.ufpe.cin.pet.geoquest.Utils.DialogUtil;
 import br.ufpe.cin.pet.geoquest.classes.Alternative;
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import br.ufpe.cin.pet.geoquest.classes.Question;
@@ -91,7 +89,7 @@ public class QuestionFragment extends Fragment {
 		getActivity().getActionBar().hide();
 
 		app_back = (ImageView) rootView.findViewById(R.id.app_back);
-		categoryName = (TextView) rootView.findViewById(R.id.category_name);
+		categoryName = (TextView) rootView.findViewById(R.id.question_number);
 		questionExam = (TextView) rootView.findViewById(R.id.question_exam);
 		questionDescription = (TextView) rootView.findViewById(R.id.question_description);
 		questionImage = (ImageView) rootView.findViewById(R.id.question_image);
@@ -105,7 +103,7 @@ public class QuestionFragment extends Fragment {
 		timer.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "TT0590M_.TTF"));
 		questionDescription.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Calibri.ttf"));
 
-		categoryName.setText(category.getName());
+		//categoryName.setText(category.getName());
 		questionDescription.setMovementMethod(new ScrollingMovementMethod());
 
 		currentQuestion = 0;
@@ -446,7 +444,7 @@ public class QuestionFragment extends Fragment {
 				@Override
 				protected void onPostExecute(Void v) {
 					FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-					ft.replace(R.id.container, new TransitionFragment(category, lev, 0));
+					ft.replace(R.id.container, new TransitionFragment(category, lev,list.length(), questions.size(), 0));
 					ft.addToBackStack("transition_fragment");
 					ft.commit();
 				}

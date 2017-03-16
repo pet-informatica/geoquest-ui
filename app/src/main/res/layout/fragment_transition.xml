@@ -3,7 +3,22 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:background="@drawable/trans_background">
+    android:background="@drawable/bg_xhdpi">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/app_back"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_exit_to_app_white_xhdpi"
+        android:clickable="true" />
+
+    <ImageView
+        android:layout_width="230dp"
+        android:layout_height="230dp"
+        android:id="@+id/logo"
+        android:src="@drawable/logo_mdpi"
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,87 +26,26 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/trasitionTitle"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="70dp"
         android:text="Hidrografia"
-        android:textColor="@color/background_floating_material_dark" />
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_marginTop="15dp" />
+
+    <com.dd.morphingbutton.impl.LinearProgressButton
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:id="@+id/next"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Nivel 1"
-        android:id="@+id/transitionLevel"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/questions"
         android:layout_gravity="center_horizontal"
-        android:textStyle="italic" />
+        android:text="15/20 acertos"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
-    <RelativeLayout
-        android:layout_width="240dp"
-        android:layout_height="280dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginTop="30dp">
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:id="@+id/feedbackImg"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/nameBadge"
-            android:layout_below="@+id/feedbackImg"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_centerInParent="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/description"
-            android:layout_centerInParent="true"
-            android:layout_below="@+id/nameBadge"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="297dp"
-        android:layout_height="55dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="0dp">
-
-        <ImageButton
-            android:layout_width="120dp"
-            android:layout_height="45dp"
-            android:id="@+id/returnMenoButton"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/voltar"
-            android:scaleType="fitXY"
-            android:backgroundTint="@color/bright_foreground_disabled_material_dark" />
-
-        <ImageButton
-            android:layout_width="120dp"
-            android:layout_height="45dp"
-            android:id="@+id/goFowardButton"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/continuar"
-            android:scaleType="fitXY"
-            android:backgroundTint="@color/bright_foreground_disabled_material_dark" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView3"
-            android:src="@drawable/star"
-            android:layout_alignParentEnd="false"
-            android:layout_centerInParent="true"
-            android:layout_alignParentStart="false" />
-    </RelativeLayout>
 </LinearLayout>

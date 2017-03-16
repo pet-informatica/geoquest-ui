@@ -52,7 +52,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                 vh.descricao = (TextView) view
                         .findViewById(R.id.category_description);
                 vh.progresso = (ProgressBar) view.findViewById(R.id.progressCategoria);
-                vh.nome = (TextView) view.findViewById(R.id.category_name);
+                vh.nome = (TextView) view.findViewById(R.id.question_number);
                 vh.jogar = (Button) view.findViewById(R.id.buttonPlay);
 
                 view.setTag(vh);
@@ -96,7 +96,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                             } else {
                                 MainActivity ma = (MainActivity) ctx;
                                 ma.getFragmentManager().beginTransaction()
-                                        .replace(R.id.container, new TransitionFragment(category, pos + 1, 1)).addToBackStack("transition_fragment").commit();
+                                        .replace(R.id.container, new TransitionFragment(category, pos + 1, 0, 0, 1)).addToBackStack("transition_fragment").commit();
 
 
                             }

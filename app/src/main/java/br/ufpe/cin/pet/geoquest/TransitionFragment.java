@@ -3,16 +3,17 @@ package br.ufpe.cin.pet.geoquest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cloudinary.Cloudinary;
+import com.dd.morphingbutton.MorphingButton;
+import com.dd.morphingbutton.impl.LinearProgressButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
 import br.ufpe.cin.pet.geoquest.Utils.Cloud;
+import br.ufpe.cin.pet.geoquest.Utils.ProgressGenerator;
 import br.ufpe.cin.pet.geoquest.classes.Badge;
 import br.ufpe.cin.pet.geoquest.classes.Category;
 import okhttp3.OkHttpClient;
@@ -33,27 +35,25 @@ import okhttp3.OkHttpClient;
  */
 public class TransitionFragment extends Fragment {
 
-    private String cat;
     private int lev;
     private int type;
+    private int right;
+    private int size;
     private Category category;
     private int fim;
 
     static class ViewHolder {
         protected TextView titulo;
         protected TextView nivel;
-        protected ImageButton gofront;
-        protected ImageButton goback;
-        protected ImageView feedback;
-        protected TextView nameBadge;
-        protected TextView description;
+        protected ImageView appBack;
     }
 
-    public TransitionFragment(Category category, int level, int type) {
+    public TransitionFragment(Category category, int level, int right, int size, int type) {
         this.category = category;
-        this.cat = category.getName();
         this.lev = level;
         this.type = type;
+        this.right = right;
+        this.size = size;
     }
 
     private final OkHttpClient client = new OkHttpClient();
@@ -68,7 +68,8 @@ public class TransitionFragment extends Fragment {
         else
         {
             view = inflater.inflate(R.layout.fragment_transition, container, false);
-            getData(view);
+            populate(view);
+            //getData(view);
         }
 
         return view;
@@ -107,7 +108,7 @@ public class TransitionFragment extends Fragment {
 
         //String url = "http://www.mocky.io/v2/58b8e8cb0f0000c503f09b5e";
 
-        String categoryId = "category=" + cat + "&level=" + lev;
+        String categoryId = "category=" + this.category.getName() + "&level=" + lev;
         String url = getResources().getString(R.string.base_url)+"badges/transition?"+categoryId;
 
         okhttp3.Request request = new okhttp3.Request.Builder()
@@ -147,57 +148,74 @@ public class TransitionFragment extends Fragment {
         }
         return items;
     }
-
+    ViewHolder vh;
     void populate(View view) {
-        ViewHolder vh = new ViewHolder();
+        vh = new ViewHolder();
 
-        vh.goback = (ImageButton) view.findViewById(R.id.returnMenoButton);
-        vh.gofront = (ImageButton) view.findViewById(R.id.goFowardButton);
         vh.titulo = (TextView) view.findViewById(R.id.trasitionTitle);
-        vh.nivel = (TextView) view.findViewById(R.id.transitionLevel);
-        vh.feedback = (ImageView) view.findViewById(R.id.feedbackImg);
-        vh.nameBadge = (TextView) view.findViewById(R.id.nameBadge);
-        vh.description = (TextView) view.findViewById(R.id.description);
+        vh.nivel = (TextView) view.findViewById(R.id.questions);
+        vh.appBack = (ImageView) view.findViewById(R.id.app_back);
+        final LinearProgressButton button = (LinearProgressButton) view.findViewById(R.id.next);
+        int progressColor = getResources().getColor(R.color.mb_purple);
+        int color = getResources().getColor(R.color.mb_gray);
+        int progressCornerRadius = (int) getResources().getDimension(R.dimen.mb_corner_radius_4);
+        int width = (int) getResources().getDimension(R.dimen.mb_width_200);
+        int height = (int) getResources().getDimension(R.dimen.mb_height_8);
 
-
-        vh.goback.setImageResource(R.drawable.voltar);
-        if (fim == 1) {
-            vh.gofront.setImageResource(R.drawable.continuar);
-        }
-        vh.titulo.setText(cat);
-        vh.nivel.setText("Nível " + lev);
-
-        if (items.size() > 0) {
-            vh.feedback.setImageBitmap(items.get(0).getImage());
-            vh.nameBadge.setText(items.get(0).getNome());
-            vh.description.setText(items.get(0).getDescricao());
-        }
-
-        vh.goback.setOnClickListener(new View.OnClickListener() {
+        button.blockTouch(); // prevent user from clicking while button is in progress
+        ProgressGenerator generator = new ProgressGenerator(new ProgressGenerator.OnCompleteListener() {
             @Override
-            public void onClick(View v) {
+            public void onComplete() {
+                button.unblockTouch();
+                morphToSuccess(button);
+            }
+        });
+        button.morphToProgress(color, progressColor, progressCornerRadius, width, height, 0);
+        double right = this.right;
+        double size = this.size;
+        generator.start(button, (int)((right / size) * 100));
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (lev < 3) {
+                    FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container, new QuestionFragment(category, lev+1));
+                    ft.addToBackStack("question_fragment");
+                    ft.commit();
+                } else{
+                    FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container, new MainFragment());
+                    ft.addToBackStack("main_fragment");
+                    ft.commit();
+                }
+            }
+        });
+
+        vh.titulo.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "cooper-black.ttf"));
+        vh.titulo.setText(this.category.getName());
+        vh.nivel.setText(this.right + "/" + this.size + "acertos");
+
+
+        vh.appBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
                 ft.replace(R.id.container, new MainFragment());
                 ft.addToBackStack("main_fragment");
                 ft.commit();
             }
         });
+    }
 
-        vh.gofront.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fim == 1 && lev < 3) {
-                    FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container, new QuestionFragment(category, lev+1));
-                    ft.addToBackStack("question_fragment");
-                    ft.commit();
-                } else if (fim == 0) {
-                    FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container, new QuestionFragment(category, lev));
-                    ft.addToBackStack("question_fragment");
-                    ft.commit();
-                }
-            }
-        });
+    private void morphToSuccess(final MorphingButton btnMorph) {
+        MorphingButton.Params circle = MorphingButton.Params.create()
+                .duration(getResources().getInteger(R.integer.mb_animation))
+                .cornerRadius((int) getResources().getDimension(R.dimen.mb_height_56))
+                .width((int) getResources().getDimension(R.dimen.mb_height_56))
+                .height((int) getResources().getDimension(R.dimen.mb_height_56))
+                .color(getResources().getColor(R.color.mb_green))
+                .colorPressed(getResources().getColor(R.color.mb_green_dark))
+                .icon(R.drawable.ic_done);
+        btnMorph.morph(circle);
     }
 }
