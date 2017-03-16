@@ -2,6 +2,7 @@ package br.ufpe.cin.pet.geoquest;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -20,6 +21,8 @@ import br.ufpe.cin.pet.geoquest.Utils.Cloud;
 
 public class CreditsFragment extends Fragment {
 
+	private ProgressDialog progressDialog;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -29,6 +32,12 @@ public class CreditsFragment extends Fragment {
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActivity().getActionBar().hide();
 
+		progressDialog = new ProgressDialog(rootView.getContext());
+		progressDialog.setMessage("Carregando...");
+		progressDialog.setCancelable(false);
+		progressDialog.setIndeterminate(true);
+		progressDialog.show();
+
 		populateView(rootView);
 		
 		return rootView;
@@ -37,7 +46,6 @@ public class CreditsFragment extends Fragment {
 	class ViewHolder {
 		TextView text;
 		TextView part1;
-		TextView part2;
 		ImageView img;
 	}
 
@@ -47,19 +55,15 @@ public class CreditsFragment extends Fragment {
 
 		viewHolder.text = (TextView) rootView.findViewById(R.id.thanks);
 		viewHolder.part1 = (TextView) rootView.findViewById(R.id.partner);
-		viewHolder.part2 = (TextView) rootView.findViewById(R.id.partner2);
 		viewHolder.img = (ImageView) rootView.findViewById(R.id.exit);
 
 		Typeface type = Typeface.createFromAsset(getActivity().getAssets(), "cooper-black.ttf");
 		viewHolder.text.setTypeface(type);
 
-		SpannableString str = new SpannableString("O GeoQuest é uma parceria do");
-		str.setSpan(new ForegroundColorSpan(Color.WHITE), 0, 28, 0);
-		str.setSpan(new ForegroundColorSpan(Color.rgb(81, 184, 93)), 2, 10, 0);
+		viewHolder.part1.setText("É uma parceria do");
+		viewHolder.part1.setTextColor(Color.rgb(247, 160, 47));
 
-		viewHolder.part1.setText(str);
 		viewHolder.part1.setTypeface(type);
-		viewHolder.part2.setTypeface(type);
 
 		viewHolder.img.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -101,6 +105,7 @@ public class CreditsFragment extends Fragment {
 						img.setImageBitmap(bm);
 					}
 				}
+				progressDialog.hide();
 			}
 		}.execute();
 	}
