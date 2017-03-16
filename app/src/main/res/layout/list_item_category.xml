@@ -26,14 +26,14 @@
             android:textSize="12sp"
             android:minLines="3"
             android:text="ola ola ola ola ola ola ola ola ola ola ola ola ola"
-            android:layout_below="@+id/category_name"
+            android:layout_below="@+id/question_number"
             android:layout_alignParentBottom="true" />
 
         <TextView
             android:layout_width="180dp"
             android:layout_height="25dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/category_name"
+            android:id="@+id/question_number"
             android:textColor="@android:color/holo_blue_dark"
             android:text="Nome"
             android:minLines="1"
