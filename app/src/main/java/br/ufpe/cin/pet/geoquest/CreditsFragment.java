@@ -1,26 +1,29 @@
 package br.ufpe.cin.pet.geoquest;
 
-import android.accessibilityservice.GestureDescription;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import br.ufpe.cin.pet.geoquest.Utils.BitmapFromURL;
+import br.ufpe.cin.pet.geoquest.Utils.Cloud;
+
 public class CreditsFragment extends Fragment {
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.activity_credits , container,
-				false);
+		View rootView = inflater.inflate(R.layout.fragment_credits, container, false);
 		
 		getActivity().getActionBar().setTitle("Créditos");
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -57,6 +60,7 @@ public class CreditsFragment extends Fragment {
 		viewHolder.part1.setText(str);
 		viewHolder.part1.setTypeface(type);
 		viewHolder.part2.setTypeface(type);
+
 		viewHolder.img.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -67,5 +71,37 @@ public class CreditsFragment extends Fragment {
 			}
 		});
 
+		getImage(rootView, "logocon.png", 1);
+		getImage(rootView, "logopet.png", 2);
+
+	}
+
+	private void getImage(final View rootView, String str, final int type) {
+
+		final String src = Cloud.cloudinary.url().generate(str);
+
+		new AsyncTask<Void, Void, Void>() {
+			Bitmap bm = null;
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				bm = new BitmapFromURL(src).getBitmapFromURL();
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void v) {
+				ImageView img;
+				if (isAdded()) {
+					if (type == 1) {
+						img = (ImageView) rootView.findViewById(R.id.petcon);
+						img.setImageBitmap(bm);
+					} else {
+						img = (ImageView) rootView.findViewById(R.id.petinfo);
+						img.setImageBitmap(bm);
+					}
+				}
+			}
+		}.execute();
 	}
 }

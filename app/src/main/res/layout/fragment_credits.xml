@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.05"
-            app:srcCompat="@drawable/ic_exit_to_app_white_xhdpi" />
+            android:src="@drawable/ic_exit_to_app_white_xhdpi" />
 
         <TextView
             android:id="@+id/thanks"
@@ -74,14 +74,13 @@
             android:id="@+id/petinfo"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_above="@+id/partner2"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="17dp"
             android:layout_marginLeft="35dp"
             android:layout_marginRight="35dp"
-            android:gravity="center"
-            android:src="@drawable/logo_pet_orange"
-            android:layout_marginBottom="17dp"
-            android:layout_above="@+id/partner2"
-            android:layout_centerHorizontal="true" />
+            android:gravity="center" />
 
         <ImageView
             android:id="@+id/petcon"
@@ -93,8 +92,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_weight="0.5"
-            android:gravity="center"
-            android:src="@drawable/logo_conexoes" />
+            android:gravity="center" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -111,14 +109,14 @@
             android:layout_marginBottom="9dp" />
 
         <ImageView
+            android:id="@+id/logo"
             android:layout_width="160dp"
             android:layout_height="150dp"
-            android:id="@+id/logo"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/logo_xhdpi"
-            android:gravity="center"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:src="@drawable/logo_xhdpi" />
 
     </RelativeLayout>
 </LinearLayout>
