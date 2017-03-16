@@ -177,17 +177,10 @@ public class TransitionFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (lev < 3) {
                     FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container, new QuestionFragment(category, lev+1));
-                    ft.addToBackStack("question_fragment");
+                    ft.replace(R.id.container, new CategoryFragment());
+                    ft.addToBackStack("category_fragment");
                     ft.commit();
-                } else{
-                    FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-                    ft.replace(R.id.container, new MainFragment());
-                    ft.addToBackStack("main_fragment");
-                    ft.commit();
-                }
             }
         });
 
