@@ -119,9 +119,9 @@ public class StatsFragment extends Fragment{
                     JSONObject area = categoriesResponse.getJSONObject(i);
                     if (area.getString(Stats.areaNameKey).toLowerCase().equals(cat.toLowerCase())) {
                         categorie_percentage = area.getDouble(Stats.areaPercKey);
-                        l1 = area.getDouble(Stats.level1Key);
-                        l2 = area.getDouble(Stats.level2Key);
-                        l3 = area.getDouble(Stats.level3Key);
+                        l1 = 100 * area.getDouble(Stats.level1Key);
+                        l2 = 100 * area.getDouble(Stats.level2Key);
+                        l3 = 100 * area.getDouble(Stats.level3Key);
                         break;
                     }
                 }

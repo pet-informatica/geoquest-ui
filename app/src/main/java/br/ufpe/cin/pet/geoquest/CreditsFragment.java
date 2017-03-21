@@ -60,8 +60,7 @@ public class CreditsFragment extends Fragment {
 		Typeface type = Typeface.createFromAsset(getActivity().getAssets(), "cooper-black.ttf");
 		viewHolder.text.setTypeface(type);
 
-		viewHolder.part1.setText("É uma parceria do");
-		viewHolder.part1.setTextColor(Color.rgb(247, 160, 47));
+		viewHolder.part1.setTextColor(Color.rgb(0, 0, 0));
 
 		viewHolder.part1.setTypeface(type);
 
