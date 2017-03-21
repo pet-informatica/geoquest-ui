@@ -61,6 +61,9 @@ public class TransitionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = null;
+
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActivity().getActionBar().hide();
         if (type == 1) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.container, new QuestionFragment(category, lev)).commit();
@@ -186,7 +189,8 @@ public class TransitionFragment extends Fragment {
 
         vh.titulo.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "cooper-black.ttf"));
         vh.titulo.setText(this.category.getName());
-        vh.nivel.setText(this.right + "/" + this.size + "acertos");
+        vh.nivel.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Calibri.ttf"));
+        vh.nivel.setText(this.right + "/" + this.size + " acertos");
 
 
         vh.appBack.setOnClickListener(new View.OnClickListener() {

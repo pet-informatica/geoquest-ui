@@ -28,7 +28,7 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:text="Questão 1"
-            android:id="@+id/question_number"
+            android:id="@+id/cat_name"
             android:layout_marginLeft="30dp"
             android:textAlignment="center"
             android:gravity="center"

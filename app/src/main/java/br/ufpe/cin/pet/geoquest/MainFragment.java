@@ -2,9 +2,6 @@ package br.ufpe.cin.pet.geoquest;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +19,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import br.ufpe.cin.pet.geoquest.Utils.CropImage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -85,6 +81,7 @@ public class MainFragment extends Fragment{
 		app_ranking.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				getActivity().getActionBar().hide();
 				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 				ft.replace(R.id.container, new RankingFragment());
 				ft.addToBackStack("ranking_fragment");
@@ -96,6 +93,7 @@ public class MainFragment extends Fragment{
 		app_statistics.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				getActivity().getActionBar().hide();
 				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 				ft.replace(R.id.container, new StatsFragment());
 				ft.addToBackStack("stats_fragment");
@@ -107,6 +105,7 @@ public class MainFragment extends Fragment{
 		app_myBadges.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				getActivity().getActionBar().hide();
 				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 				ft.replace(R.id.container, new MyBadgesFragment());
 				ft.addToBackStack("badges_fragment");
@@ -118,6 +117,7 @@ public class MainFragment extends Fragment{
 		btn_play.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				getActivity().getActionBar().hide();
 				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 				ft.replace(R.id.container, new CategoryFragment());
 				ft.addToBackStack("category_fragment");

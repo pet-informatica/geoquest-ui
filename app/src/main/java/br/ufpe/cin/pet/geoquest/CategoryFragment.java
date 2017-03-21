@@ -1,14 +1,18 @@
 package br.ufpe.cin.pet.geoquest;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,10 +34,12 @@ public class CategoryFragment extends Fragment {
     private CategoryAdapter adapter;
     private final OkHttpClient client = new OkHttpClient();
     private ProgressDialog progressDialog;
-
+    private TextView title;
+    private ImageView app_back;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
         final View rootView = inflater.inflate(R.layout.fragment_category, container, false);
 
@@ -42,9 +48,10 @@ public class CategoryFragment extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(true);
         progressDialog.show();
+        app_back = (ImageView) rootView.findViewById(R.id.app_back);
+        title = (TextView) rootView.findViewById(R.id.tv_title);
 
-        getActivity().getActionBar().setTitle("Geoquest");
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        title.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "cooper-black.ttf"));
 
         try {
             new AsyncTask<Void, Void, Void>() {
@@ -64,8 +71,8 @@ public class CategoryFragment extends Fragment {
                 protected void onPostExecute(Void v) {
                     adapter = new CategoryAdapter(getActivity().getApplicationContext(), items, getActivity());
 
-                    ListView listView = (ListView) rootView.findViewById(R.id.listViewCategories);
-                    listView.setAdapter(adapter);
+                    GridView gridView = (GridView) rootView.findViewById(R.id.gridViewCategories);
+                    gridView.setAdapter(adapter);
                     progressDialog.hide();
                 }
             }.execute();
@@ -73,11 +80,24 @@ public class CategoryFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        setOnClickListeners(getView());
         return rootView;
     }
 
-    private List<Category> run() throws Exception {
+    private void setOnClickListeners(View rootView) {
+        app_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+                ft.replace(R.id.container, new MainFragment());
+                ft.addToBackStack("main_fragment");
+                ft.commit();
+            }
+        });
+
+    }
+
+        private List<Category> run() throws Exception {
 
         //String url = "http://www.mocky.io/v2/58b8edd70f00003604f09b6b";
         String url = getResources().getString(R.string.base_url)+"questions/categories";
