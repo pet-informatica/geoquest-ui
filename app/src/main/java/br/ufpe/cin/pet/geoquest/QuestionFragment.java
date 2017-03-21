@@ -89,12 +89,12 @@ public class QuestionFragment extends Fragment {
 		getActivity().getActionBar().hide();
 
 		app_back = (ImageView) rootView.findViewById(R.id.app_back);
-		categoryName = (TextView) rootView.findViewById(R.id.question_number);
+		categoryName = (TextView) rootView.findViewById(R.id.cat_name);
 		questionExam = (TextView) rootView.findViewById(R.id.question_exam);
 		questionDescription = (TextView) rootView.findViewById(R.id.question_description);
 		questionImage = (ImageView) rootView.findViewById(R.id.question_image);
 		questionAlternatives = (ListView) rootView.findViewById(R.id.listViewQuestion);
-		questionSequence = (TextView) rootView.findViewById(R.id.question_number);
+		questionSequence = (TextView) rootView.findViewById(R.id.cat_name);
 		timer = (TextView) rootView.findViewById(R.id.timer);
 
 		categoryName.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "cooper-black.ttf"));

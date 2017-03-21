@@ -3,18 +3,19 @@ package br.ufpe.cin.pet.geoquest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import br.ufpe.cin.pet.geoquest.classes.Category;
+import me.itangqi.waveloadingview.WaveLoadingView;
 
 /**
  * Created by Tomer Simis on 19/04/2015.
@@ -35,9 +36,9 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
         static class ViewHolder {
             protected TextView descricao;
-            protected ProgressBar progresso;
+            protected WaveLoadingView progresso;
             protected TextView nome;
-            protected Button jogar;
+            protected RelativeLayout jogar;
         }
 
         @Override
@@ -50,10 +51,10 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                 view = mInflater.inflate(R.layout.list_item_category, null);
                 vh = new ViewHolder();
                 vh.descricao = (TextView) view
-                        .findViewById(R.id.category_description);
-                vh.progresso = (ProgressBar) view.findViewById(R.id.progressCategoria);
-                vh.nome = (TextView) view.findViewById(R.id.question_number);
-                vh.jogar = (Button) view.findViewById(R.id.buttonPlay);
+                        .findViewById(R.id.cat_description);
+                vh.progresso = (WaveLoadingView) view.findViewById(R.id.waveLoadingView);
+                vh.nome = (TextView) view.findViewById(R.id.cat_name);
+                vh.jogar = (RelativeLayout) view.findViewById(R.id.item);
 
                 view.setTag(vh);
             } else {
@@ -65,21 +66,24 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
             final Context ctx = this.parent;
             final CharSequence[] levels = {"Nível 1", "Nível 2", "Nível 3"};
 
-            double pr = (double)100*category.getDone()/(double)category.getTotal();
+            double pr = (double)100*(category.getDone()/(double)category.getTotal());
 
             final CharSequence message = pr+"%";
             final CharSequence unavailability = "Nível Indisponível";
             final CharSequence completed = "Nível concluído";
 
+            vh.nome.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "cooper-black.ttf"));
+            vh.descricao.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "Calibri.ttf"));
             vh.descricao.setText(category.getDescription());
-            vh.progresso.setProgress(category.getDone());
+            vh.progresso.setProgressValue((int)pr);
+            vh.progresso.setCenterTitle((int)pr + "%");
 
-            vh.progresso.setOnClickListener(new View.OnClickListener() {
+            /*vh.progresso.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     Toast toast = Toast.makeText(ctx, message, Toast.LENGTH_SHORT);
                     toast.show();
                 }
-            });
+            });*/
 
             vh.nome.setText(category.getName());
 

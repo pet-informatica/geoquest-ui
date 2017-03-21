@@ -3,67 +3,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="8" >
+    android:weightSum="8"
+    android:background="@drawable/background"
+    android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="0dp"
-        android:gravity="top"
-        android:layout_marginTop="0dp">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp">
 
-        <LinearLayout
-            android:id="@+id/title_Categories"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="7dp"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal" >
-
-        </LinearLayout>
+            android:id="@+id/app_back"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_exit_to_app_white_xhdpi"
+            android:clickable="true"
+            android:nestedScrollingEnabled="false" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CATEGORIAS"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:id="@+id/textView"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_star_badges"
-            android:id="@+id/imageView"
-            android:layout_toRightOf="@+id/textView"
-            android:layout_toEndOf="@+id/textView"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="15dp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_star_badges"
-            android:id="@+id/imageView2"
-            android:layout_toLeftOf="@+id/textView"
-            android:layout_toStartOf="@+id/textView"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="15dp" />
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/listViewCategories"
-            android:layout_centerHorizontal="true"
-            android:headerDividersEnabled="true"
-            android:layout_below="@+id/textView" />
-
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Categorias"
+            android:id="@+id/tv_title"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_centerInParent="true"
+            android:textSize="25sp" />
     </RelativeLayout>
+
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/gridViewCategories"
+        android:numColumns="2"
+        android:nestedScrollingEnabled="false"
+        android:stretchMode="columnWidth"
+        android:columnWidth="20dp" />
 
 </LinearLayout>

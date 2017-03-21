@@ -38,4 +38,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
     compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56'
+    compile 'me.itangqi.waveloadingview:library:0.3.5'
 }

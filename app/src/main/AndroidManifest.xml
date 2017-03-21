@@ -34,12 +34,14 @@
         <activity
             android:name=".HelpFragment"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_help" >
+            android:label="@string/title_activity_help"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
         <activity
             android:name=".CreditsFragment"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_credits" >
+            android:label="@string/title_activity_credits"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
     </application>
 
